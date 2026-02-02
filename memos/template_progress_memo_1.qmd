@@ -3,8 +3,10 @@ title: "Progress Memo 1"
 subtitle: |
   | Final Project 
   | Data Science 2 with R (STAT 301-2)
-author: "YOUR NAME"
-pagetitle: "PM1 YOUR NAME"
+author: "Tom McCabe"
+pagetitle: "PM1 Tom McCabe"
+date: today
+
 
 format:
   html:
@@ -19,57 +21,199 @@ reference-location: margin
 citation-location: margin
 ---
 
-::: {.callout-important collapse=true}
-## Memo format
-
-Like all other submissions for this course, we expect the memo to be **neat and well organized**.
-
-A memo is a short, polished report. Meaning, it should be well written and thoughtfully laid out. Some neatness and organizational hints/tips (not an exhaustive list):
-
-- There should be absolutely no code in your report --- don’t hide it; code should not be visible/accessible.
-- Include a date indicating when report was created.
-- There should be no tibbles/data frames or raw R output --- should use tables (avoid unnecessarily long output)!
-- Any plots or graphics should be polished (appropriate labels and/or captions).
-- All figures and tables should be properly labeled and referenced --- must make use of quarto cross-referencing.
-- Should use heading and sub-headings appropriately.
-- Remove prompts and instructions meant to assist students.
-- Should include a link to project’s GitHub repo.
-- GitHub repo should be well organized and have a few commits (no templates, commit of most recent work)
-
-:::
 
 ::: {.callout-tip icon=false}
 
 ## Github Repo Link
 
-To link to your github **repo**sitory, appropriately edit the example link below. Meaning replace `https://your-github-repo-url` with your github repo url. Suggest verifying the link works before submitting.
-
-[https://your-github-repo-url](https://your-github-repo-url)
+[https://github.com/stat301-2-2026-winter/final-project-2-tommccabe9933.git](https://github.com/stat301-2-2026-winter/final-project-2-tommccabe9933.git)
 
 :::
 
-::: {.callout-warning}
-GitHub (free account) cannot store large files. If you try to commit and push a large dataset you will have an ERROR! Any file over 100 MB (100,000 KB) needs to be added to the `.gitignore` file BEFORE committing.
 
-**We may need to do that for files in your final project!**
-:::
 
-## Prediction roblem
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
+#| warning: false
 
-Blah Blah
 
-## Data source
+library(tidyverse)
+library(janitor)
+library(readr)
 
-Blah blah blah^[an example of footnote --- [content in margins](https://quarto.org/docs/blog/posts/2022-02-17-advanced-layout/)]
+base_path <- "~/Documents/Stat301-2/final-project-2-tommccabe9933/data"
+
+team_offense <- read_csv(
+  file.path(base_path, "weekly_team_stats_offense.csv"),
+  show_col_types = FALSE
+) %>% clean_names()
+
+team_defense <- read_csv(
+  file.path(base_path, "weekly_team_stats_defense.csv"),
+  show_col_types = FALSE
+) %>% clean_names()
+
+player_offense <- read_csv(
+  file.path(base_path, "weekly_player_stats_offense.csv"),
+  show_col_types = FALSE
+) %>% clean_names()
+
+
+games_2025 <- read_csv(
+  file.path(base_path, "nfl_2025.csv"),
+  show_col_types = FALSE
+) %>% clean_names()
+
+```
+
+
+
+## Prediction Problem
+
+Sports gambling impacts millions of lives. I often read about Vegas's massive profit margins and people constantly picking the wrong team for thier bets. The objective of this project is to predict whether an NFL team will cover the closing point spread in a given game using pre-game team performance metrics, aggregated offensive production, and game-level context. The response variable is a binary indicator of spread coverage, making this a supervised classification problem. Predicting spread outcomes is especially challenging because betting markets incorporate large amounts of public and expert information, creating a strong baseline where naïve strategies rarely exceed a 50% hit rate. This makes the task well-suited for evaluating whether structured features capture predictive signal beyond intuition or narrative-driven decision-making. More broadly, the project applies classification models to a real-world setting with high noise and tight margins, where any measurable improvement over chance is meaningful.
+
+## Data Source
+
+Stepping back, my one true joy in life is the National Football League. In another life, I would've became a Data Scientist for the Chicago Bears and taken them to the Super Bowl through cutting edge analytics. This is the next best thing (not quite but it will still be really fun). This project draws on three complementary, publicly available NFL datasets sourced from Kaggle, an awesome site that was shown to us on Canvas. Each contribute a distinct layer of information necessary to study point spread outcomes at the team–game level.
+
+The first data source is **NFL Stats 2012–2024**, compiled by Philip Hyde, which provides detailed weekly player-level offensive statistics across recent NFL seasons.^[[https://www.kaggle.com/datasets/philiphyde1/nfl-stats-1999-2022](https://www.kaggle.com/datasets/philiphyde1/nfl-stats-1999-2022)] This dataset includes individual passing, rushing, and receiving production, along with player metadata such as position, team affiliation, draft information, and physical characteristics. For this project, player-level statistics will be aggregated to the team–game level to capture roster-level offensive contributions without introducing excessive dimensionality.
+
+The second data source is **NFL Team Data 2003–2023**, curated by Nick Cantalupa, which contains extensive regular-season team statistics across more than two decades.^[[https://www.kaggle.com/datasets/nickcantalupa/nfl-team-data-2003-2023](https://www.kaggle.com/datasets/nickcantalupa/nfl-team-data-2003-2023)] This dataset includes team-level offensive and defensive performance metrics such as yards, turnovers, penalties, and scoring, providing a historical view of team tendencies and efficiency. These variables form the core team-performance predictors in the modeling process.
+
+The third data source is **NFL Scores and Betting Data**, maintained by Spreadspoke, which includes historical game results, closing point spreads, totals, stadium information, and weather conditions.^[[https://www.kaggle.com/datasets/tobycrabtree/nfl-scores-and-betting-data](https://www.kaggle.com/datasets/tobycrabtree/nfl-scores-and-betting-data)] This dataset provides the betting market information needed to define the response variable, specifically whether a team covered the closing point spread, as well as contextual predictors related to game environment.
+
+All datasets are structured on a game-by-game basis and share common identifiers such as season, week, and team, allowing them to be cleanly joined and reshaped to a unified team–game level dataset for exploratory analysis and supervised learning. As I continue with my project I may swap in and out data science but the core of this project will remain trying to identify the 'signal in the noise' - a skeleton key to gain an edge in sports betting. 
+
+
+
 
 ## Data quality check
 
-Blah blah blah^[another footnote]
+
+In RStudio, I will import the team offense, team defense, player offense, and game betting datasets as tibbles, clean column names, and then filter to recent seasons to keep the analysis focused on the modern NFL. Because these datasets are organized at the game level (or can be aggregated to team–game), I will join them into one modeling dataset using shared identifiers such as season, week, team, and game ID. Specifically, I will (1) aggregate player offense to the team–game level (for example, team totals by game and/or position-level summaries), then (2) left join team offense and team defense by game ID, season, week, and team, and (3) join the betting/context dataset by matching home and away teams and week/season. The result will be a single team–game dataset suitable for EDA and predicting whether a team covers the spread.
+
+```{r}
+#| label: tbl-variable-types
+#| tbl-cap: "Variable type breakdown across the four raw datasets"
+#| echo: false
+#| message: false
+#| warning: false
+
+var_types <- function(df, name) {
+  tibble(
+    dataset = name,
+    numeric = sum(map_lgl(df, is.numeric)),
+    categorical = sum(map_lgl(df, is.character) | map_lgl(df, is.factor)),
+    logical = sum(map_lgl(df, is.logical))
+  )
+}
+
+bind_rows(
+  var_types(team_offense, "Team offense"),
+  var_types(team_defense, "Team defense"),
+  var_types(player_offense, "Player offense"),
+  var_types(games_2025, "Betting and game context")
+) |>
+  knitr::kable()
+```
+
+
+
+ @tbl-variable-types summarizes the distribution of numeric, categorical, and logical variables across the four raw data sources. The modeling data are constructed from team-level offense and defense (7,088 observations each), player-level offense (58,629 observations), and betting and game context (272 observations), with player-level data exhibiting the highest dimensionality at 393 variables. These sources will be aggregated to the team–game level to align with the binary spread-coverage outcome and ensure consistent observations across predictors. These datasets are aggregated to the game level to align with the binary spread-coverage outcome and ensure consistent observations across predictors.
+
+```{r}
+#| label: compute-cover
+#| echo: false
+#| message: false
+#| warning: false
+
+games_2025 <- games_2025 %>%
+  mutate(
+    favorite_is_home = team_favorite_id == team_home,
+    favorite_score = if_else(favorite_is_home, score_home, score_away),
+    dog_score      = if_else(favorite_is_home, score_away, score_home),
+    margin_vs_spread = (favorite_score + spread_favorite) - dog_score,
+    cover = case_when(
+      margin_vs_spread > 0 ~ "cover",
+      margin_vs_spread < 0 ~ "no_cover",
+      TRUE ~ "push"
+    )
+  )
+
+```
+
+
+
+```{r}
+#| label: tbl-target-balance
+#| tbl-cap: "Distribution of spread coverage outcomes in the 2025 NFL season"
+#| echo: false
+#| message: false
+#| warning: false
+
+games_2025 |>
+  count(cover) |>
+  mutate(prop = n / sum(n)) |>
+  knitr::kable(digits = 3)
+
+```
+
+ @tbl-target-balance shows the distribution of spread coverage outcomes for the 2025 NFL season. Across the 272 games in the 2025 season dataset, favorites covered the closing point spread in only 31.9% of games, while failing to cover in 66.9% of games, with pushes occurring just 1.1% of the time. This imbalance indicates that blindly betting favorites would have produced a substantially sub-50% hit rate, reinforcing how efficiently spreads are set to punish intuition-driven betting. The skew toward non-covers highlights the importance of modeling team-level and contextual factors rather than relying on perceived team strength or public narratives.
+
+```{r}
+#| label: compute-missingness
+#| echo: false
+#| message: false
+#| warning: false
+
+
+missing_summary <- function(df, name) {
+  tibble(
+    dataset = name,
+    total_cells = nrow(df) * ncol(df),
+    missing_cells = sum(is.na(df)),
+    pct_missing = sum(is.na(df)) / (nrow(df) * ncol(df))
+  )
+}
+
+missingness_summary <- bind_rows(
+  missing_summary(team_offense, "Team offense"),
+  missing_summary(team_defense, "Team defense"),
+  missing_summary(player_offense, "Player offense"),
+  missing_summary(games_2025, "Betting and game context")
+)
+
+
+```
+
+```{r}
+#| label: tbl-missingness-summary
+#| tbl-cap: "Missingness by dataset"
+#| echo: false
+#| message: false
+#| warning: false
+
+knitr::kable(missingness_summary)
+
+```
+
+
+ @tbl-missingness-summary summarizes missingness across the four datasets. Missingness is negligible in the team-level datasets, with both team offense and team defense having well under 0.1% missing values, indicating these data are effectively complete for modeling. Player offense shows substantially higher missingness at roughly 9.4%, which is expected given position-specific statistics and games where certain players do not record relevant events. The betting and game context data have moderate missingness at about 4.2%, but this does not affect the outcome variable and can be handled during feature selection without compromising the integrity of the modeling dataset.
+
+
+
+The raw data are not fully tidy for modeling because information is split across player-, team-, and game-level tables. However, the structure is well-defined and can be made tidy through standard preprocessing steps: aggregating player data to the team–game level and joining datasets using shared identifiers such as season, week, team, and game ID. After these steps, the resulting dataset is tidy, with one row per team–game observation and one column per predictor. After aggregation/join, modeling table will be ~2 x games rows (one per team-game) or game-level rows (one per game), depending on my design.
+
+**Very important note** This dataset from Spreadspoke is their free trial 2025 data; I plan on buying the full dataset (dating back until the 1970s) because its only $25 and hopefully my betting edge will make this money back. I only didn't buy it in case this project gets axed. This will increase the complexity and analysis because I want to examine data across seasons and out-performance of certain variables across seasons.
+
+
 
 ## Target variable analysis
 
-Blah blah blah
+The target variable for this project is spread coverage, defined as whether a team covers the closing point spread in a given NFL game. This variable directly operationalizes the project’s central goal: identifying patterns and high-signal indicators that distinguish games where teams outperform market expectations from those where they do not. Rather than predicting raw game outcomes or margins of victory, focusing on spread coverage allows the model to learn which combinations of team performance metrics, aggregated player production, and contextual factors are associated with beating the betting line itself. This framing aligns the prediction task with real-world betting decisions, where the spread represents the market’s baseline expectation. Treating spread coverage as a binary classification problem enables the use of supervised learning methods to isolate features that consistently increase the likelihood of a team covering, providing a structured way to evaluate whether meaningful predictive signal exists beyond intuition or public narratives. Because “push” outcomes are rare (about 1%), I will drop pushes and train a clean binary classifier on cover vs no_cover.
 
 ## Misc
 
-Blah Blah
+To be very clear, I am going to purchase the full dataset and train model to hunt for various patterns and indicators that a team is poised to outperform.
