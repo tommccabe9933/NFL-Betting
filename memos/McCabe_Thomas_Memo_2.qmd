@@ -286,7 +286,8 @@ This project combines three NFL datasets. The first dataset contains weekly team
 
 ## Data Set Work
 
-My project has a very tough cleaning routine. I needed to consult a lot of online sources to figure out how to fix the various issues. However, I am in a pretty good place. The final modeling dataset is called tom_cleaned_model_nfl. Each row represents a team in a specific game. The response variable is the binary spread coverage outcome.
+My project has a very tough cleaning routine. I needed to consult a lot of online sources to figure out how to fix the various issues. However, I am in a pretty good place. The final modeling dataset is called tom_cleaned_model_nfl. Each row represents a team in a specific game. The response variable is the binary spread coverage outcome.To construct the modeling dataset, I first standardized team identifiers because historical NFL datasets often use different abbreviations across seasons (for example SD vs LAC or OAK vs LVR). I then created a unique game identifier using the season, week, and participating teams so that statistics from different sources could be aligned correctly. Next, I reshaped the game-level betting dataset so that each game appears twice, once from the perspective of the home team and once from the perspective of the away team. This allowed the data to be represented at the team–game level, which is the unit needed for predicting whether a team covers the spread. Finally, I joined the offensive and defensive team statistics to this structure using the shared identifiers, creating a unified dataset that combines betting market information, game context variables, and team performance metrics.
+
 
 Predictors include betting market variables, game context variables, and team performance statistics. These include variables such as the point spread, weather conditions, offensive production averages, and defensive metrics.
 
@@ -400,7 +401,6 @@ log_results <- fit_resamples(
 
 
 ```{r}
-
 #| label: tbl-model-results
 #| tbl-cap: "CV performance of the null model and logistic regression model"
 #| echo: false
