@@ -2183,7 +2183,7 @@ vertical-align: -.125em;
   </ul>
 </nav>
 </div>
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -2236,9 +2236,11 @@ Data Science 2 with R (STAT 301-2)</div><p></p>
 <p>My goal is to predict whether an NFL team covers the closing betting spread. The response variable is spread coverage, which indicates whether a team performed better than the market expectation. I treat this as a binary classification problem with two outcomes: cover and no_cover.</p>
 <p>Predicting spread outcomes is difficult because betting markets incorporate large amounts of public and expert information. Because of this, a naive strategy usually performs around 50%. The purpose of this project is to evaluate whether structured statistical models can detect predictive signal beyond the betting market baseline.</p>
 </section>
-<section id="data-source" class="level2">
+<section id="data-source" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="data-source">Data Source</h2>
-<p>This project combines three NFL datasets. The first dataset contains weekly team offensive statistics. These include yards, pass attempts, rushing attempts, touchdowns, and efficiency metrics. Many variables also include rolling averages that summarize recent team performance. The second dataset contains weekly team defensive statistics. These include sacks, tackles, interceptions, and other defensive performance metrics. The third dataset contains historical NFL betting data. This includes game results, point spreads, totals, stadium information, and weather conditions. All datasets share common identifiers such as season, week, and team. I use these identifiers to join the datasets into a single team-game modeling dataset.</p>
+<p>As a reminder, the first data source is <strong>NFL Team Data 2003–2023</strong>, curated by Nick Cantalupa, which contains extensive regular-season team statistics across more than two decades.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> This dataset includes team-level offensive and defensive performance metrics such as yards, turnovers, penalties, and scoring, providing a historical view of team tendencies and efficiency. These variables form the core team-performance predictors in the modeling process.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup> <a href="https://www.kaggle.com/datasets/nickcantalupa/nfl-team-data-2003-2023">https://www.kaggle.com/datasets/nickcantalupa/nfl-team-data-2003-2023</a></p></div><div id="fn2"><p><sup>2</sup> <a href="https://www.kaggle.com/datasets/tobycrabtree/nfl-scores-and-betting-data">https://www.kaggle.com/datasets/tobycrabtree/nfl-scores-and-betting-data</a></p></div></div><p>The second data source is <strong>NFL Scores and Betting Data</strong>, maintained by Spreadspoke, which includes historical game results, closing point spreads, totals, stadium information, and weather conditions.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. I am no longer looking at plyaer-level statistics.</p>
+<p>Three datasets (offense, defense, spreads data). The first dataset contains weekly team offensive statistics. These include yards, pass attempts, rushing attempts, touchdowns, and efficiency metrics. Many variables also include rolling averages that summarize recent team performance. The second dataset contains weekly team defensive statistics. These include sacks, tackles, interceptions, and other defensive performance metrics. The third dataset contains historical NFL betting data. This includes game results, point spreads, totals, stadium information, and weather conditions. All datasets share common identifiers such as season, week, and team. I use these identifiers to join the datasets into a single team-game modeling dataset.</p>
 </section>
 <section id="data-set-work" class="level2">
 <h2 class="anchored" data-anchor-id="data-set-work">Data Set Work</h2>
@@ -2277,12 +2279,12 @@ Table 1: CV performance of the null model and logistic regression model
 <tr class="odd">
 <td style="text-align: left;">Null</td>
 <td style="text-align: right;">0.500</td>
-<td style="text-align: right;">0.50</td>
+<td style="text-align: right;">0.500</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Logistic Regression</td>
-<td style="text-align: right;">0.572</td>
-<td style="text-align: right;">0.63</td>
+<td style="text-align: right;">0.611</td>
+<td style="text-align: right;">0.652</td>
 </tr>
 </tbody>
 </table>
@@ -2302,6 +2304,7 @@ Table 1: CV performance of the null model and logistic regression model
 <p>For Progress Memo 2 I focused on getting a simple but complete modeling workflow running end-to-end. The null model and logistic regression model both fit successfully and produced reasonable results.</p>
 <p>The next steps of the project will focus on expanding the modeling framework. I plan to implement several additional model types including random forest, gradient boosted trees, k-nearest neighbors, and elastic net logistic regression. I will also experiment with additional feature engineering and alternative recipes to improve predictive performance.</p>
 </section>
+
 
 </main>
 <!-- /main column -->
