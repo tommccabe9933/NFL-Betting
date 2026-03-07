@@ -2178,7 +2178,6 @@ vertical-align: -.125em;
   <li><a href="#data-source" id="toc-data-source" class="nav-link" data-scroll-target="#data-source">Data Source</a></li>
   <li><a href="#data-set-work" id="toc-data-set-work" class="nav-link" data-scroll-target="#data-set-work">Data Set Work</a></li>
   <li><a href="#modeling-plan" id="toc-modeling-plan" class="nav-link" data-scroll-target="#modeling-plan">Modeling Plan</a></li>
-  <li><a href="#logistics" id="toc-logistics" class="nav-link" data-scroll-target="#logistics">Logistics</a></li>
   <li><a href="#initial-model-checks" id="toc-initial-model-checks" class="nav-link" data-scroll-target="#initial-model-checks">Initial Model Checks</a></li>
   <li><a href="#progress-and-next-steps" id="toc-progress-and-next-steps" class="nav-link" data-scroll-target="#progress-and-next-steps">Progress and Next Steps</a></li>
   </ul>
@@ -2246,65 +2245,18 @@ Data Science 2 with R (STAT 301-2)</div><p></p>
 <p>My project has a very tough cleaning routine. I needed to consult a lot of online sources to figure out how to fix the various issues. However, I am in a pretty good place. The final modeling dataset is called tom_cleaned_model_nfl. Each row represents a team in a specific game. The response variable is the binary spread coverage outcome.To construct the modeling dataset, I first standardized team identifiers because historical NFL datasets often use different abbreviations across seasons (for example SD vs LAC or OAK vs LVR). I then created a unique game identifier using the season, week, and participating teams so that statistics from different sources could be aligned correctly. Next, I reshaped the game-level betting dataset so that each game appears twice, once from the perspective of the home team and once from the perspective of the away team. This allowed the data to be represented at the team–game level, which is the unit needed for predicting whether a team covers the spread. Finally, I joined the offensive and defensive team statistics to this structure using the shared identifiers, creating a unified dataset that combines betting market information, game context variables, and team performance metrics.</p>
 <p>Predictors include betting market variables, game context variables, and team performance statistics. These include variables such as the point spread, weather conditions, offensive production averages, and defensive metrics.</p>
 <p>Rows with missing values for the key predictor average_total_off_yards were removed to ensure consistent model input. After cleaning, the dataset contains several thousand observations and more than fifteen predictor variables, which satisfies the project complexity requirements.</p>
-</section>
-<section id="modeling-plan" class="level2">
-<h2 class="anchored" data-anchor-id="modeling-plan">Modeling Plan</h2>
-<p>I split the dataset into training and testing sets using an 80/20 split, stratified by the response variable. Model performance is estimated using 10-fold cross-validation on the training data.</p>
-<p>For Progress Memo 2, I implemented two model - a null baseline model and a logistic regression classifier.</p>
-<p>A basic preprocessing recipe is used for both models. The recipe removes zero-variance predictors, converts categorical predictors into dummy variables, and normalizes numeric predictors. This setup creates a simple but complete modeling pipeline that can be expanded later with additional model types and feature engineering. Model performance will primarily be evaluated using ROC AUC because it measures the model’s ability to correctly rank outcomes across different probability thresholds. Accuracy is also reported for interpretability.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 5998</code></pre>
 </div>
 </div>
-<p>Here is a quick check on rows; I had to remove missingness but I still have enough observations for my dataset.</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 2
-  cover        n
-  &lt;fct&gt;    &lt;int&gt;
-1 cover     2999
-2 no_cover  2999</code></pre>
-</div>
-</div>
-<p>This is a great sign, for every no_cover there needs to be a cover.</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>            weather_humidity                        cover 
-                        5262                            0 
-                   home_away              stadium_neutral 
-                           0                            0 
-                 spread_team              over_under_line 
-                           0                            0 
-         weather_temperature             weather_wind_mph 
-                           0                            0 
-                 win_pct_off      average_total_off_yards 
-                           0                            0 
-       average_pass_attempts        average_complete_pass 
-                           0                            0 
-       average_passing_yards        average_rush_attempts 
-                           0                            0 
-       average_rushing_yards      average_first_down_pass 
-                           0                            0 
-     average_first_down_rush average_third_down_converted 
-                           0                            0 
-   average_third_down_failed       average_rush_touchdown 
-                           0                            0 
-      average_pass_touchdown     average_interception_off 
-                           0                            0 
-     average_fumble_lost_off                 average_sack 
-                           0                            0 
-              average_qb_hit     average_interception_def 
-                           0                            0 
-   average_fumble_forced_def          average_solo_tackle 
-                           0                            0 
-       average_assist_tackle 
-                           0 </code></pre>
-</div>
-</div>
+<p>Here is a quick check on rows; I had to remove missingness across certain important predictors but I still have enough observations for my dataset.</p>
 </section>
-<section id="logistics" class="level2">
-<h2 class="anchored" data-anchor-id="logistics">Logistics</h2>
+<section id="modeling-plan" class="level2">
+<h2 class="anchored" data-anchor-id="modeling-plan">Modeling Plan</h2>
+<p>I split the dataset into training and testing sets using an 80/20 split, stratified by the response variable. Model performance is estimated using 10-fold cross-validation on the training data.</p>
+<p>For Progress Memo 2, I implemented two model - a null baseline model and a logistic regression classifier.</p>
+<p>A basic preprocessing recipe is used for both models. The recipe removes zero-variance predictors, converts categorical predictors into dummy variables, and normalizes numeric predictors. This setup creates a simple but complete modeling pipeline that can be expanded later with additional model types and feature engineering. Model performance will primarily be evaluated using ROC AUC because it measures the model’s ability to correctly rank outcomes across different probability thresholds. Accuracy is also reported for interpretability. See my r scripts for this work.</p>
 <div class="cell">
 <div id="tbl-model-results" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -2325,12 +2277,12 @@ Table 1: CV performance of the null model and logistic regression model
 <tr class="odd">
 <td style="text-align: left;">Null</td>
 <td style="text-align: right;">0.500</td>
-<td style="text-align: right;">0.500</td>
+<td style="text-align: right;">0.50</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Logistic Regression</td>
-<td style="text-align: right;">0.576</td>
-<td style="text-align: right;">0.653</td>
+<td style="text-align: right;">0.572</td>
+<td style="text-align: right;">0.63</td>
 </tr>
 </tbody>
 </table>
@@ -2342,7 +2294,7 @@ Table 1: CV performance of the null model and logistic regression model
 </section>
 <section id="initial-model-checks" class="level2">
 <h2 class="anchored" data-anchor-id="initial-model-checks">Initial Model Checks</h2>
-<p>Table <a href="#tbl-model-results" class="quarto-xref">Table 1</a> reports the cross-validated performance of the two initial models. The null model produced an accuracy and ROC AUC of 0.50, which represents random guessing. The logistic regression model improved performance, achieving roughly 0.60 accuracy and 0.65 ROC AUC, indicating that the predictors contain real signal. In the context of sports betting, this improvement is meaningful because point spreads are designed so outcomes are close to 50/50, making even small predictive advantages difficult to achieve. In practice, bettors must win roughly 52–53% of bets just to break even, so any model that consistently predicts above 50% suggests a potentially valuable edge and confirms that the modeling pipeline is working.</p>
+<p>Table <a href="#tbl-model-results" class="quarto-xref">Table 1</a> reports the cross-validated performance of the two initial models (null and logistic regression). The null model produced an accuracy and ROC AUC of 0.50, which represents random guessing. The logistic regression model improved performance, achieving roughly 0.60 accuracy and 0.65 ROC AUC, indicating that the predictors contain real signal. In the context of sports betting, this improvement is meaningful because point spreads are designed so outcomes are close to 50/50, making even small predictive advantages difficult to achieve. In practice, bettors must win roughly 52–53% of bets just to break even, so any model that consistently predicts above 50% suggests a potentially valuable edge and confirms that the modeling pipeline is working.</p>
 </section>
 <section id="progress-and-next-steps" class="level2">
 <h2 class="anchored" data-anchor-id="progress-and-next-steps">Progress and Next Steps</h2>

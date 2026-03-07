@@ -293,36 +293,25 @@ Predictors include betting market variables, game context variables, and team pe
 
 Rows with missing values for the key predictor average_total_off_yards were removed to ensure consistent model input. After cleaning, the dataset contains several thousand observations and more than fifteen predictor variables, which satisfies the project complexity requirements.
 
-## Modeling Plan
-
-I split the dataset into training and testing sets using an 80/20 split, stratified by the response variable. Model performance is estimated using 10-fold cross-validation on the training data.
-
-For Progress Memo 2, I implemented two model - a null baseline model and a logistic regression classifier.
-
-A basic preprocessing recipe is used for both models. The recipe removes zero-variance predictors, converts categorical predictors into dummy variables, and normalizes numeric predictors. This setup creates a simple but complete modeling pipeline that can be expanded later with additional model types and feature engineering. Model performance will primarily be evaluated using ROC AUC because it measures the model’s ability to correctly rank outcomes across different probability thresholds. Accuracy is also reported for interpretability.
 
 
 ```{r}
 nrow(tom_cleaned_model_nfl)
 
 ```
-Here is a quick check on rows; I had to remove missingness but I still have enough observations for my dataset. 
+Here is a quick check on rows; I had to remove missingness across certain important predictors but I still have enough observations for my dataset. 
 
 
 
+## Modeling Plan
+
+I split the dataset into training and testing sets using an 80/20 split, stratified by the response variable. Model performance is estimated using 10-fold cross-validation on the training data.
+
+For Progress Memo 2, I implemented two model - a null baseline model and a logistic regression classifier.
+
+A basic preprocessing recipe is used for both models. The recipe removes zero-variance predictors, converts categorical predictors into dummy variables, and normalizes numeric predictors. This setup creates a simple but complete modeling pipeline that can be expanded later with additional model types and feature engineering. Model performance will primarily be evaluated using ROC AUC because it measures the model’s ability to correctly rank outcomes across different probability thresholds. Accuracy is also reported for interpretability. See my r scripts for this work.
 
 
-
-
-```{r}
-count(tom_cleaned_model_nfl, cover)
-```
-This is a great sign, for every no_cover there needs to be a cover.
-
-
-```{r}
-colSums(is.na(tom_cleaned_model_nfl)) |> sort(decreasing = TRUE)
-```
 
 
 
@@ -376,7 +365,6 @@ null_results <- fit_resamples(
 ```
 
 
-## Logistics 
 
 ```{r}
 log_mod <- logistic_reg() |>
@@ -426,7 +414,7 @@ model_results |>
 
 ## Initial Model Checks
 
-Table @tbl-model-results reports the cross-validated performance of the two initial models. The null model produced an accuracy and ROC AUC of 0.50, which represents random guessing. The logistic regression model improved performance, achieving roughly 0.60 accuracy and 0.65 ROC AUC, indicating that the predictors contain real signal. In the context of sports betting, this improvement is meaningful because point spreads are designed so outcomes are close to 50/50, making even small predictive advantages difficult to achieve. In practice, bettors must win roughly 52–53% of bets just to break even, so any model that consistently predicts above 50% suggests a potentially valuable edge and confirms that the modeling pipeline is working.
+Table @tbl-model-results reports the cross-validated performance of the two initial models (null and logistic regression). The null model produced an accuracy and ROC AUC of 0.50, which represents random guessing. The logistic regression model improved performance, achieving roughly 0.60 accuracy and 0.65 ROC AUC, indicating that the predictors contain real signal. In the context of sports betting, this improvement is meaningful because point spreads are designed so outcomes are close to 50/50, making even small predictive advantages difficult to achieve. In practice, bettors must win roughly 52–53% of bets just to break even, so any model that consistently predicts above 50% suggests a potentially valuable edge and confirms that the modeling pipeline is working.
 
 
 ## Progress and Next Steps
