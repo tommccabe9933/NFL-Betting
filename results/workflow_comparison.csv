@@ -1,0 +1,20 @@
+workflow_id,workflow_label,model_type,recipe_family,tuned,roc_auc,roc_auc_std_err,accuracy,hyperparameters,comparison_stage
+ridge_curated,Ridge - Curated,Ridge,Curated,TRUE,0.5530372897663317,0.007041004155253256,0.5438054646574826,penalty=0.03162,official
+enet_curated,Elastic Net - Curated,Elastic net,Curated,TRUE,0.5530103873296996,0.007101461067106935,0.5463539772956814,penalty=0.04217; mixture=0,official
+logistic_curated,Logistic Regression - Curated,Logistic regression,Curated,FALSE,0.5520231473048521,0.0068784579048564685,0.5391615831077714,none,official
+lasso_curated,Lasso - Curated,Lasso,Curated,TRUE,0.5507227928092029,0.0068794942016335865,0.5381118786948383,penalty=1e-04,official
+ridge_basic,Ridge - Basic,Ridge,Basic,TRUE,0.5365910502692579,0.006665667959961957,0.5294099031767193,penalty=0.03162,official
+enet_basic,Elastic Net - Basic,Elastic net,Basic,TRUE,0.5365858425927224,0.006493587422591713,0.5273071277555582,penalty=0.0007499; mixture=0.8333,official
+xgb_basic,XGBoost - Basic,Gradient boosting,Basic,TRUE,0.5365618242280729,0.008327761581230131,0.5182987920656082,trees=250; min_n=3; tree_depth=5; learn_rate=0.001; loss_reduction=10; sample_size=0.5,official
+lasso_basic,Lasso - Basic,Lasso,Basic,TRUE,0.5365588233920423,0.006482866477850696,0.5264069001737163,penalty=0.0007499,official
+logistic_basic,Logistic Regression - Basic,Logistic regression,Basic,FALSE,0.5361098422751241,0.006426662748780336,0.5253598890370191,none,official
+ridge_engineered,Ridge - Engineered,Ridge,Engineered,TRUE,0.5332328928993447,0.007015462468620256,0.5211435650897535,penalty=0.04642,official
+enet_engineered,Elastic Net - Engineered,Elastic net,Engineered,TRUE,0.5331453899218616,0.0070172390769114145,0.5209947615777212,penalty=0.04217; mixture=0,official
+xgb_engineered,XGBoost - Engineered,Gradient boosting,Engineered,TRUE,0.533024924453661,0.008791960203149745,0.5174026043981201,trees=500; min_n=3; tree_depth=2; learn_rate=0.001; loss_reduction=10; sample_size=0.5,official
+lasso_engineered,Lasso - Engineered,Lasso,Engineered,TRUE,0.532039704446842,0.00675794789447111,0.5202500706985012,penalty=0.000536,official
+knn_basic,K-Nearest Neighbors - Basic,K-nearest neighbors,Basic,TRUE,0.530809968847352,0.005805683886480916,0.5175554478245061,neighbors=245,official
+logistic_engineered,Logistic Regression - Engineered,Logistic regression,Engineered,FALSE,0.5307965876874646,0.0066445175427251035,0.518151335191694,none,official
+knn_engineered,K-Nearest Neighbors - Engineered,K-nearest neighbors,Engineered,TRUE,0.5298918998444702,0.006005517465252148,0.5166518536473693,neighbors=501,official
+rf_engineered,Random Forest - Engineered,Random forest,Engineered,TRUE,0.5282928395615277,0.0068145315132734875,0.521306508302024,mtry=2; min_n=80,official
+rf_basic,Random Forest - Basic,Random forest,Basic,TRUE,0.5276894029620705,0.006975005614817948,0.5208627910421633,mtry=2; min_n=60,official
+null_basic,Baseline,Null baseline,Basic,FALSE,0.5,0,0.5184502888538763,none,official

@@ -41,3 +41,11 @@
 # find . -size +100M | sed 's|^\./||g' | cat >> .gitignore; awk '!NF || !seen[$0]++' .gitignore
 
 data/weekly_player_stats_offense.csv
+objects/workflow_results_regularized.rds
+objects/workflow_results.rds
+objects/workflow_results_tree_models.rds
+objects/expanded_workflow_results.rds
+results/workflows/xgb_basic.rds
+results/workflows/xgb_engineered.rds
+data/weekly_player_stats_offense.csv
+# Ignore large files >25MB

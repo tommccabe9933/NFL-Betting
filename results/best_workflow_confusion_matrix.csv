@@ -1,0 +1,5 @@
+Predicted cover,Observed outcome,Count
+cover,cover,220
+no_cover,cover,441
+cover,no_cover,229
+no_cover,no_cover,426

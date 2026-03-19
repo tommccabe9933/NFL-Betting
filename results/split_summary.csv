@@ -1,0 +1,5 @@
+measure,value
+Training rows,2222
+Test rows,1316
+Cross-validation folds,10
+Cross-validation repeats,3

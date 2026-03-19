@@ -1,0 +1,5 @@
+workflow_id,workflow_label,model_type,recipe_family,tuned,roc_auc,roc_auc_std_err,accuracy,brier_class,hyperparameters,comparison_stage
+lasso_basic_refined,Lasso - Basic (Refined),Lasso,Basic,TRUE,0.5366183029980337,0.00650196399796932,0.528057878506309,0.25017528705548475,penalty=0.000631,expanded
+enet_basic_refined,Elastic Net - Basic (Refined),Elastic net,Basic,TRUE,0.5365856324174362,0.006502713283323665,0.5265577236429254,0.25012284008893965,penalty=0.00138; mixture=0.5,expanded
+ridge_engineered_refined,Ridge - Engineered (Refined),Ridge,Engineered,TRUE,0.5333251364971721,0.007032099411010326,0.5239910313901345,0.24965604631494615,penalty=0.05456,expanded
+xgb_basic_refined,XGBoost - Basic (Refined),Gradient boosting,Basic,TRUE,0.5312708365443446,0.00683888501748507,0.5259429833420864,0.26790722289554053,trees=267; min_n=29; tree_depth=8; learn_rate=0.09237; loss_reduction=0.01743; sample_size=0.6897,expanded
