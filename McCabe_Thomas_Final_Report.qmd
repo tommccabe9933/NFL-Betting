@@ -1,0 +1,887 @@
+---
+title: "Predicting NFL Spreads with Machine Learning"
+subtitle: |
+  | Final Project
+  | Data Science 2 with R (STAT 301-2)
+author: "Tom McCabe"
+pagetitle: "Final Project Tom McCabe"
+date: today
+
+format:
+  html:
+    toc: true
+    embed-resources: true
+   
+
+execute:
+  echo: false
+  warning: false
+  message: false
+
+from: markdown+emoji
+reference-location: margin
+citation-location: margin
+---
+
+::: {.callout-tip icon=false}
+## Github Repo Link
+
+[https://github.com/stat301-2-2026-winter/final-project-2-tommccabe9933.git](https://github.com/stat301-2-2026-winter/final-project-2-tommccabe9933.git)
+
+:::
+```{r}
+#| label: setup
+
+library(tidyverse)
+library(tidymodels)
+library(here)
+library(gt)
+library(knitr)
+
+tidymodels_prefer()
+
+# Load from the scripts/ pipeline outputs
+modeling_data <- read_rds(here("objects", "modeling_data.rds"))
+prepared <- read_rds(here("objects", "prepared_modeling_objects.rds"))
+train_data <- prepared$train_data
+test_data <- prepared$test_data
+
+official_comparison <- read_csv(
+  here("results", "official_workflow_comparison.csv"), show_col_types = FALSE
+)
+final_selection <- read_csv(
+  here("results", "final_selection.csv"), show_col_types = FALSE
+)
+test_metrics <- read_csv(
+  here("results", "test_metrics.csv"), show_col_types = FALSE
+)
+conf_mat_data <- read_csv(
+  here("results", "best_workflow_confusion_matrix.csv"), show_col_types = FALSE
+)
+split_summary <- read_csv(
+  here("results", "split_summary.csv"), show_col_types = FALSE
+)
+best_predictions <- read_rds(
+  here("objects", "best_workflow_test_predictions.rds")
+)
+
+selected_metrics <- test_metrics |> filter(workflow_label != "Baseline") |> slice_head(n = 1)
+baseline_metrics <- test_metrics |> filter(workflow_label == "Baseline") |> slice_head(n = 1)
+
+coef_data <- read_csv(
+  here("results", "model_coefficients.csv"), show_col_types = FALSE
+)
+workflow_results <- read_rds(here("objects", "workflow_results.rds"))
+```
+
+## Introduction
+
+My goal for this project is to further my skills as an aspiring employee of an NFL Team or sportsbook and investigate why so many young men and women lose money sports betting. Sports betting has grown into a multi-billion dollar industry and the terms "spread" and "cover" get thrown aronud a lot. This is because the point spread serving as the most popular way to wager on NFL games. A point spread represents the market's best estimate of the expected margin of victory. If a team is favored by 7 points, they must win by more than 7 to "cover" the spread. Despite the efficiency of betting markets, there remains a compelling question: can structured statistical features (team performance metrics, defensive statistics, and game context) capture predictive signal beyond what the market already prices in?
+
+I wanted to challenge myself for this project and take it a step further; I ask a narrower and more difficult question than simply whether team statistics relate to game outcomes: can publicly available team-level performance and game-context variables improve prediction of whether the closing favorite covers the spread, beyond what is already summarized by the betting market itself? 
+
+Framed this way, the task is a binary classification problem in a setting where the benchmark is unusually strong, because the closing spread already aggregates large amounts of public information about team strength, injuries, matchup quality, and game environment. Any predictive success therefore depends not on finding variables associated with winning in general, but on identifying information that remains incrementally useful after the market has already priced most of it in.
+
+The data used for this analysis spans NFL regular season games from 2012 to 2024 and is sourced from three complementary public datasets on Kaggle: team-level offensive statistics, team-level defensive statistics, and historical game results with betting lines.
+
+## Data Overview
+
+My dataset wrangling was the toughest part of the project;it was assembled from four separate sources and required substantial wrangling in `scripts/01_build_model_data.R`. Weekly team-level offensive and defensive statistics from Kaggle were joined to historical game results with betting lines from Spreadspoke, and then enriched with play-by-play EPA, success rate, and CPOE metrics computed from raw NFLverse data via `nflreadr`. On top of those joins, I built custom features using online resources, an iterative Elo rating system that tracks team strength game-by-game, lagged rolling 5-game and 3-game averages for efficiency metrics, momentum differentials, and rest/schedule context derived from game dates. The data was then restructured from a per-team format into a per-game, favorite-vs-underdog perspective. After removing pushes and incomplete records, the result is `r nrow(modeling_data)` game observations with `r ncol(modeling_data) - 3` predictor variables spanning the 2012 to 2024 NFL regular seasons.
+
+### Target Variable
+
+My outcome variable is whether the closing favorite covered the point spread. After removing a small number of "push" outcomes (where the margin exactly equals the spread), the dataset contains `r nrow(modeling_data)` game observations. The classes are well balanced, with approximately 50% of outcomes in each category, as shown in @fig-target-dist.
+
+```{r}
+#| label: fig-target-dist
+#| fig-cap: "Distribution of the target variable (spread coverage outcome)"
+
+modeling_data |>
+  ggplot(aes(x = fav_cover, fill = fav_cover)) +
+  geom_bar() +
+  scale_x_discrete(labels = c("cover" = "Covers Spread", "no_cover" = "Does Not Cover")) +
+  scale_fill_manual(
+    values = c("cover" = "#2a9d8f", "no_cover" = "#e9c46a"),
+    labels = c("cover" = "Cover", "no_cover" = "Does Not Cover")
+  ) +
+  labs(x = "Outcome", y = "Count", fill = "Outcome") +
+  theme_minimal(base_size = 12)
+```
+
+### Missingness
+
+After my cleaning process and joining together these datasets variables have complete data. The notable exception I saw was humidity, which is missing for approximately 88% of observations. This is expected, since many NFL games are played in domed stadiums or in conditions where humidity is not recorded. Rather than dropping these observations, median imputation was used to handle this missingness across all recipes.
+
+### Predictors
+
+My modeling dataset includes `r ncol(modeling_data) - 3` predictors, excluding the game identifier and season/week fields, and these variables were chosen to capture several distinct sources of possible "edge" in the betting market. Betting context variables such as the favorite's closing spread and the over/under line represent the market's prior belief about team strength and expected scoring environment. After some online research, I fleshed out that Elo rating differential serves as an independent summary of relative team quality based on historical performance. Offensive and defensive efficiency measures, including yards per play, pass and rush efficiency, points per play, and EPA differentials, aim to capture underlying team performance at a more structural level than final scores alone. Rolling 5-game features were included to represent short-run form and momentum that season-long averages may smooth away. 
+
+Also, some minor predictors but I think schedule and context variables, such as rest differential, short-week indicators, and neutral-site flags, were intended to capture situational factors that may affect performance but may not be fully absorbed by the market. 
+
+## Methods
+
+### Data Splitting
+
+The data was split by season of the NFL: games to form the training set (`r nrow(train_data)` observations) and games from 2021 onward form the held-out test set (`r nrow(test_data)` observations), as shown in @tbl-split-summary. I thought having the most recent seasons as testing data was the best for presenting this one-day, but I don't believe that time is an important factor (unlike a project tracking like stock prices over days, so I still felt that this was an OK project/within the mandate). The split was chosen over a random split because NFL team performance evolves over time as rosters change, coaching strategies shift, and league-wide trends (such as the increase in passing efficiency) alter the statistical landscape. As we work on in class, ten-fold cross-validation with 3 repeats, stratified by the outcome, was used for model evaluation during tuning to produce stable performance estimates given the moderate sample size.
+
+```{r}
+#| label: tbl-split-summary
+#| tbl-cap: "Train/test split summary"
+
+split_summary |>
+  gt() |>
+  fmt_number(columns = where(is.numeric), decimals = 0)
+```
+
+### Recipes
+
+Three distinct preprocessing recipes were developed, each with variants appropriate for linear and tree-based models:
+
+**Recipe 1 (Kitchen Sink):** My baseline recipe includes all predictors with minimal preprocessing: median imputation for missing values, removal of zero-variance predictors, dummy encoding of categorical variables, and normalization for linear models. The tree-based variant omits normalization and dummy encoding since tree models handle these natively. As we learned The purpose of this recipe is to establish a baseline: given every available feature, how well can each model type perform without any hand-crafted feature engineering? Our actual baseline is my head is a coinflip, because when lines are set, it is set at near a 50.50.
+
+**Recipe 2 (Feature Engineered):** My engineered recipe extends the kitchen sink specification by adding a small set of domain-motivated interaction for looking at football and transformation features designed to test whether football context improves prediction beyond raw team differentials alone. A market pressure term, defined as the spread multiplied by the over/under line, was included to represent games in which the favorite is expected to win comfortably in a high-scoring environment, a setting that may create different covering dynamics than low-total games. A wind-cold interaction was added because weather may matter most when multiple adverse conditions occur simultaneously rather than in isolation. A strength signal combining Elo and offensive efficiency differentials was intended to capture cases where both a long-run rating system and current on-field efficiency point in the same direction. A market signal gap, defined as the difference between the Elo-implied spread and the actual closing spread, was included to test whether discrepancies between model-based team strength and the betting market contain exploitable information. Together, these engineered features were meant to evaluate whether domain-guided representation of matchup context could outperform a simpler all-predictors approach.
+
+**Recipe 3 (Curated):** This extra, for fun, recipe was designed late in the project by myself after I struggled to find an edge in the training data. I wanted to see if in a low-signal prediction setting, removing weak or redundant predictors may improve generalization more than adding complexity. Using training-data results from the broader feature set as guidance, I tried to retain only the 10 predictors that appeared most consistently informative across the initial regularized linear fits, including rolling offensive momentum, yards per play differential, turnover differential, underdog recent scoring, temperature, offensive and defensive EPA differentials, Elo rating differential, turnover momentum, and success rate differential. Importantly, this selection was derived using training data only, and the goal was to evaluate whether concentrating model capacity on the strongest candidate signals would reduce noise and improve out-of-sample discrimination. This recipe was treated as a separate recipe comparison rather than post hoc cherry-picking of the winning model, and was applied only to the fast regularized linear models (logistic, lasso, ridge, elastic net),
+
+### Model Types
+
+The big 8 model types were evaluated across `r nrow(official_comparison)` official workflows (each model type paired with both recipes where applicable). 
+
+1. **Null model:** A baseline that always predicts the most frequent class, establishing the floor for comparison. Any useful model must outperform this benchmark.
+2. **Logistic regression:** A standard linear classifier included as the simplest reasonable model. If the relationship between predictors and outcome is approximately linear, logistic regression should perform competitively without regularization.
+3. **Lasso regression:** L1 regularized logistic regression that can zero out uninformative predictors. Included because the dataset contains 27 predictors, many of which may be noise. Lasso's built-in variable selection is valuable in this setting. The penalty strength was tuned.
+4. **Ridge regression:** L2 regularized logistic regression that shrinks coefficients toward zero without eliminating them. Unlike Lasso, Ridge retains all predictors but reduces their influence, which is appropriate when many features contribute small amounts of signal. The penalty strength was tuned.
+5. **Elastic net:** Combines L1 and L2 penalties, offering a middle ground between Lasso's sparsity and Ridge's coefficient shrinkage. Both the penalty strength and mixing parameter were tuned to let the data determine the optimal balance.
+6. **K-nearest neighbors:** Our non-parametric method included to test whether local patterns in the feature space capture information that linear models miss. The number of neighbors was tuned.
+7. **Random forest:** RF potentially captures non-linear relationships and feature interactions without explicit engineering. Included to test whether the true decision boundary is non-linear. The number of randomly selected predictors and minimum node size were tuned.
+8. **Boosted tree (XGBoost):** The longest to run,  sequential ensemble that builds trees to correct previous errors, often the top performer in structured data competitions.My number of trees, tree depth, learning rate, minimum node size, loss reduction, and sample proportion were all tuned.
+
+### Tuning Ranges and Grid Design
+
+Tuning ranges were selected deliberately rather than left at narrow defaults, with the goal of giving each model a reasonable chance to succeed while keeping comparisons fair across recipes. Because this is a low-signal prediction problem where the market already prices in most public information, I expected that optimal hyperparameters would lean toward heavy regularization and conservative complexity. For the faster model classes (regularized linear models, KNN), broader or denser searches were feasible, while slower models (Random Forest, XGBoost) required more limited but still informative grids. I also adjusted several ranges after early results indicated that optimal values were occurring at search boundaries, since a boundary hit suggests the original range may have been too restrictive and the model had not yet found its true optimum:
+
+- **Lasso and Ridge:** The penalty parameter was searched on a log-10 scale from 10^-5^ to 10^0.5^ across 10 levels. This wide range spans from very light regularization (nearly unpenalized logistic regression) to heavy regularization (coefficients shrunk close to zero), allowing the data to determine how much shrinkage is appropriate for this noisy prediction task.
+- **Elastic Net:** Both the penalty (10 levels, same range as Lasso/Ridge) and the mixture parameter (5 levels from 0 to 1) were tuned, producing 50 configurations per recipe. The mixture parameter lets the model determine whether pure Ridge (mixture = 0), pure Lasso (mixture = 1), or a blend works best. This flexibility is important because it is not obvious a priori whether variable selection or uniform shrinkage is more appropriate here.
+- **K-Nearest Neighbors:** The number of neighbors was searched from 15 to 501 across 20 levels. The lower bound of 15 avoids the instability of very small neighborhoods in a noisy domain, while the upper bound was set at 501 because early exploration showed the optimal value exceeding 200, indicating this task requires extensive averaging across neighbors to overcome observation-level noise.
+- **Random Forest:** The number of randomly selected predictors was tuned from 2 to 27 (the full set), and the minimum node size from 3 to 80. The wide node size range tests whether the model benefits from deep, granular trees or shallow, regularized trees. A space-filling grid of 15 combinations per recipe was used to efficiently explore this two-dimensional space.
+- **XGBoost:** Six parameters were tuned: trees (250–750), depth (1–6), learning rate (10^-3^ to 10^0^), minimum node size (3–80), loss reduction (0–2), and sample proportion (0.5–1.0). The learning rate range was deliberately extended to 1.0 to confirm that conservative rates outperform aggressive ones in this low-signal domain. The resulting regular grid produced 324 configurations per recipe.
+
+In total, over 1,000 unique hyperparameter configurations were evaluated across all model types and recipes. All tuned models used 10-fold cross-validation with 3 repeats, stratified by the outcome, and parallel processing was enabled to handle these computationally intensive grid searches.
+
+### Evaluation Metric
+
+The primary metric for model comparison and selection is the area under the ROC curve (ROC AUC). ROC AUC was chosen over accuracy for two reasons. First, accuracy depends on the classification threshold (typically 0.5), but in a betting context the optimal threshold may differ. ROC AUC evaluates discriminative ability across all thresholds. Second, although the classes are nearly balanced here, ROC AUC is more sensitive to the model's probabilistic calibration, which matters when even small improvements in predicted probabilities can translate to a financial edge. Accuracy is reported as a secondary metric for interpretability.
+
+## Model Building & Selection
+
+@tbl-model-comparison presents the cross-validated performance of all `r nrow(official_comparison)` official workflows, sorted by ROC AUC. The top four workflows all use the Curated recipe, led by Ridge - Curated with a cross-validated ROC AUC of `r round(official_comparison$roc_auc[[1]], 4)` and accuracy of `r round(official_comparison$accuracy[[1]], 4)`. The fact that Curated recipe models consistently outrank their Kitchen Sink and Engineered counterparts is one of the clearest signals in the results.
+
+```{r}
+#| label: tbl-model-comparison
+#| tbl-cap: "Cross-validated performance of all official workflows, sorted by ROC AUC"
+
+official_comparison |>
+  select(workflow_label, model_type, recipe_family, tuned, roc_auc, accuracy, hyperparameters) |>
+  gt() |>
+  cols_label(
+    workflow_label = "Workflow",
+    model_type = "Model Type",
+    recipe_family = "Recipe",
+    tuned = "Tuned",
+    roc_auc = "ROC AUC",
+    accuracy = "Accuracy",
+    hyperparameters = "Optimal Parameters"
+  ) |>
+  fmt_number(columns = c(roc_auc, accuracy), decimals = 4) |>
+  tab_style(
+    style = cell_fill(color = "#d4ede3"),
+    locations = cells_body(rows = 1)
+  )
+```
+
+### Tuning Parameter Analysis
+
+@tbl-tuning-summary presents the optimal hyperparameters selected for each tuned workflow. The leading tuned workflow's autoplot is shown in @fig-winner-autoplot, and autoplots for all other tuned models can be found in the Appendix (@sec-appendix-tuning).
+
+```{r}
+#| label: tbl-tuning-summary
+#| tbl-cap: "Optimal hyperparameters for all tuned workflows, sorted by ROC AUC"
+
+official_comparison |>
+  filter(tuned) |>
+  select(workflow_label, recipe_family, roc_auc, hyperparameters) |>
+  gt() |>
+  cols_label(
+    workflow_label = "Workflow",
+    recipe_family = "Recipe",
+    roc_auc = "ROC AUC",
+    hyperparameters = "Optimal Hyperparameters"
+  ) |>
+  fmt_number(columns = roc_auc, decimals = 4)
+```
+
+```{r}
+#| label: fig-winner-autoplot
+#| fig-cap: "Tuning parameter performance for the leading tuned workflow"
+
+autoplot(workflow_results[[final_selection$workflow_id[[1]]]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+Notable observations from the tuning analysis (@tbl-tuning-summary):
+
+- **KNN**: The optimal number of neighbors was very high (245 for the Basic recipe and 501 for the Engineered recipe), reflecting the noisy, low-signal nature of this prediction task. Heavy smoothing performs best when individual observations carry little predictive information.
+- **Random Forest**: The optimal configuration used very few randomly selected predictors (2 out of 27) and high minimum node sizes (60 for Basic, 80 for Engineered), indicating the model benefits from maximum regularization to avoid overfitting to noise.
+- **XGBoost**: Conservative learning rates (0.001) and relatively shallow trees (depth 2–5) were preferred, consistent with limited predictive signal. Both recipes selected the minimum learning rate in the grid, confirming that slow, cautious learning works best in this domain.
+- **Regularized linear models**: As shown in @tbl-tuning-summary, Ridge, Lasso, and Elastic Net all performed similarly at the top of the rankings with ROC AUC values between 0.53 and 0.55. Notably, the Curated recipe (retaining only the top 10 predictors) consistently outperformed both the Kitchen Sink and Engineered recipes, confirming that removing noisy features improves discrimination in this low-signal domain.
+
+The tuning results reveal a consistent pattern about model behavior in this problem. KNN's preference for very large neighborhoods, Random Forest's preference for few predictors and large minimum node sizes, and XGBoost's preference for conservative learning rates all point in the same direction: aggressive nonlinear fitting is not rewarded. Most importantly, the regularized linear models occupied the top of the performance table across recipes, implying that whatever predictive information exists is likely modest, diffuse, and closer to additive than strongly interaction-driven.
+
+### Model Selection
+
+The final model was selected as the workflow with the highest cross-validated ROC AUC, which was **`r final_selection$workflow_label[[1]]`** with a training ROC AUC of `r round(final_selection$training_roc_auc[[1]], 4)` and accuracy of `r round(final_selection$training_accuracy[[1]], 4)`. The fact that a regularized linear model using a reduced predictor set outperformed the more complex tree-based and boosted models is informative in itself. It suggests that this task does not reward flexible nonlinear decision rules as much as it rewards noise control and stable estimation. In other words, the strongest available signal appears to come from a relatively small number of moderately informative features whose effects are better combined through shrinkage than through complex partitioning of the feature space. That result is also consistent with an efficient-market setting, where any remaining signal is likely weak and easily overwhelmed by overfitting. 
+
+To cabeat, I was always a bit wary of this result, given that I took the best model after my curated variables which possibly overfitted it.
+
+## Final Model Analysis
+
+The selected model was fit on the full training set and evaluated on the held-out test set (games from 2021 onward). @tbl-final-metrics compares the selected model's performance against the null baseline on the `r nrow(test_data)` test games.
+
+```{r}
+#| label: tbl-final-metrics
+#| tbl-cap: "Final model performance on the test set compared to baseline"
+
+test_metrics |>
+  select(workflow_label, roc_auc, accuracy, sensitivity, specificity) |>
+  gt() |>
+  cols_label(
+    workflow_label = "Model",
+    roc_auc = "ROC AUC",
+    accuracy = "Accuracy",
+    sensitivity = "Sensitivity",
+    specificity = "Specificity"
+  ) |>
+  fmt_number(columns = c(roc_auc, accuracy, sensitivity, specificity), decimals = 4)
+```
+
+### Confusion Matrix
+
+@tbl-conf-mat shows the confusion matrix for my final model's predictions on the test set. The model was conservative in assigning games to the "favorite covers" class. It identified non-covers more successfully than covers, producing a specificity of `r round(selected_metrics$specificity[[1]], 4)` but a sensitivity of only `r round(selected_metrics$sensitivity[[1]], 4)`. Put differently, the model correctly flagged roughly two-thirds of non-covers while missing most actual covers. This asymmetry is consistent with the predicted-probability distributions shown in @fig-pred-dist: because the model assigns many games probabilities close to 0.5, relatively few observations are pushed far enough above the decision threshold to generate confident positive predictions. The result is a classifier that offers limited practical usefulness even though it was the strongest workflow during resampling.
+
+```{r}
+#| label: tbl-conf-mat
+#| tbl-cap: "Confusion matrix for the final model on the test set"
+
+conf_mat_data |>
+  mutate(across(where(is.character), ~ recode(., cover = "Covers", no_cover = "Does Not Cover"))) |>
+  pivot_wider(names_from = `Observed outcome`, values_from = Count) |>
+  gt() |>
+  cols_label(`Predicted cover` = "Predicted") |>
+  tab_spanner(label = "Actual Outcome", columns = c(Covers, `Does Not Cover`))
+```
+
+
+### ROC Curve
+
+@fig-roc-curve displays an ROC curve for the final model as we talked about in class. This shows the trade-off between sensitivity and specificity across all classification thresholds.
+
+```{r}
+#| label: fig-roc-curve
+#| fig-cap: "ROC curve for the final model on the test set"
+
+roc_data <- best_predictions |>
+  roc_curve(truth = fav_cover, .pred_cover)
+
+roc_data |>
+  ggplot(aes(x = 1 - specificity, y = sensitivity)) +
+  geom_path(color = "#2a9d8f", linewidth = 1) +
+  geom_abline(lty = 2, color = "gray50") +
+  coord_equal() +
+  labs(x = "1 - Specificity (False Positive Rate)",
+       y = "Sensitivity (True Positive Rate)") +
+  theme_minimal(base_size = 12)
+```
+
+### Predictions vs. Truth
+
+My @fig-pred-dist shows the distribution of predicted probabilities for games the favorite actually covered versus games it did not. In a highly discriminative model, these two distributions would be well separated. Here, the near-complete overlap confirms that the model assigns similar probabilities to both outcomes, consistent with the difficulty of predicting against an efficient market.
+
+```{r}
+#| label: fig-pred-dist
+#| fig-cap: "Distribution of predicted probabilities by true outcome. The heavy overlap indicates the model struggles to confidently separate covers from non-covers."
+
+best_predictions |>
+  ggplot(aes(x = .pred_cover, fill = fav_cover)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(
+    values = c("cover" = "#2a9d8f", "no_cover" = "#e9c46a"),
+    labels = c("cover" = "Cover", "no_cover" = "Does Not Cover")
+  ) +
+  labs(x = "Predicted Probability of Covering",
+       y = "Density",
+       fill = "True Outcome") +
+  theme_minimal(base_size = 12)
+```
+
+### Practical ROI Simulation
+
+This is my most depressing graph. To evaluate whether statistical performance translated into betting value, @fig-roi-simulation presents a simple fixed-stake wagering simulation on the holdout games using standard -110 sportsbook odds, with each wager risking $110 to win $100. A model-based bet was placed on every test-set game where the classifier predicted that the favorite would cover (predicted probability above the 0.5 threshold), bet sizes were held constant, and pushes were excluded from the dataset during preprocessing. This simulation is not intended as a fully optimized betting strategy, but rather as a practical benchmark against naive alternatives under realistic vig. Under these odds, a bettor needs to win roughly 52.4% of wagers to break even. While my best testing model would've done great on the testing data, I need to test some more models on this new dat .
+
+```{r}
+#| label: fig-roi-simulation
+#| fig-cap: "Simulated cumulative profit/loss on held-out test games under standard -110 sportsbook odds, comparing the model against random and always-pick-favorite strategies."
+
+include_graphics(here("figures", "roi_simulation.png"))
+```
+
+In short, my project is currently fascinating and taught me a lot, but unsuccessful The results profit curve shows that the selected model did not generate a sustained financial edge, ultimately performing similarly to the naive baselines. This reinforces the core conclusion: modest cross-validated discrimination did not translate into economically meaningful out-of-sample decision quality.
+
+### Holdout Performance Interpretation
+
+Although `r final_selection$workflow_label[[1]]` was my strongest model during resampling, its performance did not carry forward to the holdout period. As shown in @tbl-final-metrics, my test ROC AUC fell to `r round(selected_metrics$roc_auc[[1]], 4)` and accuracy to `r round(selected_metrics$accuracy[[1]], 4)`, both essentially at or below the baseline ROC AUC of `r round(baseline_metrics$roc_auc[[1]], 4)` and baseline accuracy of `r round(baseline_metrics$accuracy[[1]], 4)`. This sharp decline from my cross-validated training ROC AUC of `r round(final_selection$training_roc_auc[[1]], 4)` suggests that the structure identified during cross-validation did not represent a stable predictive edge that generalized to future seasons.
+
+In practical terms, the result implies that publicly available team-level summary features and game context variables, at least in the form used here, do not contain durable out-of-sample information strong enough to beat the closing spread. I think I need to work harda nd keep tinkering away with high signal versus nosey variables as I show below. 
+
+As we know, NFL point spreads are set by professional oddsmakers who have access to far more information than the public statistics used here, including injury reports, weather forecasts, sharp money movement, and proprietary power ratings. The very features we use as predictors are already reflected in the spread I faer. More broadly, the finding reinforces the difficulty of predictive modeling in efficient-market domains, where weak in-sample gains can disappear once the data shift forward in time.
+
+
+### Key Drivers of Model Predictions
+
+@fig-coef-importance displays the standardized coefficients from the selected ridge model, which allow relative comparison of predictor importance because all retained inputs were placed on a common scale. These coefficients should be interpreted as directional associations with the log-odds of the favorite covering, conditional on the other predictors in the model, rather than as causal effects. The largest positive signals came from yards per play differential, temperature, and the favorite's recent rolling yards per play, while the strongest negative signals included recent underdog scoring, turnover differential, and several EPA-based terms. 
+
+```{r}
+#| label: fig-coef-importance
+#| fig-cap: "Standardized coefficients for the selected model. Positive values increase the probability that the favorite covers; negative values decrease it. Features are sorted by absolute effect size."
+#| fig-height: 6
+
+has_se <- "std.error" %in% names(coef_data)
+
+coef_plot_data <- coef_data |>
+  filter(estimate != 0) |>
+  slice_max(abs(estimate), n = 15) |>
+  mutate(label = reorder(label, abs(estimate)))
+
+if (has_se) {
+  coef_plot_data <- coef_plot_data |>
+    mutate(
+      ci_lower = estimate - 1.96 * std.error,
+      ci_upper = estimate + 1.96 * std.error,
+      significant = p.value < 0.10
+    )
+}
+
+p <- ggplot(coef_plot_data, aes(x = estimate, y = label)) +
+  geom_vline(xintercept = 0, color = "grey60", linewidth = 0.6)
+
+if (has_se) {
+  p <- p +
+    geom_errorbarh(
+      aes(xmin = ci_lower, xmax = ci_upper),
+      height = 0.25, color = "grey50", linewidth = 0.4
+    ) +
+    geom_point(aes(color = direction, shape = significant), size = 3.5) +
+    scale_shape_manual(
+      values = c("TRUE" = 16, "FALSE" = 1),
+      labels = c("TRUE" = "p < 0.10", "FALSE" = "p >= 0.10"),
+      name = "Significance"
+    )
+} else {
+  p <- p +
+    geom_point(aes(color = direction), size = 3.5)
+}
+
+p +
+  scale_color_manual(
+    values = c(
+      "Increases Cover Probability" = "#264653",
+      "Decreases Cover Probability" = "#e76f51"
+    )
+  ) +
+  labs(
+    x = "Standardized Coefficient",
+    y = NULL,
+    color = "Direction"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "bottom",
+    legend.box = "horizontal",
+    panel.grid.major.y = element_line(color = "grey92"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+## Conclusion
+
+This project developed and compared `r nrow(official_comparison)` predictive workflows across 8 model types and 3 recipe families to test whether publicly available NFL team-level statistics and game-context features could predict whether the closing favorite would cover the spread. The main substantive finding is not that one model achieved a large edge, but that even the strongest cross-validated workflow failed to generalize to future seasons. Regularized linear models consistently outperformed more flexible nonlinear alternatives during resampling, and the best recipe was the curated specification that reduced the predictor set to the strongest candidate signals. However, the selected **`r final_selection$workflow_label[[1]]`** produced holdout performance essentially equal to baseline (@tbl-final-metrics), indicating that the closing spread remains a very difficult benchmark to beat with publicly available summary data alone.
+
+How can I generalize and have a higher signal model is my big question. 
+
+Three key findings emerged from the model comparison:
+
+1. **Which model type performed best?** As shown in @tbl-model-comparison, the regularized linear models (Ridge, Elastic Net, Lasso) performed best, with Ridge regression achieving the highest cross-validated ROC AUC of `r round(official_comparison$roc_auc[[1]], 4)`. The tree-based models (Random Forest, XGBoost) and KNN did not outperform the linear approaches, likely because the limited signal in this domain does not benefit from the added flexibility of non-linear methods.
+
+2. **Was the feature-engineered recipe worth the extra work?** No. The Engineered recipe with domain-specific interactions (market pressure, wind-cold, strength signal) consistently underperformed the simpler Kitchen Sink recipe across all model types. For example, Ridge - Basic achieved an ROC AUC of `r round(official_comparison |> dplyr::filter(workflow_label == "Ridge - Basic") |> dplyr::pull(roc_auc), 4)` while Ridge - Engineered achieved only `r round(official_comparison |> dplyr::filter(workflow_label == "Ridge - Engineered") |> dplyr::pull(roc_auc), 4)`. The interaction features introduced noise rather than signal.
+
+3. **Did the curated feature selection help?** Yes. The Curated recipe, which retained only the 10 strongest predictors identified from the initial modeling round, outperformed both other recipes across all regularized model types (@tbl-tuning-summary). By removing weak and noisy features, the models could focus on the genuine predictive signal. This demonstrates that thoughtful variable selection based on initial results can meaningfully improve performance, even for a difficult prediction task.
+
+Taken together, these findings paint a consistent picture: in an efficient-market domain, simpler models with fewer, stronger features outperform complex alternatives during training, but even the best specification does not survive a temporal shift to future seasons. The most defensible interpretation is that public team-level features do not contain durable edge against the closing spread, and that any cross-validated advantage reflected noise or era-specific patterns rather than stable predictive relationships.
+
+### Future Work
+
+I think that my negative holdout result does not make the project unsuccessful; instead, it clarifies where additional predictive value would likely need to come from. Future improvements would require either richer information than the market fully prices in, a modeling design better adapted to time variation across NFL eras, or a different prediction target that more directly captures disagreement with the spread rather than cover outcome alone. Here aer some ideas I have on specific directions could improve upon this analysis:
+
+
+**Explore player-level features.** This project uses team-level aggregates, but quarterback quality, key defensive absences, and positional matchups often drive game outcomes in ways that team averages obscure. Integrating player-level data from sources like Pro Football Reference or NFL Next Gen Stats could capture these effects.
+
+ **Model the spread itself rather than coverage.** An alternative framing would predict the actual game margin and compare it to the spread, treating this as a regression problem. This could reveal games where the model disagrees with the market by a large margin, potentially identifying higher-confidence betting opportunities.
+
+**Investigate line movement as a feature.** The difference between the opening and closing spread reflects new information entering the market. Games where the line moves significantly may be more predictable because the closing spread may lag behind the information that sharp bettors have already acted on.
+
+## Comment on Generative AI Use
+
+Following the rules of our syllabus, "IN THIS COURSE, GENERATIVE AI RESOURCES ARE encouraged to be used by students with the purpose of supporting their learning", Generative AI tools were used in a limited support role during this project to give me some interesting variables I could work with when I made the models and help me re-learn how to use R functions along with my cited online learning resources. I took on a pretty advanced data wrangling project because this is something I want to bring to interviews with NFL teams and sports betting companies. 
+
+I did not want to use GenAI learning help when making my models because that is what we learned in this class; to make this more marketable to employers for the initial wrangling, I needed to be taught how to make things like an iterative Elo computation from scratch that tracks ratings game-by-game across 12+ seasons with seasonal regression. I also used it as a learning resource on Script 01 to teach me how to write code that helps combine the Kaggle/Spreadspoke data with the live play-by-play data via nflreadr, then computes EPA, success rate, and CPOE metrics from raw play-level data as well as using rolling season averages. I also learned about a bundling strategy for organizing model workflows into modular groups, which allowed me to reuse a single fitting function across all model families from mostly online resources. To emphasize, while I could've done this project with a much simpler dataset and just write out the modeling, I wanted to challenge myself with more extracurricular wrangling to make this a cooler project. I also spent a lot of time researching online to learn about new R functions and new data science strategies. 
+
+## References
+
+Cantalupa, N. (n.d.). *NFL Team Data 2003–2023*. Kaggle.  
+[https://www.kaggle.com/datasets/nickcantalupa/nfl-team-data-2003-2023](https://www.kaggle.com/datasets/nickcantalupa/nfl-team-data-2003-2023)
+
+Spreadspoke. (n.d.). *NFL Scores and Betting Data*. Kaggle.  
+[https://www.kaggle.com/datasets/tobycrabtree/nfl-scores-and-betting-data](https://www.kaggle.com/datasets/tobycrabtree/nfl-scores-and-betting-data)
+
+Hyde, P. (n.d.). *NFL Stats 2012–2024*. Kaggle.  
+[https://www.kaggle.com/datasets/philiphyde1/nfl-stats-2012-2024](https://www.kaggle.com/datasets/philiphyde1/nfl-stats-2012-2024)
+
+NFelo. (n.d.). *NFL power ratings*.  
+[https://www.nfeloapp.com/nfl-power-ratings/](https://www.nfeloapp.com/nfl-power-ratings/)
+
+Congelio, B. (n.d.). *NFL analytics with R: Advanced methods*.  
+[https://bradcongelio.com/nfl-analytics-with-r-book/05-nfl-analytics-advanced-methods.html](https://bradcongelio.com/nfl-analytics-with-r-book/05-nfl-analytics-advanced-methods.html)
+
+ScienceDirect article on sports prediction.  
+[https://www.sciencedirect.com/science/article/pii/S2772662223001364](https://www.sciencedirect.com/science/article/pii/S2772662223001364)
+
+Samford Sports Analytics. (2023). *How I built a competitive NFL prediction model*.  
+[https://www.samford.edu/sports-analytics/fans/2023/How-I-Built-a-Competitive-NFL-Prediction-Model-with-Only-Five-Statistics](https://www.samford.edu/sports-analytics/fans/2023/How-I-Built-a-Competitive-NFL-Prediction-Model-with-Only-Five-Statistics)
+
+*Introduction to R Loops*.  
+[https://intro2r.com/loops.html](https://intro2r.com/loops.html)
+
+RStudio Bundling. *bundle: Bundle an HTML document with its external resources*.  
+[https://rstudio.github.io/bundle/reference/bundle.html](https://rstudio.github.io/bundle/reference/bundle.html)
+
+Tidymodels. *workflowsets: option_add reference*.  
+[https://workflowsets.tidymodels.org/reference/option_add.html](https://workflowsets.tidymodels.org/reference/option_add.html)
+
+Tidymodels. *dials: grid_space_filling reference*.  
+[https://dials.tidymodels.org/reference/grid_space_filling.html](https://dials.tidymodels.org/reference/grid_space_filling.html)
+
+nflverse.  
+[https://github.com/nflverse](https://github.com/nflverse)
+
+## Appendix: EDA {#sec-appendix-eda}
+
+The following exploratory analyses were conducted on the training data only. These visualizations informed the feature engineering decisions described in the Methods section, particularly the development of the Curated recipe.
+
+```{r}
+#| label: eda-load-engineered
+engineered_train <- read_rds(here("objects", "prepared_modeling_objects.rds"))$train_data
+```
+
+### Point Spread Distribution
+
+The spread distribution shows near-complete overlap between games the favorite covered and those it did not, confirming that the spread alone is a weak separator because the market already prices in most public information.
+
+```{r}
+#| label: fig-spread-dist
+#| fig-cap: "Distribution of favorite point spread by coverage outcome. The near-complete overlap suggests the market line alone does not cleanly separate covers from non-covers."
+
+engineered_train |>
+  ggplot(aes(x = spread_fav, fill = fav_cover)) +
+  geom_density(alpha = 0.5) +
+  scale_fill_manual(
+    values = c("cover" = "#2a9d8f", "no_cover" = "#e9c46a"),
+    labels = c("cover" = "Cover", "no_cover" = "Does Not Cover")
+  ) +
+  labs(x = "Favorite Point Spread", y = "Density", fill = "Outcome") +
+  theme_minimal(base_size = 12)
+```
+
+### Elo Rating Differential
+
+After a kit if work, this Elo differential provides a team-strength signal independent of the betting market. The plot below bins games by Elo gap and shows the favorite's cover rate in each bin. Cover rates hover near 50% across most bins, suggesting Elo alone provides limited edge, consistent with markets already incorporating team strength.
+
+```{r}
+#| label: fig-elo-diff
+#| fig-cap: "Elo rating differential between favorite and underdog, grouped by coverage outcome. Elo ratings are calculated from historical game results and provide a strength-of-team signal independent of the betting market."
+
+engineered_train |>
+  mutate(
+    elo_bin = cut(elo_diff, breaks = seq(-200, 400, by = 50), include.lowest = TRUE)
+  ) |>
+  filter(!is.na(elo_bin)) |>
+  group_by(elo_bin) |>
+  summarize(
+    cover_rate = mean(fav_cover == "cover"),
+    n = n(),
+    .groups = "drop"
+  ) |>
+  ggplot(aes(x = elo_bin, y = cover_rate, size = n)) +
+  geom_point(color = "#264653", alpha = 0.8) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "grey50") +
+  scale_y_continuous(labels = scales::percent, limits = c(0.3, 0.7)) +
+  labs(
+    x = "Elo Rating Differential (Favorite − Underdog)",
+    y = "Favorite Cover Rate",
+    size = "Games"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+### Offensive Momentum
+
+I thought that rolling 5-game yards per play captures recent offensive form for both the favorite and underdog. The scatter plot below shows heavy overlap between covers and non-covers, but the favorite's rolling performance emerged as the strongest individual predictor in the Lasso model, motivating its inclusion in the Curated recipe.
+
+```{r}
+#| label: fig-momentum
+#| fig-cap: "Recent offensive momentum (rolling 5-game yards per play) for favorites and underdogs, colored by coverage outcome. This engineered feature captures whether a team is trending up or down relative to its season baseline."
+
+engineered_train |>
+  ggplot(aes(x = fav_roll5_ypp, y = dog_roll5_ypp, color = fav_cover)) +
+  geom_point(alpha = 0.3, size = 1.2) +
+  scale_color_manual(
+    values = c("cover" = "#264653", "no_cover" = "#e9c46a"),
+    labels = c("cover" = "Favorite Covers", "no_cover" = "Favorite Does Not Cover")
+  ) +
+  labs(
+    x = "Favorite Rolling 5-Game Yards Per Play",
+    y = "Underdog Rolling 5-Game Yards Per Play",
+    color = "Outcome"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+```
+
+### Rest Advantage
+
+Another idea I had was rest because it is hard to price in. The differential measures the difference in days off between the favorite and underdog heading into a game. If scheduling advantages are not fully priced into the spread, teams with more rest might cover at higher rates. The bar chart below groups games by rest differential and shows the favorite's cover rate in each group.
+
+```{r}
+#| label: fig-rest-advantage
+#| fig-cap: "Favorite cover rate by rest differentia.  Teams with more rest may have a recovery advantage not fully priced into the spread."
+
+engineered_train |>
+  mutate(rest_group = case_when(
+    rest_diff < -2 ~ "Underdog has 3+ more days",
+    rest_diff < 0  ~ "Underdog has 1-2 more days",
+    rest_diff == 0 ~ "Equal rest",
+    rest_diff <= 2 ~ "Favorite has 1-2 more days",
+    TRUE           ~ "Favorite has 3+ more days"
+  )) |>
+  mutate(rest_group = factor(rest_group, levels = c(
+    "Underdog has 3+ more days", "Underdog has 1-2 more days",
+    "Equal rest",
+    "Favorite has 1-2 more days", "Favorite has 3+ more days"
+  ))) |>
+  group_by(rest_group) |>
+  summarize(
+    cover_rate = mean(fav_cover == "cover"),
+    n = n(),
+    .groups = "drop"
+  ) |>
+  ggplot(aes(x = rest_group, y = cover_rate, fill = cover_rate > 0.5)) +
+  geom_col(show.legend = FALSE) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "grey50") +
+  geom_text(aes(label = paste0("n=", n)), vjust = -0.3, size = 3.2) +
+  scale_fill_manual(values = c("TRUE" = "#2a9d8f", "FALSE" = "#e9c46a")) +
+  scale_y_continuous(labels = scales::percent, limits = c(0, 0.65)) +
+  labs(x = "Rest Differential", y = "Favorite Cover Rate") +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 25, hjust = 1))
+```
+
+### Market Signal Gap
+
+This analysis compares the spread implied by Elo ratings against the actual closing spread. A positive gap means Elo rates the favorite more highly than the market does. If these disagreements contain exploitable information, we would expect the cover rate to rise when Elo is more bullish than the market. The chart below tests this hypothesis.
+
+```{r}
+#| label: fig-market-signal-gap
+#| fig-cap: "Market signal gap: difference between what Elo ratings imply the spread should be and what the actual closing spread is. When Elo suggests the favorite is stronger than the market prices (positive gap), does the favorite cover more often?"
+
+engineered_train |>
+  mutate(
+    # Elo implies ~0.04 points per Elo point (rough empirical conversion)
+    elo_implied_spread = elo_diff * 0.04,
+    # Positive gap = Elo says favorite is BETTER than market reflects
+    market_gap = elo_implied_spread - spread_fav,
+    gap_bin = cut(market_gap,
+      breaks = c(-Inf, -6, -3, 0, 3, 6, Inf),
+      labels = c("Market >> Elo\n(>6 pts)", "Market > Elo\n(3–6 pts)",
+                 "Market > Elo\n(<3 pts)", "Elo > Market\n(<3 pts)",
+                 "Elo > Market\n(3–6 pts)", "Elo >> Market\n(>6 pts)")
+    )
+  ) |>
+  filter(!is.na(gap_bin)) |>
+  group_by(gap_bin) |>
+  summarize(
+    cover_rate = mean(fav_cover == "cover"),
+    n = n(),
+    .groups = "drop"
+  ) |>
+  ggplot(aes(x = gap_bin, y = cover_rate, fill = cover_rate > 0.5)) +
+  geom_col(show.legend = FALSE) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "grey50") +
+  geom_text(aes(label = paste0(round(cover_rate * 100, 1), "%\nn=", n)),
+            vjust = -0.3, size = 3.2) +
+  scale_fill_manual(values = c("TRUE" = "#264653", "FALSE" = "#e9c46a")) +
+  scale_y_continuous(labels = scales::percent, limits = c(0, 0.65)) +
+  labs(
+    x = "Elo-Implied Spread vs. Closing Market Spread",
+    y = "Favorite Cover Rate"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 15, hjust = 1))
+```
+
+### Feature Correlations
+
+The correlation matrix below examines relationships among the key numeric predictors. High correlations between predictors (multicollinearity) can destabilize linear models, while moderate correlations suggest the features capture distinct dimensions of team performance. Understanding these relationships informed the decision to use regularized models, which handle correlated predictors gracefully.
+
+```{r}
+#| label: fig-feature-cors
+#| fig-cap: "Correlation matrix of key numeric predictors. Moderate correlations between offensive and defensive metrics suggest complementary predictive value, while regularized models handle any multicollinearity."
+#| fig-height: 6
+
+feature_labels <- c(
+  "elo_diff" = "Elo Diff",
+  "ypp_diff" = "Yards/Play Diff",
+  "off_epa_diff" = "Off EPA Diff",
+  "def_epa_diff" = "Def EPA Diff",
+  "pass_eff_diff" = "Pass Eff Diff",
+  "rush_eff_diff" = "Rush Eff Diff",
+  "pts_play_diff" = "Pts/Play Diff",
+  "turnover_diff" = "Turnover Diff",
+  "momentum_diff" = "Momentum Diff",
+  "spread_fav" = "Spread",
+  "over_under_line" = "Over/Under"
+)
+
+cor_features <- c(
+  "elo_diff", "ypp_diff", "off_epa_diff", "def_epa_diff",
+  "pass_eff_diff", "rush_eff_diff", "pts_play_diff",
+  "turnover_diff", "momentum_diff", "spread_fav", "over_under_line"
+)
+
+cor_data <- engineered_train |>
+  select(any_of(cor_features)) |>
+  drop_na()
+
+cor_mat <- cor(cor_data)
+
+cor_long <- cor_mat |>
+  as.data.frame() |>
+  rownames_to_column("var1") |>
+  pivot_longer(-var1, names_to = "var2", values_to = "correlation") |>
+  mutate(
+    var1 = factor(var1, levels = cor_features, labels = feature_labels[cor_features]),
+    var2 = factor(var2, levels = cor_features, labels = feature_labels[cor_features])
+  )
+
+ggplot(cor_long, aes(x = var1, y = var2, fill = correlation)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = round(correlation, 2)), size = 2.8) +
+  scale_fill_gradient2(low = "#e76f51", mid = "#faf3e0", high = "#264653", limits = c(-1, 1)) +
+  labs(x = NULL, y = NULL, fill = "Correlation") +
+  theme_minimal(base_size = 11) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+### Missingness
+
+The bar chart below shows the proportion of missing values for each predictor that has any missingness. The dominant source is weather data (humidity, temperature, wind), which is expected since many games are played in domed stadiums. Median imputation was used for all numeric predictors to handle these gaps.
+
+```{r}
+#| label: fig-missingness
+#| fig-cap: "Proportion of missing values by predictor (training data). Weather variables dominate the missingness, as expected for dome and indoor games."
+
+miss_data <- engineered_train
+
+miss_var_labels <- c(
+  "ypp_diff" = "Yards Per Play Diff",
+  "turnover_diff" = "Turnover Diff",
+  "to_momentum_diff" = "Turnover Momentum Diff",
+  "third_down_diff" = "Third Down Conv. Diff",
+  "success_rate_diff" = "Success Rate Diff",
+  "sack_rate_diff" = "Sack Rate Diff",
+  "rush_eff_diff" = "Rush Efficiency Diff",
+  "pts_play_diff" = "Points Per Play Diff",
+  "pass_eff_diff" = "Pass Efficiency Diff",
+  "off_epa_diff" = "Offensive EPA Diff",
+  "momentum_diff" = "Momentum Diff",
+  "fav_roll5_ypp" = "Fav Rolling 5-Gm Yards/Play",
+  "fav_roll5_pts" = "Fav Rolling 5-Gm Points",
+  "dog_roll5_ypp" = "Dog Rolling 5-Gm Yards/Play",
+  "dog_roll5_pts" = "Dog Rolling 5-Gm Points",
+  "def_epa_diff" = "Defensive EPA Diff",
+  "weather_temperature" = "Temperature",
+  "weather_wind_mph" = "Wind Speed"
+)
+
+miss_data |>
+  summarize(across(everything(), ~ mean(is.na(.)))) |>
+  pivot_longer(everything(), names_to = "variable", values_to = "pct_missing") |>
+  filter(pct_missing > 0) |>
+  mutate(variable = coalesce(miss_var_labels[variable], variable)) |>
+  ggplot(aes(x = reorder(variable, pct_missing), y = pct_missing)) +
+  geom_col(fill = "#2a9d8f") +
+  coord_flip() +
+  scale_y_continuous(labels = scales::percent) +
+  labs(x = NULL, y = "Percent Missing") +
+  theme_minimal()
+```
+
+## Appendix: Tuning Parameter Analysis {#sec-appendix-tuning}
+
+The following plots display the cross-validated ROC AUC across tuning parameter values for each tuned workflow. Tuning ranges were chosen to be broad enough that optimal values do not fall at the boundaries of the search space. For example, the KNN neighborhood range extends to 501, the Random Forest minimum node size extends to 80, and the XGBoost learning rate extends to 1.0, ensuring the optimizer can identify true optima rather than being constrained by an artificially narrow grid.
+
+### Regularized Models
+
+The Lasso, Ridge, and Elastic Net models each tune a penalty parameter that controls the strength of regularization. Higher penalties shrink coefficients toward zero, reducing overfitting at the cost of potential underfitting. The Lasso additionally performs variable selection by zeroing out weak predictors entirely. For the Elastic Net, both the penalty and the mixture parameter (controlling the balance between L1 and L2 penalties) were tuned. The plots below show ROC AUC across the tuning grid for each model and recipe combination.
+
+```{r}
+#| label: fig-tuning-lasso-basic
+#| fig-cap: "Tuning results for Lasso, Basic recipe"
+#| fig-height: 4
+
+autoplot(workflow_results[["lasso_basic"]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+```{r}
+#| label: fig-tuning-lasso-eng
+#| fig-cap: "Tuning results for Lasso, Engineered recipe"
+#| fig-height: 4
+
+autoplot(workflow_results[["lasso_engineered"]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+```{r}
+#| label: fig-tuning-ridge-basic
+#| fig-cap: "Tuning results for Ridge, Basic recipe"
+#| fig-height: 4
+
+autoplot(workflow_results[["ridge_basic"]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+```{r}
+#| label: fig-tuning-ridge-eng
+#| fig-cap: "Tuning results for Ridge, Engineered recipe"
+#| fig-height: 4
+
+autoplot(workflow_results[["ridge_engineered"]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+```{r}
+#| label: fig-tuning-enet-basic
+#| fig-cap: "Tuning results for Elastic Net, Basic recipe"
+#| fig-height: 4
+
+autoplot(workflow_results[["enet_basic"]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+```{r}
+#| label: fig-tuning-enet-eng
+#| fig-cap: "Tuning results for Elastic Net, Engineered recipe"
+#| fig-height: 4
+
+autoplot(workflow_results[["enet_engineered"]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+### K-Nearest Neighbors
+
+The KNN model has a single tuning parameter: the number of neighbors used for classification. Fewer neighbors allow the model to capture local patterns but risk overfitting to noise, while more neighbors produce smoother, more stable predictions. In this task, the optimal number of neighbors was very high (245–501), indicating that heavy smoothing performs best when individual observations carry little predictive information. The initial tuning range capped at 251 neighbors, but the optimal value hit that boundary, so the range was extended to 501 for the final run.
+
+```{r}
+#| label: fig-tuning-knn-basic
+#| fig-cap: "Tuning results for KNN, Basic recipe"
+#| fig-height: 4
+
+autoplot(workflow_results[["knn_basic"]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+```{r}
+#| label: fig-tuning-knn-eng
+#| fig-cap: "Tuning results for KNN, Engineered recipe"
+#| fig-height: 4
+
+autoplot(workflow_results[["knn_engineered"]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+### Random Forest
+
+The Random Forest models tune two parameters: the number of randomly selected predictors considered at each split, and the minimum number of observations required in a terminal node. Fewer predictors per split decorrelate the trees, while higher minimum node sizes prevent overfitting by requiring each leaf to represent more observations. The optimal configurations used very few predictors (2 out of 27) and high minimum node sizes (60–80), indicating the model benefits from maximum regularization in this low-signal domain. The initial minimum node size range capped at 50, but the optimal hit that boundary, so it was extended to 80.
+
+```{r}
+#| label: fig-tuning-rf-basic
+#| fig-cap: "Tuning results for Random Forest, Basic recipe"
+#| fig-height: 4
+
+autoplot(workflow_results[["rf_basic"]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+```{r}
+#| label: fig-tuning-rf-eng
+#| fig-cap: "Tuning results for Random Forest, Engineered recipe"
+#| fig-height: 4
+
+autoplot(workflow_results[["rf_engineered"]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+### XGBoost
+
+M XGBoost models tune six parameters: number of trees, tree depth, learning rate, minimum node size, loss reduction, and sample proportion. This is the most complex tuning space in the project. Conservative learning rates (0.001) and shallow trees were preferred, consistent with limited predictive signal. The model avoids overfitting by learning slowly and keeping individual trees simple. The initial learning rate range extended from 0.0001 to 0.1, but the optimum for the Engineered recipe hit the upper boundary, so the range was extended to 1.0 for the refit. The results confirmed that aggressive learning rates do not improve performance. Because the 6-dimensional tuning grid produces an unreadable faceted autoplot, the XGBoost tuning visualizations are omitted here. The optimal hyperparameters are reported in @tbl-tuning-summary above.
+
+### Curated Recipe Models
+
+The Curated recipe was run through the fast linear models only (Lasso, Ridge, Elastic Net). By retaining only the 10 strongest predictors identified from the initial modeling round, these models test whether focused feature selection outperforms the kitchen sink approach. The tuning plots below show that the Curated models consistently achieved competitive or superior ROC AUC compared to their Kitchen Sink and Engineered counterparts, confirming that removing noisy features improves discrimination.
+
+```{r}
+#| label: fig-tuning-lasso-curated
+#| fig-cap: "Tuning results for Lasso, Curated recipe"
+#| fig-height: 4
+
+autoplot(workflow_results[["lasso_curated"]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+```{r}
+#| label: fig-tuning-ridge-curated
+#| fig-cap: "Tuning results for Ridge, Curated recipe"
+#| fig-height: 4
+
+autoplot(workflow_results[["ridge_curated"]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+```{r}
+#| label: fig-tuning-enet-curated
+#| fig-cap: "Tuning results for Elastic Net, Curated recipe"
+#| fig-height: 4
+
+autoplot(workflow_results[["enet_curated"]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+

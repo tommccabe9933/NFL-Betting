@@ -1,0 +1,12 @@
+term,estimate,penalty,label,direction
+ypp_diff,0.10793206932078206,0.03162277660168379,Yards Per Play Diff,Increases Cover Probability
+weather_temperature,0.09313516897830848,0.03162277660168379,Temperature,Increases Cover Probability
+dog_roll5_pts,-0.08999394203513385,0.03162277660168379,Underdog Rolling 5-Gm Points,Decreases Cover Probability
+turnover_diff,-0.08959217278524964,0.03162277660168379,Turnover Differential,Decreases Cover Probability
+fav_roll5_ypp,0.07977311433083999,0.03162277660168379,Favorite Rolling 5-Gm Yards/Play,Increases Cover Probability
+off_epa_diff,-0.07794204145633075,0.03162277660168379,Offensive EPA Diff,Decreases Cover Probability
+elo_diff,-0.07566177578115875,0.03162277660168379,Elo Rating Diff,Decreases Cover Probability
+def_epa_diff,-0.07182049368843631,0.03162277660168379,Defensive EPA Diff,Decreases Cover Probability
+success_rate_diff,-0.06770908750852926,0.03162277660168379,Success Rate Diff,Decreases Cover Probability
+dog_short_week_yes,-0.061609445312222746,0.03162277660168379,Underdog on Short Week,Decreases Cover Probability
+to_momentum_diff,0.04400269978722779,0.03162277660168379,Turnover Momentum Diff,Increases Cover Probability

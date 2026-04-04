@@ -1,0 +1,8 @@
+measure,value
+Observation unit,One row per game from the favorite's perspective
+Outcome,Whether the favorite covers the closing spread
+Seasons included,2012 to 2025
+Rows in final modeling data,3538
+Predictor count,26
+Share favorite covers,49%
+Share favorite does not cover,51%

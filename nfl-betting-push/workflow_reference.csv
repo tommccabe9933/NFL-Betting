@@ -1,0 +1,20 @@
+workflow_id,workflow_label,model_type,recipe_family,recipe_key,model_key,tuned
+null_basic,Baseline,Null baseline,Basic,basic_linear,null,FALSE
+logistic_basic,Logistic Regression - Basic,Logistic regression,Basic,basic_linear,log,FALSE
+logistic_engineered,Logistic Regression - Engineered,Logistic regression,Engineered,engineered_linear,log,FALSE
+logistic_curated,Logistic Regression - Curated,Logistic regression,Curated,curated_linear,log,FALSE
+lasso_basic,Lasso - Basic,Lasso,Basic,basic_linear,lasso,TRUE
+lasso_engineered,Lasso - Engineered,Lasso,Engineered,engineered_linear,lasso,TRUE
+ridge_basic,Ridge - Basic,Ridge,Basic,basic_linear,ridge,TRUE
+ridge_engineered,Ridge - Engineered,Ridge,Engineered,engineered_linear,ridge,TRUE
+enet_basic,Elastic Net - Basic,Elastic net,Basic,basic_linear,enet,TRUE
+enet_engineered,Elastic Net - Engineered,Elastic net,Engineered,engineered_linear,enet,TRUE
+lasso_curated,Lasso - Curated,Lasso,Curated,curated_linear,lasso,TRUE
+ridge_curated,Ridge - Curated,Ridge,Curated,curated_linear,ridge,TRUE
+enet_curated,Elastic Net - Curated,Elastic net,Curated,curated_linear,enet,TRUE
+rf_basic,Random Forest - Basic,Random forest,Basic,basic_tree,rf,TRUE
+rf_engineered,Random Forest - Engineered,Random forest,Engineered,engineered_tree,rf,TRUE
+xgb_basic,XGBoost - Basic,Gradient boosting,Basic,basic_tree,xgb,TRUE
+xgb_engineered,XGBoost - Engineered,Gradient boosting,Engineered,engineered_tree,xgb,TRUE
+knn_basic,K-Nearest Neighbors - Basic,K-nearest neighbors,Basic,basic_linear,knn,TRUE
+knn_engineered,K-Nearest Neighbors - Engineered,K-nearest neighbors,Engineered,engineered_linear,knn,TRUE

@@ -1,0 +1,130 @@
+---
+title: "Executive Summary: Can Public NFL Data Beat the Closing Spread?"
+subtitle: |
+  | Final Project
+  | Data Science 2 with R (STAT 301-2)
+author: "Tom McCabe"
+pagetitle: "Exec Sum: Tom McCabe"
+date: today
+
+format:
+  html:
+    toc: true
+    embed-resources: true
+  
+
+execute:
+  echo: false
+  warning: false
+  message: false
+
+from: markdown+emoji
+reference-location: margin
+citation-location: margin
+---
+
+```{r}
+#| label: setup
+
+library(tidyverse)
+library(here)
+library(gt)
+library(knitr)
+
+official_comparison <- read_csv(
+  here("results", "official_workflow_comparison.csv"), show_col_types = FALSE
+)
+final_selection <- read_csv(
+  here("results", "final_selection.csv"), show_col_types = FALSE
+)
+test_metrics <- read_csv(
+  here("results", "test_metrics.csv"), show_col_types = FALSE
+)
+
+selected_metrics <- test_metrics |> filter(workflow_label != "Baseline") |> slice_head(n = 1)
+baseline_metrics <- test_metrics |> filter(workflow_label == "Baseline") |> slice_head(n = 1)
+
+winner_label <- final_selection$workflow_label[[1]]
+winner_cv <- official_comparison |>
+  filter(workflow_label == winner_label)
+winner_cv_roc <- round(winner_cv$roc_auc[[1]], 4)
+winner_cv_acc <- round(winner_cv$accuracy[[1]], 4)
+```
+
+## Purpose
+
+My project evaluates whether publicly available NFL team-performance and betting-market information can be used to predict whether the closing favorite covers the point spread, and more importantly, whether that information can translate into a practical betting edge. The analysis was structured as a binary classification problem using NFL regular-season games. I knew this was going to be a very tough task going in. If there was an obvious model to build, many sharp bettors would have done so already.
+
+## Data
+
+The final modeling dataset contains 3,538 NFL games and 27 predictor variables built from betting lines, Elo-style team-strength measures, rolling offensive and defensive form, EPA-based efficiency differentials, and schedule context such as rest. The target variable, whether the favorite covered the closing spread, was essentially balanced at 50/50. To mimic a real forecasting setting, I tested it on a season-by-season basis, I think season by season made sense given how teams change a lot each year, even though this project is not about time-based analysis. 
+
+## Key Results
+
+I compared multiple model classes that we learned about in class, logistic regression, regularized linear models, KNN, random forest, and XGBoost, across simple, engineered, and reduced-feature (third recipe just for my personal interst) specifications. Models were compared using cross-validated ROC AUC, and the strongest training workflow was then tested on future seasons to evaluate whether its apparent edge generalized out of sample.
+
+```{r}
+#| label: tbl-exec-comparison
+#| tbl-cap: "Top 5 model workflows by cross-validated ROC AUC"
+
+official_comparison |>
+  head(5) |>
+  select(workflow_label, model_type, recipe_family, roc_auc, accuracy) |>
+  gt() |>
+  cols_label(
+    workflow_label = "Workflow",
+    model_type = "Model",
+    recipe_family = "Recipe",
+    roc_auc = "ROC AUC",
+    accuracy = "Accuracy"
+  ) |>
+  fmt_number(columns = c(roc_auc, accuracy), decimals = 4)
+```
+
+The strongest training workflow was `r winner_label`, which achieved a cross-validated ROC AUC of `r winner_cv_roc` and accuracy of `r winner_cv_acc`. More broadly, regularized linear models outperformed random forest, XGBoost, and KNN, and the reduced-feature curated specification consistently beat both the kitchen-sink and engineered alternatives. This suggests that in a low-signal domain like NFL spread betting, controlling noise mattered more than adding nonlinear flexibility or complex interactions. I tried to make a third recipe that focused on just the high-signal variables, called the "curated" recipe. One risk I took here is that those high-signal variables (see full report) were just causing me to overfit on the training folds.
+
+In short, to my demise that training-period advantage did not survive the holdout test.
+
+```{r}
+#| label: tbl-exec-final
+#| tbl-cap: "Final model performance on held-out test data (2021--2024)"
+
+test_metrics |>
+  select(workflow_label, roc_auc, accuracy, sensitivity, specificity) |>
+  gt() |>
+  cols_label(
+    workflow_label = "Model",
+    roc_auc = "ROC AUC",
+    accuracy = "Accuracy",
+    sensitivity = "Sensitivity",
+    specificity = "Specificity"
+  ) |>
+  fmt_number(columns = c(roc_auc, accuracy, sensitivity, specificity), decimals = 4)
+```
+
+On the 2021--2024 games, `r final_selection$workflow_label[[1]]` fell to a test ROC AUC of `r round(selected_metrics$roc_auc[[1]], 4)` and accuracy of `r round(selected_metrics$accuracy[[1]], 4)`, which is effectively baseline performance. In NFL betting, a model is only practically useful if it can clear the sportsbook hold: under standard -110 odds, that means winning roughly 52.4% of wagers. The holdout results indicate that this model did not meet that threshold, and the simulated betting ROI was negative. The baseline model was very helpful here as a "coin flip" or blind-bet benchmark.
+
+```{r}
+#| label: fig-roi-exec
+#| fig-cap: "Simulated cumulative profit/loss on held-out test games under standard -110 sportsbook odds. Even the best training-period model failed to produce a positive betting return on future games once standard vig was applied."
+
+include_graphics(here("figures", "roi_simulation.png"))
+```
+
+## Conclusions
+
+My main takeaway is that as of now, I think publicly available team-level summary statistics did not provide a durable edge against the closing NFL spread in a temporally honest evaluation. I really think that if I tinker around more with more datasets and files, I can figure out a slight edge. Although a curated ridge model appeared modestly promising during cross-validation, its performance regressed to baseline on future seasons and failed to generate positive simulated betting returns. I think the people setting these lines know what they are doing.
+
+
+For me, four large findings stand out. First, regularized linear models performed best, which indicates that the remaining predictive signal is weak and better handled through shrinkage than through highly flexible nonlinear models. Second, removing noisy predictors helped more than adding engineered interaction terms. Third, the gap between training and holdout results reinforces how easy it is to mistake cross-validated improvement for a real betting edge in an efficient market. Fourth, my model actually did really well for the first ~400 games or so, and then crashed down to defeat --- almost shockingly bad, as if it could be a contra-indicator of what team won't cover. Perhaps the model is only good for a certain number of games before the alpha from training decays. This is something I plan to keep working on.
+
+For future model improvement, I think the most promising next steps would be to incorporate player-level availability and matchup information, something such as opening-to-closing line movement, and more adaptive rolling retraining windows. Those sources are more likely than public team-level summaries to capture information that the market has not already fully absorbed.
+
+
+
+## Comment on Generative AI Use
+
+Following the rules of our syllabus, "IN THIS COURSE, GENERATIVE AI RESOURCES ARE encouraged to be used by students with the purpose of supporting their learning", Generative AI tools were used in a limited support role during this project to give me some interesting variables I could work with when I made the models and help me re-learn how to use R functions along with my cited online learning resources. I took on a pretty advanced data wrangling project because this is something I want to bring to interviews with NFL teams and sports betting companies. 
+
+To make this more marketable for employers, I wanted to work on my initial wrangling skills, I needed to be taught how to make things like an iterative Elo (calculating relative skill that is normally used for chess but is now being used in other sports modeling as I've read about) computation from scratch that tracks ratings game-by-game across 12+ seasons with seasonal regression. I also used it as a learning resource on Script 01 to teach me how to write code that helps combine the Kaggle/Spreadspoke data with the live play-by-play data via nflreadr, then computes EPA, success rate, and CPOE metrics from raw play-level data as well as using rolling season averages. 
+I also learned about a bundling strategy for organizing model workflows into modular groups, which allowed me to reuse a single fitting function across all model families from mostly online resources. To emphasize, while I could've done this project with a much simpler dataset and just written out the modeling, I wanted to challenge myself with more extracurricular wrangling to make this a cooler project. I also spent a lot of time researching online to learn about new R functions and new data science strategies. 

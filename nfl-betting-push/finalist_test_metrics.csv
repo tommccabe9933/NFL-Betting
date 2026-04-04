@@ -1,0 +1,6 @@
+workflow_id,workflow_label,comparison_stage,roc_auc,accuracy
+enet_curated,Elastic Net - Curated,official,0.49894330819600113,0.4939209726443769
+logistic_curated,Logistic Regression - Curated,official,0.49755979258814326,0.4939209726443769
+lasso_curated,Lasso - Curated,official,0.4973449896640521,0.49240121580547114
+lasso_basic_refined,Lasso - Basic (Refined),expanded,0.5029529627790427,0.5015197568389058
+ridge_basic,Ridge - Basic,official,0.5028328579182603,0.5037993920972644

@@ -1,0 +1,24 @@
+workflow_id,workflow_label,model_type,recipe_family,tuned,roc_auc,roc_auc_std_err,accuracy,hyperparameters,comparison_stage,brier_class,rank_overall
+ridge_curated,Ridge - Curated,Ridge,Curated,TRUE,0.5530372897663317,0.00704100415525325,0.5438054646574826,penalty=0.03162,official,NA,1
+enet_curated,Elastic Net - Curated,Elastic net,Curated,TRUE,0.5530103873296996,0.00710146106710693,0.5463539772956814,penalty=0.04217; mixture=0,official,NA,2
+logistic_curated,Logistic Regression - Curated,Logistic regression,Curated,FALSE,0.5520231473048521,0.00687845790485646,0.5391615831077714,none,official,NA,3
+lasso_curated,Lasso - Curated,Lasso,Curated,TRUE,0.5507227928092029,0.00687949420163358,0.5381118786948383,penalty=1e-04,official,NA,4
+lasso_basic_refined,Lasso - Basic (Refined),Lasso,Basic,TRUE,0.5366183029980337,0.00650196399796932,0.528057878506309,penalty=0.000631,expanded,0.25017528705548475,5
+ridge_basic,Ridge - Basic,Ridge,Basic,TRUE,0.5365910502692579,0.00666566795996195,0.5294099031767193,penalty=0.03162,official,NA,6
+enet_basic,Elastic Net - Basic,Elastic net,Basic,TRUE,0.5365858425927224,0.00649358742259171,0.5273071277555582,penalty=0.0007499; mixture=0.8333,official,NA,7
+enet_basic_refined,Elastic Net - Basic (Refined),Elastic net,Basic,TRUE,0.5365856324174362,0.00650271328332366,0.5265577236429254,penalty=0.00138; mixture=0.5,expanded,0.25012284008893965,8
+xgb_basic,XGBoost - Basic,Gradient boosting,Basic,TRUE,0.5365618242280729,0.00832776158123013,0.5182987920656082,trees=250; min_n=3; tree_depth=5; learn_rate=0.001; loss_reduction=10; sample_size=0.5,official,NA,9
+lasso_basic,Lasso - Basic,Lasso,Basic,TRUE,0.5365588233920423,0.00648286647785069,0.5264069001737163,penalty=0.0007499,official,NA,10
+logistic_basic,Logistic Regression - Basic,Logistic regression,Basic,FALSE,0.5361098422751241,0.00642666274878033,0.5253598890370191,none,official,NA,11
+ridge_engineered_refined,Ridge - Engineered (Refined),Ridge,Engineered,TRUE,0.5333251364971721,0.00703209941101032,0.5239910313901345,penalty=0.05456,expanded,0.24965604631494617,12
+ridge_engineered,Ridge - Engineered,Ridge,Engineered,TRUE,0.5332328928993447,0.00701546246862025,0.5211435650897535,penalty=0.04642,official,NA,13
+enet_engineered,Elastic Net - Engineered,Elastic net,Engineered,TRUE,0.5331453899218616,0.00701723907691141,0.5209947615777212,penalty=0.04217; mixture=0,official,NA,14
+xgb_engineered,XGBoost - Engineered,Gradient boosting,Engineered,TRUE,0.533024924453661,0.00879196020314974,0.5174026043981201,trees=500; min_n=3; tree_depth=2; learn_rate=0.001; loss_reduction=10; sample_size=0.5,official,NA,15
+lasso_engineered,Lasso - Engineered,Lasso,Engineered,TRUE,0.532039704446842,0.00675794789447111,0.5202500706985012,penalty=0.000536,official,NA,16
+xgb_basic_refined,XGBoost - Basic (Refined),Gradient boosting,Basic,TRUE,0.5312708365443446,0.00683888501748507,0.5259429833420864,trees=267; min_n=29; tree_depth=8; learn_rate=0.09237; loss_reduction=0.01743; sample_size=0.6897,expanded,0.26790722289554053,17
+knn_basic,K-Nearest Neighbors - Basic,K-nearest neighbors,Basic,TRUE,0.530809968847352,0.00580568388648091,0.5175554478245061,neighbors=245,official,NA,18
+logistic_engineered,Logistic Regression - Engineered,Logistic regression,Engineered,FALSE,0.5307965876874646,0.0066445175427251,0.518151335191694,none,official,NA,19
+knn_engineered,K-Nearest Neighbors - Engineered,K-nearest neighbors,Engineered,TRUE,0.5298918998444702,0.00600551746525214,0.5166518536473693,neighbors=501,official,NA,20
+rf_engineered,Random Forest - Engineered,Random forest,Engineered,TRUE,0.5282928395615277,0.00681453151327348,0.521306508302024,mtry=2; min_n=80,official,NA,21
+rf_basic,Random Forest - Basic,Random forest,Basic,TRUE,0.5276894029620705,0.00697500561481794,0.5208627910421633,mtry=2; min_n=60,official,NA,22
+null_basic,Baseline,Null baseline,Basic,FALSE,0.5,0,0.5184502888538763,none,official,NA,23

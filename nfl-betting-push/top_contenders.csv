@@ -1,0 +1,7 @@
+workflow_id,workflow_label,model_type,recipe_family,tuned,roc_auc,roc_auc_std_err,accuracy,hyperparameters,comparison_stage,brier_class,rank_overall,priority,stage_rank,gap
+ridge_curated,Ridge - Curated,Ridge,Curated,TRUE,0.5530372897663317,0.00704100415525325,0.5438054646574826,penalty=0.03162,official,NA,1,4,0,0
+enet_curated,Elastic Net - Curated,Elastic net,Curated,TRUE,0.5530103873296996,0.00710146106710693,0.5463539772956814,penalty=0.04217; mixture=0,official,NA,2,5,0,0
+logistic_curated,Logistic Regression - Curated,Logistic regression,Curated,FALSE,0.5520231473048521,0.00687845790485646,0.5391615831077714,none,official,NA,3,2,0,0
+lasso_curated,Lasso - Curated,Lasso,Curated,TRUE,0.5507227928092029,0.00687949420163358,0.5381118786948383,penalty=1e-04,official,NA,4,3,0,0
+lasso_basic_refined,Lasso - Basic (Refined),Lasso,Basic,TRUE,0.5366183029980337,0.00650196399796932,0.528057878506309,penalty=0.000631,expanded,0.25017528705548475,5,3,1,0
+ridge_basic,Ridge - Basic,Ridge,Basic,TRUE,0.5365910502692579,0.00666566795996195,0.5294099031767193,penalty=0.03162,official,NA,6,4,0,0

@@ -1,0 +1,4 @@
+strategy,total_profit,win_rate,total_bets
+Model Prediction,-9100,0.4908814589665654,1316
+Coin Flip (Random),-7420,0.4969604863221885,1316
+Always Pick Favorite,-5950,0.5022796352583586,1316

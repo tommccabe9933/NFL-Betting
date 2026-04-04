@@ -1,0 +1,273 @@
+schedule_date,schedule_season,schedule_week,schedule_playoff,team_home,score_home,score_away,team_away,team_favorite_id,spread_favorite,over_under_line,stadium,stadium_neutral,weather_temperature,weather_wind_mph,weather_humidity,weather_detail
+9/4/2025,2025,1,FALSE,Philadelphia Eagles,24,20,Dallas Cowboys,PHI,-8.5,47.5,Lincoln Financial Field,FALSE,75,11,66,
+9/5/2025,2025,1,FALSE,Los Angeles Chargers,27,21,Kansas City Chiefs,KC,-3,46.5,Corinthians Arena,TRUE,62,7,80,
+9/7/2025,2025,1,FALSE,Atlanta Falcons,20,23,Tampa Bay Buccaneers,ATL,-1,47,Mercedes-Benz Stadium,FALSE,72,0,,indoor
+9/7/2025,2025,1,FALSE,Buffalo Bills,41,40,Baltimore Ravens,BAL,-1.5,50.5,Highmark Stadium,FALSE,58,8,61,
+9/7/2025,2025,1,FALSE,Cleveland Browns,16,17,Cincinnati Bengals,CIN,-5,48,Huntington Bank Field,FALSE,63,10,49,
+9/7/2025,2025,1,FALSE,Denver Broncos,20,12,Tennessee Titans,DEN,-9,42.5,Empower Field at Mile High,FALSE,84,6,24,
+9/7/2025,2025,1,FALSE,Green Bay Packers,27,13,Detroit Lions,GB,-1,47,Lambeau Field,FALSE,60,5,76,
+9/7/2025,2025,1,FALSE,Indianapolis Colts,33,8,Miami Dolphins,PICK,0,46.5,Lucas Oil Stadium,FALSE,72,0,,indoor
+9/7/2025,2025,1,FALSE,Jacksonville Jaguars,26,10,Carolina Panthers,JAX,-3.5,46.5,TIAA Bank Field,FALSE,85,3,71,
+9/7/2025,2025,1,FALSE,Los Angeles Rams,14,9,Houston Texans,LAR,-3,43.5,SoFi Stadium,FALSE,72,0,,indoor
+9/7/2025,2025,1,FALSE,New England Patriots,13,20,Las Vegas Raiders,NE,-2.5,44,Gillette Stadium,FALSE,62,4,86,rain
+9/7/2025,2025,1,FALSE,New Orleans Saints,13,20,Arizona Cardinals,ARI,-6.5,43.5,Caesars Superdome,FALSE,72,0,,indoor
+9/7/2025,2025,1,FALSE,New York Jets,32,34,Pittsburgh Steelers,PIT,-2.5,38,MetLife Stadium,FALSE,67,3,79,rain
+9/7/2025,2025,1,FALSE,Seattle Seahawks,13,17,San Francisco 49ers,SF,-2,43,Lumen Field,FALSE,67,6,83,
+9/7/2025,2025,1,FALSE,Washington Commanders,21,6,New York Giants,WAS,-6,45.5,Northwest Stadium,FALSE,68,5,68,
+9/8/2025,2025,1,FALSE,Chicago Bears,24,27,Minnesota Vikings,MIN,-1.5,43.5,Soldier Field,FALSE,68,6,38,
+9/11/2025,2025,2,FALSE,Green Bay Packers,27,18,Washington Commanders,GB,-3.5,48,Lambeau Field,FALSE,65,7,78,
+9/14/2025,2025,2,FALSE,Arizona Cardinals,27,22,Carolina Panthers,ARI,-7,44.5,State Farm Stadium,FALSE,72,0,,indoor
+9/14/2025,2025,2,FALSE,Baltimore Ravens,41,17,Cleveland Browns,BAL,-11.5,45,M&T Bank Stadium,FALSE,75,4,65,
+9/14/2025,2025,2,FALSE,Cincinnati Bengals,31,27,Jacksonville Jaguars,CIN,-3,49,Paycor Stadium,FALSE,85,3,37,
+9/14/2025,2025,2,FALSE,Dallas Cowboys,40,37,New York Giants,DAL,-5.5,44.5,AT&T Stadium,FALSE,72,0,,indoor
+9/14/2025,2025,2,FALSE,Detroit Lions,52,21,Chicago Bears,DET,-6.5,46.5,Ford Field,FALSE,72,0,,indoor
+9/14/2025,2025,2,FALSE,Indianapolis Colts,29,28,Denver Broncos,DEN,-1,43.5,Lucas Oil Stadium,FALSE,72,0,,indoor
+9/14/2025,2025,2,FALSE,Kansas City Chiefs,17,20,Philadelphia Eagles,PHI,-1,47,GEHA Field at Arrowhead Stadium,FALSE,88,12,46,
+9/14/2025,2025,2,FALSE,Miami Dolphins,27,33,New England Patriots,MIA,-2,43,Hard Rock Stadium,FALSE,89,4,56,
+9/14/2025,2025,2,FALSE,Minnesota Vikings,6,22,Atlanta Falcons,MIN,-3,44.5,U.S. Bank Stadium,FALSE,72,0,,indoor
+9/14/2025,2025,2,FALSE,New Orleans Saints,21,26,San Francisco 49ers,SF,-3,40.5,Caesars Superdome,FALSE,72,0,,indoor
+9/14/2025,2025,2,FALSE,New York Jets,10,30,Buffalo Bills,BUF,-6,47.5,MetLife Stadium,FALSE,80,3,49,
+9/14/2025,2025,2,FALSE,Pittsburgh Steelers,17,31,Seattle Seahawks,PIT,-3,40,Acrisure Stadium,FALSE,79,5,46,
+9/14/2025,2025,2,FALSE,Tennessee Titans,19,33,Los Angeles Rams,LAR,-5.5,41.5,Nissan Stadium,FALSE,83,3,46,
+9/15/2025,2025,2,FALSE,Houston Texans,19,20,Tampa Bay Buccaneers,HOU,-2.5,42.5,NRG Stadium,FALSE,72,0,,indoor
+9/15/2025,2025,2,FALSE,Las Vegas Raiders,9,20,Los Angeles Chargers,LAC,-3.5,46.5,Allegiant Stadium,FALSE,72,0,,indoor
+9/18/2025,2025,3,FALSE,Buffalo Bills,31,21,Miami Dolphins,BUF,-12,50,Highmark Stadium,FALSE,68,7,71,
+9/21/2025,2025,3,FALSE,Carolina Panthers,30,0,Atlanta Falcons,ATL,-4.5,44,Bank of America Stadium,FALSE,83,5,51,
+9/21/2025,2025,3,FALSE,Chicago Bears,31,14,Dallas Cowboys,DAL,-1,50,Soldier Field,FALSE,82,4,48,
+9/21/2025,2025,3,FALSE,Cleveland Browns,13,10,Green Bay Packers,GB,-7.5,41,Huntington Bank Field,FALSE,79,10,53,
+9/21/2025,2025,3,FALSE,Jacksonville Jaguars,17,10,Houston Texans,JAX,-1,43.5,TIAA Bank Field,FALSE,85,11,59,
+9/21/2025,2025,3,FALSE,Los Angeles Chargers,23,20,Denver Broncos,LAC,-3,43.5,SoFi Stadium,FALSE,72,0,,indoor
+9/21/2025,2025,3,FALSE,Minnesota Vikings,48,10,Cincinnati Bengals,MIN,-3,41.5,U.S. Bank Stadium,FALSE,72,0,,indoor
+9/21/2025,2025,3,FALSE,New England Patriots,14,21,Pittsburgh Steelers,PIT,-1.5,44.5,Gillette Stadium,FALSE,66,5,54,
+9/21/2025,2025,3,FALSE,New York Giants,9,22,Kansas City Chiefs,KC,-6,44.5,MetLife Stadium,FALSE,65,5,56,
+9/21/2025,2025,3,FALSE,Philadelphia Eagles,33,26,Los Angeles Rams,PHI,-3,44.5,Lincoln Financial Field,FALSE,73,9,47,
+9/21/2025,2025,3,FALSE,San Francisco 49ers,16,15,Arizona Cardinals,SF,-2,45.5,Levi's Stadium,FALSE,72,7,65,
+9/21/2025,2025,3,FALSE,Seattle Seahawks,44,13,New Orleans Saints,SEA,-7,41.5,Lumen Field,FALSE,63,3,84,
+9/21/2025,2025,3,FALSE,Tampa Bay Buccaneers,29,27,New York Jets,TB,-6.5,43,Raymond James Stadium,FALSE,88,5,55,
+9/21/2025,2025,3,FALSE,Tennessee Titans,20,41,Indianapolis Colts,IND,-4.5,43.5,Nissan Stadium,FALSE,84,8,49,
+9/21/2025,2025,3,FALSE,Washington Commanders,41,24,Las Vegas Raiders,WAS,-3,43.5,Northwest Stadium,FALSE,72,6,72,
+9/22/2025,2025,3,FALSE,Baltimore Ravens,30,38,Detroit Lions,BAL,-4,53,M&T Bank Stadium,FALSE,74,7,64,
+9/25/2025,2025,4,FALSE,Arizona Cardinals,20,23,Seattle Seahawks,SEA,-1.5,43,State Farm Stadium,FALSE,72,0,,indoor
+9/28/2025,2025,4,FALSE,Atlanta Falcons,34,27,Washington Commanders,ATL,-1.5,43.5,Mercedes-Benz Stadium,FALSE,72,0,,indoor
+9/28/2025,2025,4,FALSE,Buffalo Bills,31,19,New Orleans Saints,BUF,-15.5,47.5,Highmark Stadium,FALSE,73,7,56,
+9/28/2025,2025,4,FALSE,Dallas Cowboys,40,40,Green Bay Packers,GB,-6.5,46.5,AT&T Stadium,FALSE,72,0,,indoor
+9/28/2025,2025,4,FALSE,Detroit Lions,34,10,Cleveland Browns,DET,-10,44,Ford Field,FALSE,72,0,,indoor
+9/28/2025,2025,4,FALSE,Houston Texans,26,0,Tennessee Titans,HOU,-7,39.5,NRG Stadium,FALSE,72,0,,indoor
+9/28/2025,2025,4,FALSE,Kansas City Chiefs,37,20,Baltimore Ravens,BAL,-2.5,48.5,GEHA Field at Arrowhead Stadium,FALSE,89,10,38,
+9/28/2025,2025,4,FALSE,Las Vegas Raiders,24,25,Chicago Bears,PICK,0,47.5,Allegiant Stadium,FALSE,72,0,,indoor
+9/28/2025,2025,4,FALSE,Los Angeles Rams,27,20,Indianapolis Colts,LAR,-3.5,49.5,SoFi Stadium,FALSE,72,0,,indoor
+9/28/2025,2025,4,FALSE,New England Patriots,42,13,Carolina Panthers,NE,-5,43,Gillette Stadium,FALSE,76,7,70,
+9/28/2025,2025,4,FALSE,New York Giants,21,18,Los Angeles Chargers,LAC,-6.5,43.5,MetLife Stadium,FALSE,81,4,53,
+9/28/2025,2025,4,FALSE,Pittsburgh Steelers,24,21,Minnesota Vikings,MIN,-2.5,41,Croke Park,TRUE,61,5,70,
+9/28/2025,2025,4,FALSE,San Francisco 49ers,21,26,Jacksonville Jaguars,SF,-3.5,46,Levi's Stadium,FALSE,72,7,72,
+9/28/2025,2025,4,FALSE,Tampa Bay Buccaneers,25,31,Philadelphia Eagles,PHI,-3.5,44,Raymond James Stadium,FALSE,88,6,61,
+9/29/2025,2025,4,FALSE,Denver Broncos,28,3,Cincinnati Bengals,DEN,-7.5,44,Empower Field at Mile High,FALSE,66,12,55,rain
+9/29/2025,2025,4,FALSE,Miami Dolphins,27,21,New York Jets,MIA,-2.5,44.5,Hard Rock Stadium,FALSE,88,17,57,
+10/2/2025,2025,5,FALSE,Los Angeles Rams,23,26,San Francisco 49ers,LAR,-9,45,SoFi Stadium,FALSE,72,0,,indoor
+10/5/2025,2025,5,FALSE,Arizona Cardinals,21,22,Tennessee Titans,ARI,-7.5,41,State Farm Stadium,FALSE,72,0,,indoor
+10/5/2025,2025,5,FALSE,Baltimore Ravens,10,44,Houston Texans,HOU,-1,40.5,M&T Bank Stadium,FALSE,78,2,45,
+10/5/2025,2025,5,FALSE,Buffalo Bills,20,23,New England Patriots,BUF,-9,48.5,Highmark Stadium,FALSE,66,3,58,
+10/5/2025,2025,5,FALSE,Carolina Panthers,27,24,Miami Dolphins,MIA,-1,44,Bank of America Stadium,FALSE,77,8,57,
+10/5/2025,2025,5,FALSE,Cincinnati Bengals,24,37,Detroit Lions,DET,-10.5,49.5,Paycor Stadium,FALSE,84,7,39,
+10/5/2025,2025,5,FALSE,Cleveland Browns,17,21,Minnesota Vikings,MIN,-3.5,35.5,Tottenham Hotspur Stadium,TRUE,61,14,48,
+10/5/2025,2025,5,FALSE,Indianapolis Colts,40,6,Las Vegas Raiders,IND,-7,48,Lucas Oil Stadium,FALSE,72,0,,indoor
+10/5/2025,2025,5,FALSE,Los Angeles Chargers,10,27,Washington Commanders,LAC,-3,47,SoFi Stadium,FALSE,72,0,,indoor
+10/5/2025,2025,5,FALSE,New Orleans Saints,26,14,New York Giants,NO,-2,42,Caesars Superdome,FALSE,72,0,,indoor
+10/5/2025,2025,5,FALSE,New York Jets,22,37,Dallas Cowboys,DAL,-1.5,48,MetLife Stadium,FALSE,82,3,46,
+10/5/2025,2025,5,FALSE,Philadelphia Eagles,17,21,Denver Broncos,PHI,-4,43.5,Lincoln Financial Field,FALSE,80,6,43,
+10/5/2025,2025,5,FALSE,Seattle Seahawks,35,38,Tampa Bay Buccaneers,SEA,-3.5,44.5,Lumen Field,FALSE,61,8,73,
+10/6/2025,2025,5,FALSE,Jacksonville Jaguars,31,28,Kansas City Chiefs,KC,-3.5,45.5,EverBank Stadium,FALSE,80,12,79,
+10/9/2025,2025,6,FALSE,New York Giants,34,17,Philadelphia Eagles,PHI,-8,40,MetLife Stadium,FALSE,53,3,31,
+10/12/2025,2025,6,FALSE,Baltimore Ravens,3,17,Los Angeles Rams,LAR,-7,44.5,M&T Bank Stadium,FALSE,64,15,66,rain
+10/12/2025,2025,6,FALSE,Carolina Panthers,30,27,Dallas Cowboys,DAL,-3,48.5,Bank of America Stadium,FALSE,68,15,71,
+10/12/2025,2025,6,FALSE,Green Bay Packers,27,18,Cincinnati Bengals,GB,-14,45,Lambeau Field,FALSE,64,14,56,
+10/12/2025,2025,6,FALSE,Indianapolis Colts,31,27,Arizona Cardinals,IND,-9.5,46.5,Lucas Oil Stadium,FALSE,72,0,,indoor
+10/12/2025,2025,6,FALSE,Jacksonville Jaguars,12,20,Seattle Seahawks,PICK,0,47.5,EverBank Stadium,FALSE,76,8,59,
+10/12/2025,2025,6,FALSE,Las Vegas Raiders,20,10,Tennessee Titans,LVR,-4,42,Allegiant Stadium,FALSE,72,0,,indoor
+10/12/2025,2025,6,FALSE,Miami Dolphins,27,29,Los Angeles Chargers,LAC,-4,43.5,Hard Rock Stadium,FALSE,85,4,62,
+10/12/2025,2025,6,FALSE,New Orleans Saints,19,25,New England Patriots,NE,-3.5,46,Caesars Superdome,FALSE,72,0,,indoor
+10/12/2025,2025,6,FALSE,New York Jets,11,13,Denver Broncos,DEN,-7,43.5,Tottenham Hotspur Stadium,TRUE,59,6,69,
+10/12/2025,2025,6,FALSE,Pittsburgh Steelers,23,9,Cleveland Browns,PIT,-6,38,Acrisure Stadium,FALSE,64,8,77,
+10/12/2025,2025,6,FALSE,Tampa Bay Buccaneers,30,19,San Francisco 49ers,TB,-3,47,Raymond James Stadium,FALSE,82,10,49,
+10/13/2025,2025,6,FALSE,Atlanta Falcons,24,14,Buffalo Bills,BUF,-4,50,Mercedes-Benz Stadium,FALSE,72,0,,indoor
+10/13/2025,2025,6,FALSE,Kansas City Chiefs,30,17,Detroit Lions,KC,-2.5,53,GEHA Field at Arrowhead Stadium,FALSE,85,13,37,
+10/14/2025,2025,6,FALSE,Washington Commanders,24,25,Chicago Bears,WAS,-5.5,49.5,Northwest Stadium,FALSE,59,12,82,
+10/17/2025,2025,7,FALSE,Cincinnati Bengals,33,31,Pittsburgh Steelers,PIT,-5.5,44.5,Paycor Stadium,FALSE,60,5,74,
+10/19/2025,2025,7,FALSE,Arizona Cardinals,23,27,Green Bay Packers,GB,-7,44.5,State Farm Stadium,FALSE,72,0,,indoor
+10/19/2025,2025,7,FALSE,Chicago Bears,26,14,New Orleans Saints,CHI,-4,45.5,Soldier Field,FALSE,49,8,87,
+10/19/2025,2025,7,FALSE,Cleveland Browns,31,6,Miami Dolphins,CLE,-2.5,35.5,Huntington Bank Field,FALSE,65,17,85,rain
+10/19/2025,2025,7,FALSE,Dallas Cowboys,44,22,Washington Commanders,DAL,-1,54,AT&T Stadium,FALSE,72,0,,indoor
+10/19/2025,2025,7,FALSE,Denver Broncos,33,32,New York Giants,DEN,-7.5,40.5,Empower Field at Mile High,FALSE,72,3,17,
+10/19/2025,2025,7,FALSE,Jacksonville Jaguars,7,35,Los Angeles Rams,LAR,-3,44,Wembley Stadium,TRUE,59,9,95,rain
+10/19/2025,2025,7,FALSE,Kansas City Chiefs,31,0,Las Vegas Raiders,KC,-12,45.5,GEHA Field at Arrowhead Stadium,FALSE,57,9,41,
+10/19/2025,2025,7,FALSE,Los Angeles Chargers,24,38,Indianapolis Colts,LAC,-3,44,SoFi Stadium,FALSE,72,0,,indoor
+10/19/2025,2025,7,FALSE,Minnesota Vikings,22,28,Philadelphia Eagles,PHI,-1.5,44,U.S. Bank Stadium,FALSE,72,0,,indoor
+10/19/2025,2025,7,FALSE,New York Jets,6,13,Carolina Panthers,CAR,-1,41,MetLife Stadium,FALSE,71,13,70,
+10/19/2025,2025,7,FALSE,Tennessee Titans,13,31,New England Patriots,NE,-7,42,Nissan Stadium,FALSE,60,18,78,
+10/20/2025,2025,7,FALSE,Detroit Lions,24,9,Tampa Bay Buccaneers,DET,-6,53,Ford Field,FALSE,72,0,,indoor
+10/20/2025,2025,7,FALSE,San Francisco 49ers,20,10,Atlanta Falcons,SF,-2,47,Levi's Stadium,FALSE,74,5,49,
+10/21/2025,2025,7,FALSE,Seattle Seahawks,27,19,Houston Texans,SEA,-3,41,Lumen Field,FALSE,56,5,54,
+10/24/2025,2025,8,FALSE,Los Angeles Chargers,37,10,Minnesota Vikings,LAC,-3.5,44.5,SoFi Stadium,FALSE,72,0,,indoor
+10/26/2025,2025,8,FALSE,Atlanta Falcons,10,34,Miami Dolphins,ATL,-7,44.5,Mercedes-Benz Stadium,FALSE,72,0,,indoor
+10/26/2025,2025,8,FALSE,Baltimore Ravens,30,16,Chicago Bears,BAL,-2.5,45,M&T Bank Stadium,FALSE,60,2,38,
+10/26/2025,2025,8,FALSE,Carolina Panthers,9,40,Buffalo Bills,BUF,-7,46.5,Bank of America Stadium,FALSE,63,9,36,
+10/26/2025,2025,8,FALSE,Cincinnati Bengals,38,39,New York Jets,CIN,-6.5,44.5,Paycor Stadium,FALSE,57,8,48,
+10/26/2025,2025,8,FALSE,Denver Broncos,44,24,Dallas Cowboys,DEN,-3.5,51,Empower Field at Mile High,FALSE,67,4,25,
+10/26/2025,2025,8,FALSE,Houston Texans,26,15,San Francisco 49ers,HOU,-2,42,NRG Stadium,FALSE,72,0,,indoor
+10/26/2025,2025,8,FALSE,Indianapolis Colts,38,14,Tennessee Titans,IND,-14.5,48.5,Lucas Oil Stadium,FALSE,72,0,,indoor
+10/26/2025,2025,8,FALSE,New England Patriots,32,13,Cleveland Browns,NE,-7,41,Gillette Stadium,FALSE,53,7,52,
+10/26/2025,2025,8,FALSE,New Orleans Saints,3,23,Tampa Bay Buccaneers,TB,-3.5,46.5,Caesars Superdome,FALSE,72,0,,indoor
+10/26/2025,2025,8,FALSE,Philadelphia Eagles,38,20,New York Giants,PHI,-7,44,Lincoln Financial Field,FALSE,60,4,41,
+10/27/2025,2025,8,FALSE,Pittsburgh Steelers,25,35,Green Bay Packers,GB,-3,45.5,Acrisure Stadium,FALSE,46,5,56,
+10/28/2025,2025,8,FALSE,Kansas City Chiefs,28,7,Washington Commanders,KC,-11,48,GEHA Field at Arrowhead Stadium,FALSE,54,8,94,
+10/31/2025,2025,9,FALSE,Miami Dolphins,6,28,Baltimore Ravens,BAL,-7.5,51,Hard Rock Stadium,FALSE,73,5,57,
+11/2/2025,2025,9,FALSE,Buffalo Bills,28,21,Kansas City Chiefs,KC,-1.5,52.5,Highmark Stadium,FALSE,54,6,55,
+11/2/2025,2025,9,FALSE,Cincinnati Bengals,42,47,Chicago Bears,CHI,-2.5,51.5,Paycor Stadium,FALSE,50,6,74,
+11/2/2025,2025,9,FALSE,Detroit Lions,24,27,Minnesota Vikings,DET,-9.5,48,Ford Field,FALSE,72,0,,indoor
+11/2/2025,2025,9,FALSE,Green Bay Packers,13,16,Carolina Panthers,GB,-13,43,Lambeau Field,FALSE,47,15,53,
+11/2/2025,2025,9,FALSE,Houston Texans,15,18,Denver Broncos,HOU,-2.5,40.5,NRG Stadium,FALSE,72,0,,indoor
+11/2/2025,2025,9,FALSE,Las Vegas Raiders,29,30,Jacksonville Jaguars,JAX,-2.5,44,Allegiant Stadium,FALSE,72,0,,indoor
+11/2/2025,2025,9,FALSE,Los Angeles Rams,34,10,New Orleans Saints,LAR,-14,44,SoFi Stadium,FALSE,72,0,,indoor
+11/2/2025,2025,9,FALSE,New England Patriots,24,23,Atlanta Falcons,NE,-5,45,Gillette Stadium,FALSE,52,7,51,
+11/2/2025,2025,9,FALSE,New York Giants,24,34,San Francisco 49ers,SF,-2.5,48.5,MetLife Stadium,FALSE,56,5,47,
+11/2/2025,2025,9,FALSE,Pittsburgh Steelers,27,20,Indianapolis Colts,IND,-3,51.5,Acrisure Stadium,FALSE,56,2,66,
+11/2/2025,2025,9,FALSE,Tennessee Titans,20,27,Los Angeles Chargers,LAC,-9.5,43.5,Nissan Stadium,FALSE,46,5,84,
+11/3/2025,2025,9,FALSE,Washington Commanders,14,38,Seattle Seahawks,SEA,-3,48,Northwest Stadium,FALSE,53,3,70,
+11/4/2025,2025,9,FALSE,Dallas Cowboys,17,27,Arizona Cardinals,DAL,-3,53.5,AT&T Stadium,FALSE,72,0,,indoor
+11/7/2025,2025,10,FALSE,Denver Broncos,10,7,Las Vegas Raiders,DEN,-7,43,Empower Field at Mile High,FALSE,60,10,26,
+11/9/2025,2025,10,FALSE,Carolina Panthers,7,17,New Orleans Saints,CAR,-5.5,38,Bank of America Stadium,FALSE,73,15,52,
+11/9/2025,2025,10,FALSE,Chicago Bears,24,20,New York Giants,CHI,-4.5,46.5,Soldier Field,FALSE,33,10,68,snow
+11/9/2025,2025,10,FALSE,Houston Texans,36,29,Jacksonville Jaguars,PICK,0,37.5,NRG Stadium,FALSE,72,0,,indoor
+11/9/2025,2025,10,FALSE,Indianapolis Colts,31,25,Atlanta Falcons,IND,-6.5,48,Olympiastadion,TRUE,46,2,80,
+11/9/2025,2025,10,FALSE,Miami Dolphins,30,13,Buffalo Bills,BUF,-9.5,50,Hard Rock Stadium,FALSE,84,6,68,
+11/9/2025,2025,10,FALSE,Minnesota Vikings,19,27,Baltimore Ravens,BAL,-4,49,U.S. Bank Stadium,FALSE,72,0,,indoor
+11/9/2025,2025,10,FALSE,New York Jets,27,20,Cleveland Browns,CLE,-1.5,37.5,MetLife Stadium,FALSE,62,12,78,rain
+11/9/2025,2025,10,FALSE,San Francisco 49ers,26,42,Los Angeles Rams,LAR,-6,49.5,Levi's Stadium,FALSE,77,3,49,
+11/9/2025,2025,10,FALSE,Seattle Seahawks,44,22,Arizona Cardinals,SEA,-7,45.5,Lumen Field,FALSE,59,5,72,
+11/9/2025,2025,10,FALSE,Tampa Bay Buccaneers,23,28,New England Patriots,TB,-2.5,48,Raymond James Stadium,FALSE,82,11,74,
+11/9/2025,2025,10,FALSE,Washington Commanders,22,44,Detroit Lions,DET,-8,49,Northwest Stadium,FALSE,64,9,82,
+11/10/2025,2025,10,FALSE,Los Angeles Chargers,25,10,Pittsburgh Steelers,LAC,-2.5,44.5,SoFi Stadium,FALSE,72,0,,indoor
+11/11/2025,2025,10,FALSE,Green Bay Packers,7,10,Philadelphia Eagles,GB,-1,45.5,Lambeau Field,FALSE,33,9,55,
+11/14/2025,2025,11,FALSE,New England Patriots,27,14,New York Jets,NE,-13,43,Gillette Stadium,FALSE,39,9,76,
+11/16/2025,2025,11,FALSE,Arizona Cardinals,22,41,San Francisco 49ers,SF,-3.5,48.5,State Farm Stadium,FALSE,73,10,38,retractable (open roof)
+11/16/2025,2025,11,FALSE,Atlanta Falcons,27,30,Carolina Panthers,ATL,-4,42,Mercedes-Benz Stadium,FALSE,72,0,,indoor
+11/16/2025,2025,11,FALSE,Buffalo Bills,44,32,Tampa Bay Buccaneers,BUF,-6,46.5,Highmark Stadium,FALSE,38,20,50,
+11/16/2025,2025,11,FALSE,Cleveland Browns,16,23,Baltimore Ravens,BAL,-9,38.5,Huntington Bank Field,FALSE,44,20,53,
+11/16/2025,2025,11,FALSE,Denver Broncos,22,19,Kansas City Chiefs,KC,-4,45,Empower Field at Mile High,FALSE,70,6,23,
+11/16/2025,2025,11,FALSE,Jacksonville Jaguars,35,6,Los Angeles Chargers,LAC,-3,44,EverBank Stadium,FALSE,74,9,50,
+11/16/2025,2025,11,FALSE,Los Angeles Rams,21,19,Seattle Seahawks,LAR,-3,48.5,SoFi Stadium,FALSE,72,0,,indoor
+11/16/2025,2025,11,FALSE,Miami Dolphins,16,13,Washington Commanders,MIA,-2.5,47,Santiago Bernabeu Stadium,TRUE,72,0,,indoor
+11/16/2025,2025,11,FALSE,Minnesota Vikings,17,19,Chicago Bears,MIN,-3,48,U.S. Bank Stadium,FALSE,72,0,,indoor
+11/16/2025,2025,11,FALSE,New York Giants,20,27,Green Bay Packers,GB,-7,42,MetLife Stadium,FALSE,55,17,31,
+11/16/2025,2025,11,FALSE,Pittsburgh Steelers,34,12,Cincinnati Bengals,PIT,-5.5,49,Acrisure Stadium,FALSE,46,17,50,
+11/16/2025,2025,11,FALSE,Tennessee Titans,13,16,Houston Texans,HOU,-6,37,Nissan Stadium,FALSE,64,8,26,
+11/17/2025,2025,11,FALSE,Philadelphia Eagles,16,9,Detroit Lions,PHI,-3,46.5,Lincoln Financial Field,FALSE,45,15,43,
+11/18/2025,2025,11,FALSE,Las Vegas Raiders,16,33,Dallas Cowboys,DAL,-3.5,50,Allegiant Stadium,FALSE,72,0,,indoor
+11/21/2025,2025,12,FALSE,Houston Texans,23,19,Buffalo Bills,BUF,-6,43.5,NRG Stadium,FALSE,72,0,,indoor
+11/23/2025,2025,12,FALSE,Arizona Cardinals,24,27,Jacksonville Jaguars,JAX,-2.5,47.5,State Farm Stadium,FALSE,72,0,,indoor
+11/23/2025,2025,12,FALSE,Baltimore Ravens,23,10,New York Jets,BAL,-14,44,M&T Bank Stadium,FALSE,54,3,69,
+11/23/2025,2025,12,FALSE,Chicago Bears,31,28,Pittsburgh Steelers,CHI,-2.5,46.5,Soldier Field,FALSE,51,3,58,
+11/23/2025,2025,12,FALSE,Cincinnati Bengals,20,26,New England Patriots,NE,-7.5,50,Paycor Stadium,FALSE,54,7,61,
+11/23/2025,2025,12,FALSE,Dallas Cowboys,24,21,Philadelphia Eagles,PHI,-3,47.5,AT&T Stadium,FALSE,72,0,,indoor
+11/23/2025,2025,12,FALSE,Detroit Lions,34,27,New York Giants,DET,-13,50.5,Ford Field,FALSE,72,0,,indoor
+11/23/2025,2025,12,FALSE,Green Bay Packers,23,6,Minnesota Vikings,GB,-6.5,41.5,Lambeau Field,FALSE,43,10,60,
+11/23/2025,2025,12,FALSE,Kansas City Chiefs,23,20,Indianapolis Colts,KC,-3,49.5,GEHA Field at Arrowhead Stadium,FALSE,46,5,93,
+11/23/2025,2025,12,FALSE,Las Vegas Raiders,10,24,Cleveland Browns,LVR,-4,36,Allegiant Stadium,FALSE,72,0,,indoor
+11/23/2025,2025,12,FALSE,New Orleans Saints,10,24,Atlanta Falcons,NO,-2,40,Caesars Superdome,FALSE,72,0,,indoor
+11/23/2025,2025,12,FALSE,Tennessee Titans,24,30,Seattle Seahawks,SEA,-12,40.5,Nissan Stadium,FALSE,55,1,64,
+11/24/2025,2025,12,FALSE,Los Angeles Rams,34,7,Tampa Bay Buccaneers,LAR,-7,49.5,SoFi Stadium,FALSE,72,0,,indoor
+11/25/2025,2025,12,FALSE,San Francisco 49ers,20,9,Carolina Panthers,SF,-7.5,50,Levi's Stadium,FALSE,58,3,78,
+11/27/2025,2025,13,FALSE,Dallas Cowboys,31,28,Kansas City Chiefs,KC,-3,52.5,AT&T Stadium,FALSE,72,0,,indoor
+11/27/2025,2025,13,FALSE,Detroit Lions,24,31,Green Bay Packers,DET,-3,48.5,Ford Field,FALSE,72,0,,indoor
+11/28/2025,2025,13,FALSE,Baltimore Ravens,14,32,Cincinnati Bengals,BAL,-7.5,51.5,M&T Bank Stadium,FALSE,38,11,44,
+11/28/2025,2025,13,FALSE,Philadelphia Eagles,15,24,Chicago Bears,PHI,-7,44,Lincoln Financial Field,FALSE,42,18,35,
+11/30/2025,2025,13,FALSE,Carolina Panthers,31,28,Los Angeles Rams,LAR,-10,45,Bank of America Stadium,FALSE,45,3,57,
+11/30/2025,2025,13,FALSE,Cleveland Browns,8,26,San Francisco 49ers,SF,-5,35.5,Huntington Bank Field,FALSE,35,20,73,
+11/30/2025,2025,13,FALSE,Indianapolis Colts,16,20,Houston Texans,IND,-3,45,Lucas Oil Stadium,FALSE,72,0,,indoor
+11/30/2025,2025,13,FALSE,Los Angeles Chargers,31,14,Las Vegas Raiders,LAC,-9.5,40.5,SoFi Stadium,FALSE,72,0,,indoor
+11/30/2025,2025,13,FALSE,Miami Dolphins,21,17,New Orleans Saints,MIA,-5,41.5,Hard Rock Stadium,FALSE,76,10,87,
+11/30/2025,2025,13,FALSE,New York Jets,27,24,Atlanta Falcons,ATL,-3,39,MetLife Stadium,FALSE,43,8,79,
+11/30/2025,2025,13,FALSE,Pittsburgh Steelers,7,26,Buffalo Bills,BUF,-3,46,Acrisure Stadium,FALSE,34,16,68,
+11/30/2025,2025,13,FALSE,Seattle Seahawks,26,0,Minnesota Vikings,SEA,-12,41.5,Lumen Field,FALSE,45,2,75,
+11/30/2025,2025,13,FALSE,Tampa Bay Buccaneers,20,17,Arizona Cardinals,TB,-3.5,44.5,Raymond James Stadium,FALSE,80,8,56,
+11/30/2025,2025,13,FALSE,Tennessee Titans,3,25,Jacksonville Jaguars,JAX,-6,41.5,Nissan Stadium,FALSE,38,7,79,
+12/1/2025,2025,13,FALSE,Washington Commanders,26,27,Denver Broncos,DEN,-6,43,Northwest Stadium,FALSE,40,13,77,
+12/2/2025,2025,13,FALSE,New England Patriots,33,15,New York Giants,NE,-7.5,46.5,Gillette Stadium,FALSE,29,4,61,
+12/5/2025,2025,14,FALSE,Detroit Lions,44,30,Dallas Cowboys,DET,-3,54,Ford Field,FALSE,72,0,,indoor
+12/7/2025,2025,14,FALSE,Arizona Cardinals,17,45,Los Angeles Rams,LAR,-10,48,State Farm Stadium,FALSE,68,1,30,retractable (open roof)
+12/7/2025,2025,14,FALSE,Atlanta Falcons,9,37,Seattle Seahawks,SEA,-6.5,44,Mercedes-Benz Stadium,FALSE,72,0,,indoor
+12/7/2025,2025,14,FALSE,Baltimore Ravens,22,27,Pittsburgh Steelers,BAL,-5.5,42.5,M&T Bank Stadium,FALSE,44,6,51,
+12/7/2025,2025,14,FALSE,Buffalo Bills,39,34,Cincinnati Bengals,BUF,-6,53.5,Highmark Stadium,FALSE,31,12,86,snow
+12/7/2025,2025,14,FALSE,Cleveland Browns,29,31,Tennessee Titans,CLE,-3.5,34,Huntington Bank Field,FALSE,33,6,86,snow
+12/7/2025,2025,14,FALSE,Green Bay Packers,28,21,Chicago Bears,GB,-6.5,43.5,Lambeau Field,FALSE,16,9,55,
+12/7/2025,2025,14,FALSE,Jacksonville Jaguars,36,19,Indianapolis Colts,IND,-1.5,46,EverBank Stadium,FALSE,61,7,98,
+12/7/2025,2025,14,FALSE,Las Vegas Raiders,17,24,Denver Broncos,DEN,-8,40.5,Allegiant Stadium,FALSE,72,0,,indoor
+12/7/2025,2025,14,FALSE,Minnesota Vikings,31,0,Washington Commanders,WAS,-1.5,44,U.S. Bank Stadium,FALSE,72,0,,indoor
+12/7/2025,2025,14,FALSE,New York Jets,10,34,Miami Dolphins,MIA,-2.5,41,MetLife Stadium,FALSE,41,6,58,
+12/7/2025,2025,14,FALSE,Tampa Bay Buccaneers,20,24,New Orleans Saints,TB,-9,41.5,Raymond James Stadium,FALSE,73,6,88,
+12/8/2025,2025,14,FALSE,Kansas City Chiefs,10,20,Houston Texans,KC,-3.5,41,GEHA Field at Arrowhead Stadium,FALSE,27,8,80,
+12/9/2025,2025,14,FALSE,Los Angeles Chargers,22,19,Philadelphia Eagles,PHI,-2,41.5,SoFi Stadium,FALSE,72,0,,indoor
+12/12/2025,2025,15,FALSE,Tampa Bay Buccaneers,28,29,Atlanta Falcons,TB,-4.5,44,Raymond James Stadium,FALSE,56,5,58,
+12/14/2025,2025,15,FALSE,Chicago Bears,31,3,Cleveland Browns,CHI,-7.5,38,Soldier Field,FALSE,8,6,62,
+12/14/2025,2025,15,FALSE,Cincinnati Bengals,0,24,Baltimore Ravens,BAL,-3,51.5,Paycor Stadium,FALSE,10,7,63,
+12/14/2025,2025,15,FALSE,Denver Broncos,34,26,Green Bay Packers,GB,-1,42.5,Empower Field at Mile High,FALSE,65,3,16,
+12/14/2025,2025,15,FALSE,Houston Texans,40,20,Arizona Cardinals,HOU,-10.5,42,NRG Stadium,FALSE,72,0,,indoor
+12/14/2025,2025,15,FALSE,Jacksonville Jaguars,48,20,New York Jets,JAX,-14,41,EverBank Stadium,FALSE,70,11,60,
+12/14/2025,2025,15,FALSE,Kansas City Chiefs,13,16,Los Angeles Chargers,KC,-6,41.5,GEHA Field at Arrowhead Stadium,FALSE,15,3,44,
+12/14/2025,2025,15,FALSE,Los Angeles Rams,41,34,Detroit Lions,LAR,-6,55,SoFi Stadium,FALSE,72,0,,indoor
+12/14/2025,2025,15,FALSE,New England Patriots,31,35,Buffalo Bills,BUF,-1.5,49,Gillette Stadium,FALSE,32,6,86,snow
+12/14/2025,2025,15,FALSE,New Orleans Saints,20,17,Carolina Panthers,CAR,-3,40.5,Caesars Superdome,FALSE,72,0,,indoor
+12/14/2025,2025,15,FALSE,New York Giants,21,29,Washington Commanders,NYG,-2.5,46.5,MetLife Stadium,FALSE,27,13,69,
+12/14/2025,2025,15,FALSE,Philadelphia Eagles,31,0,Las Vegas Raiders,PHI,-12.5,38,Lincoln Financial Field,FALSE,30,20,56,
+12/14/2025,2025,15,FALSE,San Francisco 49ers,37,24,Tennessee Titans,SF,-12.5,44.5,Levi's Stadium,FALSE,54,4,82,fog
+12/14/2025,2025,15,FALSE,Seattle Seahawks,18,16,Indianapolis Colts,SEA,-14,42.5,Lumen Field,FALSE,51,9,87,
+12/15/2025,2025,15,FALSE,Dallas Cowboys,26,34,Minnesota Vikings,DAL,-5.5,47.5,AT&T Stadium,FALSE,72,0,,indoor
+12/16/2025,2025,15,FALSE,Pittsburgh Steelers,28,15,Miami Dolphins,PIT,-3,42.5,Acrisure Stadium,FALSE,17,7,71,
+12/19/2025,2025,16,FALSE,Seattle Seahawks,38,37,Los Angeles Rams,SEA,-1.5,42,Lumen Field,FALSE,51,17,91,
+12/20/2025,2025,16,FALSE,Chicago Bears,22,16,Green Bay Packers,CHI,-1.5,46.5,Soldier Field,FALSE,37,6,48,
+12/20/2025,2025,16,FALSE,Washington Commanders,18,29,Philadelphia Eagles,PHI,-7,44,Northwest Stadium,FALSE,42,7,49,
+12/21/2025,2025,16,FALSE,Arizona Cardinals,19,26,Atlanta Falcons,ATL,-2.5,48.5,State Farm Stadium,FALSE,72,0,,indoor
+12/21/2025,2025,16,FALSE,Baltimore Ravens,24,28,New England Patriots,BAL,-3,49,M&T Bank Stadium,FALSE,40,2,36,
+12/21/2025,2025,16,FALSE,Carolina Panthers,23,20,Tampa Bay Buccaneers,TB,-3,45,Bank of America Stadium,FALSE,61,8,28,
+12/21/2025,2025,16,FALSE,Cleveland Browns,20,23,Buffalo Bills,BUF,-10.5,41.5,Huntington Bank Field,FALSE,25,16,68,
+12/21/2025,2025,16,FALSE,Dallas Cowboys,17,34,Los Angeles Chargers,DAL,-2,50,AT&T Stadium,FALSE,72,0,,indoor
+12/21/2025,2025,16,FALSE,Denver Broncos,20,34,Jacksonville Jaguars,DEN,-3.5,47,Empower Field at Mile High,FALSE,62,3,26,
+12/21/2025,2025,16,FALSE,Detroit Lions,24,29,Pittsburgh Steelers,DET,-7,52,Ford Field,FALSE,72,0,,indoor
+12/21/2025,2025,16,FALSE,Houston Texans,23,21,Las Vegas Raiders,HOU,-14,38.5,NRG Stadium,FALSE,72,0,,indoor
+12/21/2025,2025,16,FALSE,New Orleans Saints,29,6,New York Jets,NO,-6.5,40.5,Caesars Superdome,FALSE,72,0,,indoor
+12/21/2025,2025,16,FALSE,New York Giants,13,16,Minnesota Vikings,MIN,-2.5,43,MetLife Stadium,FALSE,46,20,37,
+12/21/2025,2025,16,FALSE,Tennessee Titans,26,9,Kansas City Chiefs,KC,-2.5,37.5,Nissan Stadium,FALSE,51,8,27,
+12/22/2025,2025,16,FALSE,Miami Dolphins,21,45,Cincinnati Bengals,CIN,-4,48.5,Hard Rock Stadium,FALSE,81,7,64,
+12/23/2025,2025,16,FALSE,Indianapolis Colts,27,48,San Francisco 49ers,SF,-5.5,46,Lucas Oil Stadium,FALSE,72,0,,indoor
+12/25/2025,2025,17,FALSE,Minnesota Vikings,23,10,Detroit Lions,DET,-7.5,43,U.S. Bank Stadium,FALSE,72,0,,indoor
+12/25/2025,2025,17,FALSE,Washington Commanders,23,30,Dallas Cowboys,DAL,-10,50.5,Northwest Stadium,FALSE,50,7,53,
+12/26/2025,2025,17,FALSE,Kansas City Chiefs,13,20,Denver Broncos,DEN,-13.5,36.5,GEHA Field at Arrowhead Stadium,FALSE,57,3,99,fog
+12/27/2025,2025,17,FALSE,Green Bay Packers,24,41,Baltimore Ravens,GB,-3,38.5,Lambeau Field,FALSE,36,10,95,fog
+12/27/2025,2025,17,FALSE,Los Angeles Chargers,16,20,Houston Texans,LAC,-1,39.5,SoFi Stadium,FALSE,72,0,,indoor
+12/28/2025,2025,17,FALSE,Buffalo Bills,12,13,Philadelphia Eagles,BUF,-1.5,44,Highmark Stadium,FALSE,38,6,94,rain
+12/28/2025,2025,17,FALSE,Carolina Panthers,10,27,Seattle Seahawks,SEA,-7,42.5,Bank of America Stadium,FALSE,43,2,94,rain
+12/28/2025,2025,17,FALSE,Cincinnati Bengals,37,14,Arizona Cardinals,CIN,-7.5,53,Paycor Stadium,FALSE,65,9,87,
+12/28/2025,2025,17,FALSE,Cleveland Browns,13,6,Pittsburgh Steelers,PIT,-3,34.5,Huntington Bank Field,FALSE,45,14,95,fog
+12/28/2025,2025,17,FALSE,Indianapolis Colts,17,23,Jacksonville Jaguars,JAX,-5.5,48.5,Lucas Oil Stadium,FALSE,72,0,,indoor
+12/28/2025,2025,17,FALSE,Las Vegas Raiders,10,34,New York Giants,NYG,-2.5,41.5,Allegiant Stadium,FALSE,72,0,,indoor
+12/28/2025,2025,17,FALSE,Miami Dolphins,20,17,Tampa Bay Buccaneers,TB,-5.5,44.5,Hard Rock Stadium,FALSE,80,3,51,
+12/28/2025,2025,17,FALSE,New York Jets,10,42,New England Patriots,NE,-13.5,43,MetLife Stadium,FALSE,29,4,81,
+12/28/2025,2025,17,FALSE,San Francisco 49ers,42,38,Chicago Bears,SF,-3.5,52.5,Levi's Stadium,FALSE,53,5,65,
+12/28/2025,2025,17,FALSE,Tennessee Titans,26,34,New Orleans Saints,NO,-1.5,39.5,Nissan Stadium,FALSE,71,14,71,
+12/30/2025,2025,17,FALSE,Atlanta Falcons,27,24,Los Angeles Rams,LAR,-7.5,50,Mercedes-Benz Stadium,FALSE,72,0,,indoor
+1/3/2026,2025,18,FALSE,San Francisco 49ers,3,13,Seattle Seahawks,SEA,-2.5,47.5,Levi's Stadium,FALSE,57,8,81,
+1/3/2026,2025,18,FALSE,Tampa Bay Buccaneers,16,14,Carolina Panthers,TB,-3,43.5,Raymond James Stadium,FALSE,69,11,85,rain
+1/4/2026,2025,18,FALSE,Atlanta Falcons,19,17,New Orleans Saints,ATL,-3.5,43.5,Mercedes-Benz Stadium,FALSE,72,0,,indoor
+1/4/2026,2025,18,FALSE,Buffalo Bills,35,8,New York Jets,BUF,-7.5,37.5,Highmark Stadium,FALSE,27,13,75,
+1/4/2026,2025,18,FALSE,Chicago Bears,16,19,Detroit Lions,CHI,-3,50.5,Soldier Field,FALSE,33,4,70,
+1/4/2026,2025,18,FALSE,Cincinnati Bengals,18,20,Cleveland Browns,CIN,-7.5,44.5,Paycor Stadium,FALSE,37,0,56,
+1/4/2026,2025,18,FALSE,Denver Broncos,19,3,Los Angeles Chargers,DEN,-13.5,37.5,Empower Field at Mile High,FALSE,69,16,7,
+1/4/2026,2025,18,FALSE,Houston Texans,38,30,Indianapolis Colts,HOU,-10,38.5,NRG Stadium,FALSE,72,0,,indoor
+1/4/2026,2025,18,FALSE,Jacksonville Jaguars,41,7,Tennessee Titans,JAX,-13.5,47.5,EverBank Stadium,FALSE,58,7,76,
+1/4/2026,2025,18,FALSE,Las Vegas Raiders,14,12,Kansas City Chiefs,KC,-5.5,36.5,Allegiant Stadium,FALSE,72,0,,indoor
+1/4/2026,2025,18,FALSE,Los Angeles Rams,37,20,Arizona Cardinals,LAR,-8.5,46.5,SoFi Stadium,FALSE,72,0,,indoor
+1/4/2026,2025,18,FALSE,Minnesota Vikings,16,3,Green Bay Packers,MIN,-9.5,37.5,U.S. Bank Stadium,FALSE,72,0,,indoor
+1/4/2026,2025,18,FALSE,New England Patriots,38,10,Miami Dolphins,NE,-11.5,45.5,Gillette Stadium,FALSE,29,6,56,
+1/4/2026,2025,18,FALSE,New York Giants,34,17,Dallas Cowboys,DAL,-3.5,49.5,MetLife Stadium,FALSE,33,7,52,
+1/4/2026,2025,18,FALSE,Philadelphia Eagles,17,24,Washington Commanders,PHI,-4.5,38.5,Lincoln Financial Field,FALSE,35,9,47,
+1/4/2026,2025,18,FALSE,Pittsburgh Steelers,26,24,Baltimore Ravens,BAL,-3.5,41.5,Acrisure Stadium,FALSE,25,3,81,

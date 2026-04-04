@@ -1,0 +1,6 @@
+check_name,status,details
+Official workflow accounting,pass,All 19 official workflow IDs found in workflow_info.
+Baseline ROC AUC check,pass,Baseline ROC AUC = 0.5
+Close candidates reviewed,pass,Close candidate pool size: 23
+Selection rule,pass,"Select the workflow with the highest cross-validated ROC AUC. Tie-break by preferring official workflows, then higher accuracy."
+Expanded workflows present,pass,Found 4 expanded workflows.

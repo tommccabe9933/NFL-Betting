@@ -1,0 +1,2 @@
+workflow_id,workflow_label,recipe_family,model_type,comparison_stage,training_roc_auc,training_accuracy,selection_rule
+ridge_curated,Ridge - Curated,Curated,Ridge,official,0.5530372897663317,0.5438054646574826,"Select the workflow with the highest cross-validated ROC AUC. Tie-break by preferring official workflows, then higher accuracy."
