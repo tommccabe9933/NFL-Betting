@@ -1,0 +1,5 @@
+model,n,brier,log_loss,roc_auc,accuracy
+enet_universal_2012,787,0.2508,0.6947,NA,0.478
+lasso_universal_2012,787,0.2508,0.6947,NA,0.478
+ridge_universal_2012,787,0.251,0.6952,NA,0.478
+ridge_universal_2018,787,0.2523,0.6977,NA,0.47

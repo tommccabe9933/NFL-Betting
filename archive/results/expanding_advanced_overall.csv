@@ -1,0 +1,4 @@
+model,n,accuracy,roc_auc,total_profit,roi_pct
+ridge_advanced,1316,0.501,0.5112,-6370,-4.4
+ridge_original,1316,0.494,0.5111,-8260,-5.7
+lasso_advanced,1316,0.495,0.5097,-7840,-5.4

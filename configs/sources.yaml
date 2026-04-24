@@ -1,0 +1,62 @@
+# Data source configuration for the NFL pregame feature pipeline
+
+sources:
+  pbp:
+    method: nfl_data_py
+    function: import_pbp_data
+    fallback: nflverse_direct
+    release_tag: pbp
+    filename_pattern: "play_by_play_{season}.parquet"
+    seasons: [2012, 2025]
+
+  schedules:
+    method: nfl_data_py
+    function: import_schedules
+    seasons: [2012, 2025]
+
+  player_stats:
+    method: nfl_data_py
+    function: import_weekly_data
+    seasons: [2012, 2025]
+
+  ngs:
+    method: nfl_data_py
+    function: import_ngs_data
+    stat_types: [passing, rushing, receiving]
+    seasons: [2016, 2025]
+
+  pfr:
+    method: nflverse_direct
+    release_tag: pfr_advstats
+    filename_pattern: "advstats_season_{stat_type}_{season}.parquet"
+    stat_types: [pass, rush, rec, def]
+    seasons: [2018, 2025]
+
+  ftn:
+    method: nflverse_direct
+    release_tag: ftn_charting
+    filename_pattern: "ftn_charting_{season}.parquet"
+    seasons: [2022, 2025]
+    feature_flag: FTN_ENABLED
+
+  injuries:
+    method: nfl_data_py
+    function: import_injuries
+    seasons: [2012, 2025]
+
+  depth_charts:
+    method: nfl_data_py
+    function: import_depth_charts
+    seasons: [2012, 2025]
+
+  market:
+    method: local_csv
+    files:
+      - data/nfl_all_seasons.csv
+      - data/nfl_2025.csv
+
+  odds_snapshots:
+    method: api
+    api_url: null  # Configure when ready: e.g. https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds
+    api_key: null
+    note: "Stub — no free historical odds. Build forward-looking snapshot history."

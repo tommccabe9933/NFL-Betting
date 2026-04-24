@@ -1,0 +1,8 @@
+workflow,cv_roc_auc,cv_accuracy
+ridge_original,0.553,0.5438
+xgb_advanced,0.5351,0.5288
+ridge_advanced,0.5298,0.5263
+enet_advanced,0.5297,0.5266
+ridge_kitchensink,0.5283,0.5225
+lasso_advanced,0.5278,0.5246
+lasso_kitchensink,0.5272,0.5249

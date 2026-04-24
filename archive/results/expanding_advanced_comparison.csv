@@ -1,0 +1,16 @@
+model,season,n,accuracy,roc_auc,profit,roi_pct
+lasso_advanced,2021,266,0.515,0.4912,-490,-1.7
+lasso_advanced,2022,263,0.494,0.5205,-1630,-5.6
+lasso_advanced,2023,260,0.5,0.5083,-1300,-4.5
+lasso_advanced,2024,263,0.483,0.5316,-2260,-7.8
+lasso_advanced,2025,264,0.485,0.5054,-2160,-7.4
+ridge_advanced,2021,266,0.511,0.4943,-700,-2.4
+ridge_advanced,2022,263,0.502,0.5204,-1210,-4.2
+ridge_advanced,2023,260,0.477,0.5051,-2560,-9
+ridge_advanced,2024,263,0.506,0.5372,-1000,-3.5
+ridge_advanced,2025,264,0.508,0.5065,-900,-3.1
+ridge_original,2021,266,0.492,0.5073,-1750,-6
+ridge_original,2022,263,0.525,0.5462,50,0.2
+ridge_original,2023,260,0.485,0.5019,-2140,-7.5
+ridge_original,2024,263,0.498,0.5332,-1420,-4.9
+ridge_original,2025,264,0.47,0.4733,-3000,-10.3

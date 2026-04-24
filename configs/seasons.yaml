@@ -1,0 +1,12 @@
+# Season configuration
+
+min_season: 2012
+max_season: 2025
+
+# Test/holdout seasons (not used for feature engineering tuning)
+test_seasons: [2023, 2024, 2025]
+
+# Weeks per season (changed in 2021)
+weeks_per_season:
+  default: 17
+  2021_plus: 18

@@ -1,0 +1,25 @@
+[project]
+name = "nfl-pregame-features"
+version = "0.1.0"
+description = "NFL pregame feature pipeline for spread prediction"
+requires-python = ">=3.9"
+dependencies = [
+    "polars>=0.20.0",
+    "pyarrow>=14.0.0",
+    "duckdb>=0.9.0",
+    "nfl_data_py>=0.3.0",
+    "pyyaml>=6.0",
+    "httpx>=0.25.0",
+    "pandas>=1.5.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pyreadr>=0.5.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"

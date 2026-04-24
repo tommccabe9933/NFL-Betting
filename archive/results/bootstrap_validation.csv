@@ -1,0 +1,9 @@
+metric,value
+observed_wr,0.5508474576271186
+observed_roi,0.05161787365177196
+boot_median_wr,0.5508474576271186
+boot_ci_lower,0.4745762711864407
+boot_ci_upper,0.6271186440677966
+p_above_breakeven,0.736
+p_roi_positive,0.736
+perm_pvalue,0.289

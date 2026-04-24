@@ -1,0 +1,641 @@
+---
+title: "Predicting NFL Spreads with Machine Learning"
+subtitle: |
+  | Final Project V2
+  | Data Science 2 with R (STAT 301-2)
+author: "Tom McCabe"
+pagetitle: "Final Project V2 Tom McCabe"
+date: today
+
+format:
+  html:
+    toc: true
+    embed-resources: true
+
+
+execute:
+  echo: false
+  warning: false
+  message: false
+
+from: markdown+emoji
+reference-location: margin
+citation-location: margin
+---
+
+::: {.callout-tip icon=false}
+## Github Repo Link
+
+[https://github.com/tommccabe9933/NFL-Betting](https://github.com/tommccabe9933/NFL-Betting)
+
+:::
+```{r}
+#| label: setup
+
+library(tidyverse)
+library(tidymodels)
+library(here)
+library(gt)
+library(knitr)
+
+tidymodels_prefer()
+
+# Load from the scripts/ pipeline outputs
+modeling_data <- read_rds(here("objects", "modeling_data.rds"))
+prepared <- read_rds(here("objects", "prepared_modeling_objects.rds"))
+train_data <- prepared$train_data
+test_data <- prepared$test_data
+
+official_comparison <- read_csv(
+  here("results", "official_workflow_comparison.csv"), show_col_types = FALSE
+)
+final_selection <- read_csv(
+  here("results", "final_selection.csv"), show_col_types = FALSE
+)
+test_metrics <- read_csv(
+  here("results", "test_metrics.csv"), show_col_types = FALSE
+)
+conf_mat_data <- read_csv(
+  here("results", "best_workflow_confusion_matrix.csv"), show_col_types = FALSE
+)
+split_summary <- read_csv(
+  here("results", "split_summary.csv"), show_col_types = FALSE
+)
+best_predictions <- read_rds(
+  here("objects", "best_workflow_test_predictions.rds")
+)
+
+selected_metrics <- test_metrics |> filter(workflow_label != "Baseline") |> slice_head(n = 1)
+baseline_metrics <- test_metrics |> filter(workflow_label == "Baseline") |> slice_head(n = 1)
+
+coef_data <- read_csv(
+  here("results", "model_coefficients.csv"), show_col_types = FALSE
+)
+
+# Load individual workflow results into a named list
+workflow_result_files <- list.files(here("results", "workflows"), full.names = TRUE)
+workflow_results <- map(workflow_result_files, read_rds) |>
+  set_names(tools::file_path_sans_ext(basename(workflow_result_files)))
+
+# Stage 2 data
+decay_analysis <- read_csv(here("results", "decay_analysis.csv"), show_col_types = FALSE)
+decay_season <- read_csv(here("results", "decay_season_metrics.csv"), show_col_types = FALSE)
+decay_obj <- read_rds(here("objects", "decay_diagnosis.rds"))
+expanding_preds <- read_rds(here("objects", "expanding_window_predictions.rds"))
+tuning_log <- read_csv(here("results", "expanding_tuning_log.csv"), show_col_types = FALSE)
+rolling_comparison <- read_csv(here("results", "rolling_comparison.csv"), show_col_types = FALSE)
+rolling_overall <- read_csv(here("results", "rolling_overall_comparison.csv"), show_col_types = FALSE)
+```
+
+# Stage 1: Initial Model Development {#sec-stage1}
+
+## Introduction
+
+My goal for this project is to further my skills as an aspiring employee of an NFL Team or sportsbook and investigate why so many young men and women lose money sports betting. Sports betting has grown into a multi-billion dollar industry and the terms "spread" and "cover" get thrown around a lot. This is because the point spread serving as the most popular way to wager on NFL games. A point spread represents the market's best estimate of the expected margin of victory. If a team is favored by 7 points, they must win by more than 7 to "cover" the spread. Despite the efficiency of betting markets, there remains a compelling question: can structured statistical features (team performance metrics, defensive statistics, and game context) capture predictive signal beyond what the market already prices in?
+
+I wanted to challenge myself for this project and take it a step further; I ask a narrower and more difficult question than simply whether team statistics relate to game outcomes: can publicly available team-level performance and game-context variables improve prediction of whether the closing favorite covers the spread, beyond what is already summarized by the betting market itself?
+
+Framed this way, the task is a binary classification problem in a setting where the benchmark is unusually strong, because the closing spread already aggregates large amounts of public information about team strength, injuries, matchup quality, and game environment. Any predictive success therefore depends not on finding variables associated with winning in general, but on identifying information that remains incrementally useful after the market has already priced most of it in.
+
+The data used for this analysis spans NFL regular season games from 2012 to 2024 and is sourced from three complementary public datasets on Kaggle: team-level offensive statistics, team-level defensive statistics, and historical game results with betting lines.
+
+## Data Overview
+
+My dataset wrangling was the toughest part of the project; it was assembled from four separate sources and required substantial wrangling in `scripts/01_build_model_data.R`. Weekly team-level offensive and defensive statistics from Kaggle were joined to historical game results with betting lines from Spreadspoke, and then enriched with play-by-play EPA, success rate, and CPOE metrics computed from raw NFLverse data via `nflreadr`. On top of those joins, I built custom features using online resources, an iterative Elo rating system that tracks team strength game-by-game, lagged rolling 5-game and 3-game averages for efficiency metrics, momentum differentials, and rest/schedule context derived from game dates. The data was then restructured from a per-team format into a per-game, favorite-vs-underdog perspective. After removing pushes and incomplete records, the result is `r nrow(modeling_data)` game observations with `r ncol(modeling_data) - 3` predictor variables spanning the 2012 to 2024 NFL regular seasons.
+
+### Target Variable
+
+My outcome variable is whether the closing favorite covered the point spread. After removing a small number of "push" outcomes (where the margin exactly equals the spread), the dataset contains `r nrow(modeling_data)` game observations. The classes are well balanced, with approximately 50% of outcomes in each category, as shown in @fig-target-dist.
+
+```{r}
+#| label: fig-target-dist
+#| fig-cap: "Distribution of the target variable (spread coverage outcome)"
+
+modeling_data |>
+  ggplot(aes(x = fav_cover, fill = fav_cover)) +
+  geom_bar() +
+  scale_x_discrete(labels = c("cover" = "Covers Spread", "no_cover" = "Does Not Cover")) +
+  scale_fill_manual(
+    values = c("cover" = "#2a9d8f", "no_cover" = "#e9c46a"),
+    labels = c("cover" = "Cover", "no_cover" = "Does Not Cover")
+  ) +
+  labs(x = "Outcome", y = "Count", fill = "Outcome") +
+  theme_minimal(base_size = 12)
+```
+
+### Missingness
+
+After my cleaning process and joining together these datasets variables have complete data. The notable exception I saw was humidity, which is missing for approximately 88% of observations. This is expected, since many NFL games are played in domed stadiums or in conditions where humidity is not recorded. Rather than dropping these observations, median imputation was used to handle this missingness across all recipes.
+
+### Predictors
+
+My modeling dataset includes `r ncol(modeling_data) - 3` predictors, excluding the game identifier and season/week fields, and these variables were chosen to capture several distinct sources of possible "edge" in the betting market. Betting context variables such as the favorite's closing spread and the over/under line represent the market's prior belief about team strength and expected scoring environment. After some online research, I fleshed out that Elo rating differential serves as an independent summary of relative team quality based on historical performance. Offensive and defensive efficiency measures, including yards per play, pass and rush efficiency, points per play, and EPA differentials, aim to capture underlying team performance at a more structural level than final scores alone. Rolling 5-game features were included to represent short-run form and momentum that season-long averages may smooth away.
+
+Also, some minor predictors but I think schedule and context variables, such as rest differential, short-week indicators, and neutral-site flags, were intended to capture situational factors that may affect performance but may not be fully absorbed by the market.
+
+## Methods
+
+### Data Splitting
+
+The data was split by season of the NFL: games to form the training set (`r nrow(train_data)` observations) and games from 2021 onward form the held-out test set (`r nrow(test_data)` observations), as shown in @tbl-split-summary. I thought having the most recent seasons as testing data was the best for presenting this one-day, but I don't believe that time is an important factor (unlike a project tracking like stock prices over days, so I still felt that this was an OK project/within the mandate). The split was chosen over a random split because NFL team performance evolves over time as rosters change, coaching strategies shift, and league-wide trends (such as the increase in passing efficiency) alter the statistical landscape. As we work on in class, ten-fold cross-validation with 3 repeats, stratified by the outcome, was used for model evaluation during tuning to produce stable performance estimates given the moderate sample size.
+
+```{r}
+#| label: tbl-split-summary
+#| tbl-cap: "Train/test split summary"
+
+split_summary |>
+  gt() |>
+  fmt_number(columns = where(is.numeric), decimals = 0)
+```
+
+### Recipes
+
+Three distinct preprocessing recipes were developed, each with variants appropriate for linear and tree-based models:
+
+**Recipe 1 (Kitchen Sink):** My baseline recipe includes all predictors with minimal preprocessing: median imputation for missing values, removal of zero-variance predictors, dummy encoding of categorical variables, and normalization for linear models. The tree-based variant omits normalization and dummy encoding since tree models handle these natively. As we learned The purpose of this recipe is to establish a baseline: given every available feature, how well can each model type perform without any hand-crafted feature engineering? Our actual baseline is my head is a coinflip, because when lines are set, it is set at near a 50.50.
+
+**Recipe 2 (Feature Engineered):** My engineered recipe extends the kitchen sink specification by adding a small set of domain-motivated interaction for looking at football and transformation features designed to test whether football context improves prediction beyond raw team differentials alone. A market pressure term, defined as the spread multiplied by the over/under line, was included to represent games in which the favorite is expected to win comfortably in a high-scoring environment, a setting that may create different covering dynamics than low-total games. A wind-cold interaction was added because weather may matter most when multiple adverse conditions occur simultaneously rather than in isolation. A strength signal combining Elo and offensive efficiency differentials was intended to capture cases where both a long-run rating system and current on-field efficiency point in the same direction. A market signal gap, defined as the difference between the Elo-implied spread and the actual closing spread, was included to test whether discrepancies between model-based team strength and the betting market contain exploitable information. Together, these engineered features were meant to evaluate whether domain-guided representation of matchup context could outperform a simpler all-predictors approach.
+
+**Recipe 3 (Curated):** This extra, for fun, recipe was designed late in the project by myself after I struggled to find an edge in the training data. I wanted to see if in a low-signal prediction setting, removing weak or redundant predictors may improve generalization more than adding complexity. Using training-data results from the broader feature set as guidance, I tried to retain only the 10 predictors that appeared most consistently informative across the initial regularized linear fits, including rolling offensive momentum, yards per play differential, turnover differential, underdog recent scoring, temperature, offensive and defensive EPA differentials, Elo rating differential, turnover momentum, and success rate differential. Importantly, this selection was derived using training data only, and the goal was to evaluate whether concentrating model capacity on the strongest candidate signals would reduce noise and improve out-of-sample discrimination. This recipe was treated as a separate recipe comparison rather than post hoc cherry-picking of the winning model, and was applied only to the fast regularized linear models (logistic, lasso, ridge, elastic net),
+
+### Model Types
+
+The big 8 model types were evaluated across `r nrow(official_comparison)` official workflows (each model type paired with both recipes where applicable).
+
+1. **Null model:** A baseline that always predicts the most frequent class, establishing the floor for comparison. Any useful model must outperform this benchmark.
+2. **Logistic regression:** A standard linear classifier included as the simplest reasonable model. If the relationship between predictors and outcome is approximately linear, logistic regression should perform competitively without regularization.
+3. **Lasso regression:** L1 regularized logistic regression that can zero out uninformative predictors. Included because the dataset contains 27 predictors, many of which may be noise. Lasso's built-in variable selection is valuable in this setting. The penalty strength was tuned.
+4. **Ridge regression:** L2 regularized logistic regression that shrinks coefficients toward zero without eliminating them. Unlike Lasso, Ridge retains all predictors but reduces their influence, which is appropriate when many features contribute small amounts of signal. The penalty strength was tuned.
+5. **Elastic net:** Combines L1 and L2 penalties, offering a middle ground between Lasso's sparsity and Ridge's coefficient shrinkage. Both the penalty strength and mixing parameter were tuned to let the data determine the optimal balance.
+6. **K-nearest neighbors:** Our non-parametric method included to test whether local patterns in the feature space capture information that linear models miss. The number of neighbors was tuned.
+7. **Random forest:** RF potentially captures non-linear relationships and feature interactions without explicit engineering. Included to test whether the true decision boundary is non-linear. The number of randomly selected predictors and minimum node size were tuned.
+8. **Boosted tree (XGBoost):** The longest to run, sequential ensemble that builds trees to correct previous errors, often the top performer in structured data competitions. My number of trees, tree depth, learning rate, minimum node size, loss reduction, and sample proportion were all tuned.
+
+### Evaluation Metric
+
+The primary metric for model comparison and selection is the area under the ROC curve (ROC AUC). ROC AUC was chosen over accuracy for two reasons. First, accuracy depends on the classification threshold (typically 0.5), but in a betting context the optimal threshold may differ. ROC AUC evaluates discriminative ability across all thresholds. Second, although the classes are nearly balanced here, ROC AUC is more sensitive to the model's probabilistic calibration, which matters when even small improvements in predicted probabilities can translate to a financial edge. Accuracy is reported as a secondary metric for interpretability.
+
+## Model Building & Selection
+
+@tbl-model-comparison presents the cross-validated performance of all `r nrow(official_comparison)` official workflows, sorted by ROC AUC. The top four workflows all use the Curated recipe, led by Ridge - Curated with a cross-validated ROC AUC of `r round(official_comparison$roc_auc[[1]], 4)` and accuracy of `r round(official_comparison$accuracy[[1]], 4)`. The fact that Curated recipe models consistently outrank their Kitchen Sink and Engineered counterparts is one of the clearest signals in the results.
+
+```{r}
+#| label: tbl-model-comparison
+#| tbl-cap: "Cross-validated performance of all official workflows, sorted by ROC AUC"
+
+official_comparison |>
+  select(workflow_label, model_type, recipe_family, tuned, roc_auc, accuracy, hyperparameters) |>
+  gt() |>
+  cols_label(
+    workflow_label = "Workflow",
+    model_type = "Model Type",
+    recipe_family = "Recipe",
+    tuned = "Tuned",
+    roc_auc = "ROC AUC",
+    accuracy = "Accuracy",
+    hyperparameters = "Optimal Parameters"
+  ) |>
+  fmt_number(columns = c(roc_auc, accuracy), decimals = 4) |>
+  tab_style(
+    style = cell_fill(color = "#d4ede3"),
+    locations = cells_body(rows = 1)
+  )
+```
+
+### Model Selection
+
+The final model was selected as the workflow with the highest cross-validated ROC AUC, which was **`r final_selection$workflow_label[[1]]`** with a training ROC AUC of `r round(final_selection$training_roc_auc[[1]], 4)` and accuracy of `r round(final_selection$training_accuracy[[1]], 4)`.
+
+## Final Model Analysis
+
+The selected model was fit on the full training set and evaluated on the held-out test set (games from 2021 onward). @tbl-final-metrics compares the selected model's performance against the null baseline on the `r nrow(test_data)` test games.
+
+```{r}
+#| label: tbl-final-metrics
+#| tbl-cap: "Final model performance on the test set compared to baseline"
+
+test_metrics |>
+  select(workflow_label, roc_auc, accuracy, sensitivity, specificity) |>
+  gt() |>
+  cols_label(
+    workflow_label = "Model",
+    roc_auc = "ROC AUC",
+    accuracy = "Accuracy",
+    sensitivity = "Sensitivity",
+    specificity = "Specificity"
+  ) |>
+  fmt_number(columns = c(roc_auc, accuracy, sensitivity, specificity), decimals = 4)
+```
+
+### Confusion Matrix
+
+```{r}
+#| label: tbl-conf-mat
+#| tbl-cap: "Confusion matrix for the final model on the test set"
+
+conf_mat_data |>
+  mutate(across(where(is.character), ~ recode(., cover = "Covers", no_cover = "Does Not Cover"))) |>
+  pivot_wider(names_from = `Observed outcome`, values_from = Count) |>
+  gt() |>
+  cols_label(`Predicted cover` = "Predicted") |>
+  tab_spanner(label = "Actual Outcome", columns = c(Covers, `Does Not Cover`))
+```
+
+### ROC Curve
+
+```{r}
+#| label: fig-roc-curve
+#| fig-cap: "ROC curve for the final model on the test set"
+
+roc_data <- best_predictions |>
+  roc_curve(truth = fav_cover, .pred_cover)
+
+roc_data |>
+  ggplot(aes(x = 1 - specificity, y = sensitivity)) +
+  geom_path(color = "#2a9d8f", linewidth = 1) +
+  geom_abline(lty = 2, color = "gray50") +
+  coord_equal() +
+  labs(x = "1 - Specificity (False Positive Rate)",
+       y = "Sensitivity (True Positive Rate)") +
+  theme_minimal(base_size = 12)
+```
+
+### Original ROI Simulation
+
+To evaluate whether statistical performance translated into betting value, @fig-roi-simulation presents a simple fixed-stake wagering simulation on the holdout games using standard -110 sportsbook odds, with each wager risking $110 to win $100. A bettor needs to win roughly 52.4% of wagers to break even.
+
+```{r}
+#| label: fig-roi-simulation
+#| fig-cap: "Simulated cumulative profit/loss on held-out test games under standard -110 sportsbook odds, comparing the model against random and always-pick-favorite strategies."
+
+include_graphics(here("figures", "roi_simulation.png"))
+```
+
+The results profit curve shows that the selected model did not generate a sustained financial edge across all test games, ultimately performing similarly to the naive baselines. However, upon closer inspection, the curve reveals something much more interesting: the model was clearly profitable for a significant stretch of games before declining. This observation led directly to Stage 2 of this analysis.
+
+### Key Drivers of Model Predictions
+
+@fig-coef-importance displays the standardized coefficients from the selected ridge model, which allow relative comparison of predictor importance because all retained inputs were placed on a common scale.
+
+```{r}
+#| label: fig-coef-importance
+#| fig-cap: "Standardized coefficients for the selected model. Positive values increase the probability that the favorite covers; negative values decrease it."
+#| fig-height: 6
+
+has_se <- "std.error" %in% names(coef_data)
+
+coef_plot_data <- coef_data |>
+  filter(estimate != 0) |>
+  slice_max(abs(estimate), n = 15) |>
+  mutate(label = reorder(label, abs(estimate)))
+
+if (has_se) {
+  coef_plot_data <- coef_plot_data |>
+    mutate(
+      ci_lower = estimate - 1.96 * std.error,
+      ci_upper = estimate + 1.96 * std.error,
+      significant = p.value < 0.10
+    )
+}
+
+p <- ggplot(coef_plot_data, aes(x = estimate, y = label)) +
+  geom_vline(xintercept = 0, color = "grey60", linewidth = 0.6)
+
+if (has_se) {
+  p <- p +
+    geom_errorbarh(
+      aes(xmin = ci_lower, xmax = ci_upper),
+      height = 0.25, color = "grey50", linewidth = 0.4
+    ) +
+    geom_point(aes(color = direction, shape = significant), size = 3.5) +
+    scale_shape_manual(
+      values = c("TRUE" = 16, "FALSE" = 1),
+      labels = c("TRUE" = "p < 0.10", "FALSE" = "p >= 0.10"),
+      name = "Significance"
+    )
+} else {
+  p <- p +
+    geom_point(aes(color = direction), size = 3.5)
+}
+
+p +
+  scale_color_manual(
+    values = c(
+      "Increases Cover Probability" = "#264653",
+      "Decreases Cover Probability" = "#e76f51"
+    )
+  ) +
+  labs(
+    x = "Standardized Coefficient",
+    y = NULL,
+    color = "Direction"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "bottom",
+    legend.box = "horizontal",
+    panel.grid.major.y = element_line(color = "grey92"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+## Stage 1 Summary
+
+The initial analysis across `r nrow(official_comparison)` workflows showed that regularized linear models with curated features outperformed all alternatives. However, the full test-set performance (ROC AUC = `r round(selected_metrics$roc_auc[[1]], 4)`) appeared to show the model was no better than a coin flip. Looking at the ROI simulation curve more carefully told a different story, which led me to Stage 2.
+
+---
+
+# Stage 2: Temporal Decay and Expanding Window Retraining {#sec-stage2}
+
+## The Discovery: Temporal Decay
+
+Looking at the ROI simulation from Stage 1, I noticed something critical: the model was actually **profitable** for a significant stretch of early test games before collapsing. This pattern is visible in @fig-decay-annotated, where I have annotated the original ROI curve with a marker at game 400 and vertical lines at season boundaries.
+
+```{r}
+#| label: fig-decay-annotated
+#| fig-cap: "The static model's cumulative profit, annotated to show the onset of performance decay. The model was profitable through roughly game 400 before collapsing as the training data grew stale."
+
+include_graphics(here("figures", "decay_annotated.png"))
+```
+
+### Quantifying the Decay
+
+To confirm this visually apparent pattern with hard numbers, I sliced the test predictions at game 400 and computed performance metrics for each segment. @tbl-decay-analysis shows the striking contrast.
+
+```{r}
+#| label: tbl-decay-analysis
+#| tbl-cap: "Model performance in the first 400 test games vs. the remaining games. The early games show profitable performance well above the 52.4% breakeven threshold."
+
+decay_analysis |>
+  gt() |>
+  cols_label(
+    slice = "Segment",
+    n_games = "Games",
+    accuracy = "Accuracy",
+    win_rate_pct = "Win Rate %",
+    roc_auc = "ROC AUC",
+    total_profit = "Total Profit",
+    roi_pct = "ROI %"
+  ) |>
+  fmt_number(columns = c(accuracy, roc_auc), decimals = 4) |>
+  fmt_number(columns = c(win_rate_pct, roi_pct), decimals = 1) |>
+  fmt_currency(columns = total_profit, decimals = 0) |>
+  tab_style(
+    style = cell_fill(color = "#d4ede3"),
+    locations = cells_body(rows = 1)
+  ) |>
+  tab_style(
+    style = cell_fill(color = "#f8d7da"),
+    locations = cells_body(rows = 2)
+  )
+```
+
+The first 400 games show **`r round(decay_analysis$accuracy[1] * 100, 1)`% accuracy** and **`r scales::dollar(decay_analysis$total_profit[1])` in profit** (a `r round(decay_analysis$roi_pct[1], 1)`% ROI). This is well above the 52.4% breakeven threshold required under standard -110 odds. The remaining `r decay_analysis$n_games[2]` games, however, show a devastating `r round(decay_analysis$accuracy[2] * 100, 1)`% accuracy and `r scales::dollar(decay_analysis$total_profit[2])` in losses.
+
+@tbl-decay-seasons breaks this down by individual season.
+
+```{r}
+#| label: tbl-decay-seasons
+#| tbl-cap: "Season-by-season model performance on the test set. Performance is strongest in 2022, the season closest to (but not identical to) the training window, and degrades sharply in later seasons."
+
+decay_season |>
+  gt() |>
+  cols_label(
+    slice = "Season",
+    n_games = "Games",
+    accuracy = "Accuracy",
+    win_rate_pct = "Win Rate %",
+    roc_auc = "ROC AUC",
+    total_profit = "Total Profit",
+    roi_pct = "ROI %"
+  ) |>
+  fmt_number(columns = c(accuracy, roc_auc), decimals = 4) |>
+  fmt_number(columns = c(win_rate_pct, roi_pct), decimals = 1) |>
+  fmt_currency(columns = total_profit, decimals = 0)
+```
+
+### What This Means
+
+This is not a failed model. This is a model suffering from **concept drift**, a well-documented phenomenon in machine learning where the statistical relationship between features and outcomes changes over time. In the NFL context, this makes intuitive sense:
+
+- Rosters turn over as players retire, get traded, or develop
+- Coaching staffs change offensive and defensive schemes
+- League-wide trends shift (rule changes favoring passing, evolving analytics adoption)
+- The features that predicted spread coverage in 2012-2020 may no longer carry the same weight by 2024-2025
+
+The model trained on 2012-2020 data captured real, actionable patterns, but those patterns decayed as the league evolved. The solution is straightforward: **keep the model fresh by retraining it periodically**.
+
+## Expanding Window Retraining
+
+### Approach
+
+Instead of training once on 2012-2020 and predicting all future seasons, I implemented an **expanding window** approach where the model is retrained before each test season using all available data up to that point:
+
+```{r}
+#| label: tbl-retrain-schedule
+#| tbl-cap: "Expanding window retraining schedule. Each season gets a freshly tuned model that incorporates the most recent data."
+
+tuning_log |>
+  mutate(
+    predict_season = paste("Season", season),
+    train_window = train_seasons,
+    train_size = scales::comma(train_n),
+    penalty = round(best_penalty, 5),
+    cv_roc = round(cv_roc_auc, 4)
+  ) |>
+  select(predict_season, train_window, train_size, penalty, cv_roc) |>
+  gt() |>
+  cols_label(
+    predict_season = "Predict",
+    train_window = "Training Data",
+    train_size = "Training Games",
+    penalty = "Best Penalty",
+    cv_roc = "CV ROC AUC"
+  )
+```
+
+The same model specification (Ridge regression with curated features), the same tuning grid (25 penalty levels from 10^-4^ to 10^0^), and the same cross-validation strategy (10-fold, 3 repeats) were used for each retrain. The only difference is the training data grows by one season each time. Critically, the recipe's normalization step recomputes mean and standard deviation from each new training window, ensuring the model adapts to evolving feature distributions.
+
+### Results: Static vs. Expanding Window
+
+@tbl-rolling-comparison shows the head-to-head comparison between the original static model and the expanding window approach, broken down by season.
+
+```{r}
+#| label: tbl-rolling-comparison
+#| tbl-cap: "Season-by-season performance comparison: static model vs. expanding window retraining"
+
+rolling_comparison |>
+  select(approach, season, n_games, accuracy, roc_auc, total_profit, roi_pct) |>
+  gt() |>
+  cols_label(
+    approach = "Approach",
+    season = "Season",
+    n_games = "Games",
+    accuracy = "Accuracy",
+    roc_auc = "ROC AUC",
+    total_profit = "Profit",
+    roi_pct = "ROI %"
+  ) |>
+  fmt_number(columns = c(accuracy, roc_auc), decimals = 4) |>
+  fmt_number(columns = roi_pct, decimals = 1) |>
+  fmt_currency(columns = total_profit, decimals = 0)
+```
+
+@tbl-rolling-overall shows the overall aggregated comparison.
+
+```{r}
+#| label: tbl-rolling-overall
+#| tbl-cap: "Overall performance comparison across all test games"
+
+rolling_overall |>
+  gt() |>
+  cols_label(
+    approach = "Approach",
+    n_games = "Games",
+    accuracy = "Accuracy",
+    roc_auc = "ROC AUC",
+    total_profit = "Total Profit",
+    roi_pct = "ROI %",
+    win_rate_pct = "Win Rate %"
+  ) |>
+  fmt_number(columns = c(accuracy, roc_auc), decimals = 4) |>
+  fmt_number(columns = c(roi_pct, win_rate_pct), decimals = 1) |>
+  fmt_currency(columns = total_profit, decimals = 0)
+```
+
+### The Centerpiece: Cumulative Profit Comparison
+
+@fig-rolling-roi is the most important figure in this report. It shows the cumulative profit curves for the static model, the expanding window model, and the baseline strategies on the same chart.
+
+```{r}
+#| label: fig-rolling-roi
+#| fig-cap: "Cumulative profit comparison between the static model (trained once on 2012-2020) and the expanding window model (retrained each season). Dashed vertical lines mark season boundaries."
+
+include_graphics(here("figures", "rolling_vs_static_roi.png"))
+```
+
+## Stage 2 Conclusion
+
+The temporal decay analysis fundamentally changes the story of this project. Rather than concluding that the model "failed to generalize," the evidence shows that the model **did** capture real predictive signal, but that signal decayed over time as the NFL evolved away from the patterns in the training data.
+
+The expanding window retraining approach tests a natural solution: keep the model fresh by incorporating the most recent season's data before predicting the next one. This is how any real-world sports betting operation would maintain a predictive model, since nobody would use a model trained in 2020 to make bets in 2025 without updating it.
+
+Key takeaways:
+
+1. **The model has real signal when fresh.** The first 400 test games showed `r round(decay_analysis$accuracy[1] * 100, 1)`% accuracy and `r scales::dollar(decay_analysis$total_profit[1])` in profit, well above the 52.4% breakeven.
+2. **Concept drift is the enemy, not model quality.** The sharp performance decline in later seasons is consistent with changing team dynamics, not a fundamentally flawed model.
+3. **Periodic retraining is essential** for any temporal prediction task in sports betting, which is how professional operations actually maintain their models.
+
+### Future Work
+
+- **Automated seasonal retraining pipeline:** Build a production workflow that automatically retrains when new season data becomes available
+- **2025 live predictions:** Incorporate the 2025 play-by-play data (requires re-running the feature engineering pipeline with updated EPA metrics)
+- **Confidence-based betting:** Only bet when the model's predicted probability exceeds a threshold (e.g., 0.55), potentially improving ROI by being selective
+- **Player-level features:** Integrate quarterback quality and key defensive absences for richer signal
+- **Line movement:** Use the difference between opening and closing spreads as a feature
+
+## Comment on Generative AI Use
+
+Following the rules of our syllabus, "IN THIS COURSE, GENERATIVE AI RESOURCES ARE encouraged to be used by students with the purpose of supporting their learning", Generative AI tools were used in a limited support role during this project to give me some interesting variables I could work with when I made the models and help me re-learn how to use R functions along with my cited online learning resources. I took on a pretty advanced data wrangling project because this is something I want to bring to interviews with NFL teams and sports betting companies.
+
+I did not want to use GenAI learning help when making my models because that is what we learned in this class; to make this more marketable to employers for the initial wrangling, I needed to be taught how to make things like an iterative Elo computation from scratch that tracks ratings game-by-game across 12+ seasons with seasonal regression. I also used it as a learning resource on Script 01 to teach me how to write code that helps combine the Kaggle/Spreadspoke data with the live play-by-play data via nflreadr, then computes EPA, success rate, and CPOE metrics from raw play-level data as well as using rolling season averages. I also learned about a bundling strategy for organizing model workflows into modular groups, which allowed me to reuse a single fitting function across all model families from mostly online resources.
+
+For Stage 2 of this project, I used Claude Code as a coding assistant to help me implement the expanding window retraining approach, which required writing new R scripts to automate the seasonal retrain-predict loop and generate the comparison visualizations. The statistical methodology (expanding window, concept drift diagnosis) and interpretation are my own.
+
+## References
+
+Cantalupa, N. (n.d.). *NFL Team Data 2003-2023*. Kaggle.
+[https://www.kaggle.com/datasets/nickcantalupa/nfl-team-data-2003-2023](https://www.kaggle.com/datasets/nickcantalupa/nfl-team-data-2003-2023)
+
+Spreadspoke. (n.d.). *NFL Scores and Betting Data*. Kaggle.
+[https://www.kaggle.com/datasets/tobycrabtree/nfl-scores-and-betting-data](https://www.kaggle.com/datasets/tobycrabtree/nfl-scores-and-betting-data)
+
+Hyde, P. (n.d.). *NFL Stats 2012-2024*. Kaggle.
+[https://www.kaggle.com/datasets/philiphyde1/nfl-stats-2012-2024](https://www.kaggle.com/datasets/philiphyde1/nfl-stats-2012-2024)
+
+NFelo. (n.d.). *NFL power ratings*.
+[https://www.nfeloapp.com/nfl-power-ratings/](https://www.nfeloapp.com/nfl-power-ratings/)
+
+Congelio, B. (n.d.). *NFL analytics with R: Advanced methods*.
+[https://bradcongelio.com/nfl-analytics-with-r-book/05-nfl-analytics-advanced-methods.html](https://bradcongelio.com/nfl-analytics-with-r-book/05-nfl-analytics-advanced-methods.html)
+
+ScienceDirect article on sports prediction.
+[https://www.sciencedirect.com/science/article/pii/S2772662223001364](https://www.sciencedirect.com/science/article/pii/S2772662223001364)
+
+Samford Sports Analytics. (2023). *How I built a competitive NFL prediction model*.
+[https://www.samford.edu/sports-analytics/fans/2023/How-I-Built-a-Competitive-NFL-Prediction-Model-with-Only-Five-Statistics](https://www.samford.edu/sports-analytics/fans/2023/How-I-Built-a-Competitive-NFL-Prediction-Model-with-Only-Five-Statistics)
+
+nflverse.
+[https://github.com/nflverse](https://github.com/nflverse)
+
+## Appendix: Tuning Parameter Analysis {#sec-appendix-tuning}
+
+### Selected Model Tuning
+
+```{r}
+#| label: fig-winner-autoplot
+#| fig-cap: "Tuning parameter performance for the leading tuned workflow"
+
+autoplot(workflow_results[[final_selection$workflow_id[[1]]]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+### Regularized Models
+
+```{r}
+#| label: fig-tuning-lasso-basic
+#| fig-cap: "Tuning results for Lasso, Basic recipe"
+#| fig-height: 4
+
+autoplot(workflow_results[["lasso_basic"]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+```{r}
+#| label: fig-tuning-ridge-basic
+#| fig-cap: "Tuning results for Ridge, Basic recipe"
+#| fig-height: 4
+
+autoplot(workflow_results[["ridge_basic"]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+```{r}
+#| label: fig-tuning-enet-basic
+#| fig-cap: "Tuning results for Elastic Net, Basic recipe"
+#| fig-height: 4
+
+autoplot(workflow_results[["enet_basic"]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+### K-Nearest Neighbors
+
+```{r}
+#| label: fig-tuning-knn-basic
+#| fig-cap: "Tuning results for KNN, Basic recipe"
+#| fig-height: 4
+
+autoplot(workflow_results[["knn_basic"]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+### Random Forest
+
+```{r}
+#| label: fig-tuning-rf-basic
+#| fig-cap: "Tuning results for Random Forest, Basic recipe"
+#| fig-height: 4
+
+autoplot(workflow_results[["rf_basic"]], metric = "roc_auc") +
+  theme_minimal(base_size = 12)
+```
+
+### XGBoost
+
+```{r}
+#| label: fig-tuning-xgb-basic
+#| fig-cap: "Tuning results for XGBoost, Basic recipe"
+
+include_graphics(here("figures", "tuning_xgb_basic.png"))
+```

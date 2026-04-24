@@ -1,0 +1,74 @@
+# Feature family configuration
+
+features:
+  market_baseline:
+    enabled: true
+    min_season: 2012
+    dependencies: [canonical_games]
+
+  epa_ratings:
+    enabled: true
+    min_season: 2012
+    rolling_window: 5
+    short_rolling_window: 3
+    dependencies: [pbp]
+
+  elo:
+    enabled: true
+    min_season: 2012
+    k_value: 20
+    season_regression: 0.75
+    dependencies: [canonical_games]
+
+  qb_features:
+    enabled: true
+    min_season: 2012
+    rolling_window: 5
+    dependencies: [player_stats, injuries, depth_charts]
+
+  rest_schedule:
+    enabled: true
+    min_season: 2012
+    dependencies: [canonical_games]
+
+  weather:
+    enabled: true
+    min_season: 2012
+    dependencies: [canonical_games]
+
+  injury_impact:
+    enabled: true
+    min_season: 2012
+    dependencies: [injuries]
+
+  situational_epa:
+    enabled: true
+    min_season: 2012
+    rolling_window: 5
+    dependencies: [pbp]
+
+  tracking_proxy:
+    enabled: true
+    min_season: 2016
+    rolling_window: 5
+    dependencies: [ngs]
+
+  pfr_pressure:
+    enabled: true
+    min_season: 2018
+    rolling_window: 5
+    dependencies: [pfr]
+
+  ftn_scheme:
+    enabled: true
+    min_season: 2022
+    rolling_window: 5
+    feature_flag: FTN_ENABLED
+    dependencies: [ftn, pbp]
+
+  kaggle_team_stats:
+    enabled: true
+    min_season: 2012
+    rolling_window: 5
+    short_rolling_window: 3
+    dependencies: [market]

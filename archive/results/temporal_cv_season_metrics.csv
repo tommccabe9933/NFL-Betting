@@ -1,0 +1,13 @@
+model,test_season,n,brier,log_loss,roc_auc,raw_accuracy,cal_accuracy
+enet_universal_2012,2023,260,0.2506,0.6943,NA,0.473,0.473
+enet_universal_2012,2024,263,0.2518,0.6967,NA,0.449,0.449
+enet_universal_2012,2025,264,0.25,0.6932,NA,0.511,0.511
+lasso_universal_2012,2023,260,0.2506,0.6943,NA,0.473,0.473
+lasso_universal_2012,2024,263,0.2518,0.6967,NA,0.449,0.449
+lasso_universal_2012,2025,264,0.25,0.6932,NA,0.511,0.511
+ridge_universal_2012,2023,260,0.2513,0.6958,NA,0.473,0.473
+ridge_universal_2012,2024,263,0.2518,0.6968,NA,0.449,0.449
+ridge_universal_2012,2025,264,0.2499,0.6928,NA,0.515,0.511
+ridge_universal_2018,2023,260,0.2529,0.699,NA,0.473,0.473
+ridge_universal_2018,2024,263,0.2516,0.6964,NA,0.449,0.449
+ridge_universal_2018,2025,264,0.2522,0.6976,NA,0.515,0.489

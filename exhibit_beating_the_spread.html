@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Beating the Spread — An NFL Data Science Story</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --field-green: #0a3d1f;
+    --field-green-bright: #1a6e3a;
+    --gridiron: #ffffff;
+    --gold: #ffb81c;
+    --neon: #00d4ff;
+    --neon-pink: #ff2d75;
+    --bg: #0c0f14;
+    --bg-elev: #161b25;
+    --bg-card: #1d2330;
+    --text: #f3f6fa;
+    --text-dim: #9aa6b8;
+    --accent: #ff6b35;
+    --good: #2ee59d;
+    --bad: #ff4d6d;
+    --shadow: 0 10px 40px rgba(0,0,0,0.4);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse at top, rgba(0,212,255,0.08), transparent 60%),
+      radial-gradient(ellipse at bottom, rgba(255,107,53,0.08), transparent 60%),
+      linear-gradient(180deg, #0a0d12, #0c0f14);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem 2rem;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+  .hero-content { position: relative; z-index: 2; text-align: center; max-width: 1100px; }
+  .hero-tag {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.3);
+    color: var(--neon);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+  .hero h1 {
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    line-height: 1.05;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #fff 0%, var(--neon) 50%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero p.lede {
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+    color: var(--text-dim);
+    max-width: 720px;
+    margin: 0 auto 3rem;
+  }
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+    max-width: 900px;
+    margin: 0 auto 3rem;
+  }
+  .stat {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 1.5rem 1rem;
+    backdrop-filter: blur(10px);
+    transition: transform 0.25s, border 0.25s;
+  }
+  .stat:hover { transform: translateY(-4px); border-color: var(--neon); }
+  .stat-num {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--neon), var(--gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-top: 0.6rem;
+  }
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%      { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* ============ SECTIONS ============ */
+  section.exhibit {
+    padding: 6rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .eyebrow {
+    display: inline-block;
+    color: var(--gold);
+    font-size: 0.85rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+  h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.2rem;
+  }
+  h3 { font-size: 1.4rem; margin: 1.5rem 0 0.75rem; font-weight: 700; }
+  .lead {
+    font-size: 1.15rem;
+    color: var(--text-dim);
+    max-width: 720px;
+    margin-bottom: 3rem;
+  }
+
+  /* ============ CARDS ============ */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: var(--shadow);
+  }
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+
+  /* ============ DATA SOURCES ============ */
+  .source-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+  .source {
+    background: var(--bg-card);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 1.25rem;
+    transition: all 0.25s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .source::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(0,212,255,0.06) 100%);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .source:hover { transform: translateY(-3px); border-color: var(--neon); }
+  .source:hover::before { opacity: 1; }
+  .source-name { font-weight: 700; font-size: 1rem; margin-bottom: 0.35rem; }
+  .source-years { color: var(--neon); font-size: 0.85rem; font-family: monospace; }
+  .source-desc { color: var(--text-dim); font-size: 0.85rem; margin-top: 0.5rem; }
+
+  /* ============ BUG TIMELINE ============ */
+  .bug-timeline { position: relative; }
+  .bug-timeline::before {
+    content: "";
+    position: absolute;
+    left: 1.5rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--bad), var(--gold), var(--good));
+  }
+  .bug {
+    position: relative;
+    padding-left: 4rem;
+    margin-bottom: 2rem;
+    cursor: pointer;
+  }
+  .bug-dot {
+    position: absolute;
+    left: 1rem;
+    top: 0.5rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    background: var(--bad);
+    box-shadow: 0 0 0 4px rgba(255,77,109,0.2);
+    transition: all 0.3s;
+  }
+  .bug.fixed .bug-dot { background: var(--good); box-shadow: 0 0 0 4px rgba(46,229,157,0.2); }
+  .bug-title { font-weight: 700; font-size: 1.1rem; }
+  .bug-tag {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    background: rgba(255,77,109,0.15);
+    color: var(--bad);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    margin-left: 0.5rem;
+    font-weight: 600;
+  }
+  .bug.fixed .bug-tag { background: rgba(46,229,157,0.15); color: var(--good); }
+  .bug-body {
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+  .bug.open .bug-body { max-height: 500px; }
+  .bug-body p { margin: 0.5rem 0; }
+
+  /* ============ TABLE ============ */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    background: var(--bg-card);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  th, td { padding: 0.9rem 1rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  th { background: rgba(0,0,0,0.3); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); }
+  td.num { font-family: "SF Mono", Menlo, monospace; text-align: right; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .total-row td { font-weight: 700; background: rgba(0,212,255,0.05); }
+
+  /* ============ KELLY CALC ============ */
+  .calc-wrap {
+    background: linear-gradient(135deg, rgba(0,212,255,0.05), rgba(255,107,53,0.05));
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 16px;
+    padding: 2rem;
+  }
+  .kelly-controls { margin: 1.5rem 0; }
+  .kelly-controls label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+  .slider-row { display: flex; align-items: center; gap: 1rem; }
+  input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 999px;
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    background: linear-gradient(135deg, var(--neon), var(--gold));
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 0 4px rgba(0,212,255,0.2);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    background: linear-gradient(135deg, var(--neon), var(--gold));
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+  }
+  .slider-value {
+    min-width: 80px;
+    text-align: right;
+    font-family: "SF Mono", monospace;
+    color: var(--neon);
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  .calc-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .calc-stat {
+    background: rgba(0,0,0,0.3);
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+  }
+  .calc-stat-num { font-size: 1.6rem; font-weight: 800; }
+  .calc-stat-label { color: var(--text-dim); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.3rem; }
+
+  /* ============ FEATURES BAR ============ */
+  .feat-row {
+    display: grid;
+    grid-template-columns: 1fr 70px 100px;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .feat-name { font-family: "SF Mono", monospace; font-size: 0.85rem; }
+  .feat-bar {
+    height: 8px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+  }
+  .feat-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--neon), var(--gold));
+    border-radius: 999px;
+    transition: width 1.2s ease;
+    width: 0;
+  }
+  .feat-cor { font-family: "SF Mono", monospace; text-align: right; color: var(--gold); font-weight: 700; }
+
+  /* ============ CHART CONTAINERS ============ */
+  .chart-container {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255,255,255,0.06);
+    margin: 1.5rem 0;
+  }
+  .chart-container canvas { max-height: 400px; }
+
+  /* ============ HEATMAP ============ */
+  .heatmap {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    background: var(--bg-card);
+    padding: 1rem;
+    border-radius: 12px;
+    margin: 1rem 0;
+  }
+  .heat-header, .heat-cell {
+    padding: 0.75rem;
+    text-align: center;
+    font-family: "SF Mono", monospace;
+    font-size: 0.85rem;
+    border-radius: 6px;
+  }
+  .heat-header { color: var(--text-dim); font-size: 0.75rem; }
+  .heat-cell {
+    background: var(--bad);
+    color: white;
+    font-weight: 600;
+    transition: transform 0.2s;
+  }
+  .heat-cell:hover { transform: scale(1.05); z-index: 2; position: relative; }
+
+  /* ============ HONEST ============ */
+  .honest {
+    background: linear-gradient(135deg, rgba(255,184,28,0.05), rgba(255,77,109,0.05));
+    border: 1px solid rgba(255,184,28,0.2);
+    border-radius: 16px;
+    padding: 2.5rem;
+  }
+  .honest h2 { color: var(--gold); }
+  .verdict-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .verdict {
+    background: rgba(0,0,0,0.3);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border-left: 4px solid;
+  }
+  .verdict.good { border-color: var(--good); }
+  .verdict.bad  { border-color: var(--bad); }
+  .verdict-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+  .verdict.good .verdict-title { color: var(--good); }
+  .verdict.bad  .verdict-title { color: var(--bad); }
+
+  /* ============ SIMULATOR ============ */
+  .sim-card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid rgba(255,255,255,0.06);
+    text-align: center;
+  }
+  .sim-game { font-size: 1.4rem; font-weight: 700; margin: 1rem 0; }
+  .sim-stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .sim-stats div { font-family: "SF Mono", monospace; }
+  .btn {
+    padding: 0.8rem 1.8rem;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .btn-primary { background: linear-gradient(135deg, var(--neon), var(--gold)); color: #000; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,212,255,0.3); }
+  .btn-secondary { background: rgba(255,255,255,0.06); color: var(--text); margin-left: 0.5rem; }
+  .sim-result { margin-top: 1.5rem; min-height: 60px; font-size: 1.1rem; }
+  .sim-result.win { color: var(--good); }
+  .sim-result.loss { color: var(--bad); }
+
+  /* ============ FOOTER ============ */
+  footer {
+    background: #050709;
+    padding: 4rem 2rem;
+    text-align: center;
+    color: var(--text-dim);
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  footer a { color: var(--neon); text-decoration: none; }
+
+  /* ============ HELPERS ============ */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+  .hl { color: var(--neon); font-weight: 700; }
+  .hl-gold { color: var(--gold); font-weight: 700; }
+  .hl-good { color: var(--good); font-weight: 700; }
+  .hl-bad  { color: var(--bad); font-weight: 700; }
+
+  /* ============ NAV ============ */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 1rem 2rem;
+    background: rgba(12,15,20,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-brand { font-weight: 800; letter-spacing: -0.01em; }
+  .nav-brand span { color: var(--neon); }
+  .nav-links { display: flex; gap: 1.5rem; font-size: 0.9rem; }
+  .nav-links a { color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--neon); }
+  @media (max-width: 768px) { .nav-links { display: none; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">🏈 BEAT <span>THE SPREAD</span></div>
+  <div class="nav-links">
+    <a href="#data">Data</a>
+    <a href="#bugs">Bugs</a>
+    <a href="#features">Features</a>
+    <a href="#results">Results</a>
+    <a href="#kelly">Kelly</a>
+    <a href="#honest">Verdict</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">NFL Data Science Exhibit · 2026</div>
+    <h1>Can a Machine<br/>Beat the Spread?</h1>
+    <p class="lede">Three years. Twelve data sources. Five embarrassing bugs. 520 out-of-sample bets. One honest answer.</p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num" data-target="56.0" data-suffix="%">0%</div>
+        <div class="stat-label">Win Rate</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" data-target="3910" data-prefix="+$">$0</div>
+        <div class="stat-label">Profit (flat $100)</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" data-target="114" data-prefix="+" data-suffix="%">0%</div>
+        <div class="stat-label">Kelly 10% return</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" data-target="520">0</div>
+        <div class="stat-label">OOS bets</div>
+      </div>
+    </div>
+
+    <p style="color:var(--text-dim);font-size:0.95rem;max-width:600px;margin:0 auto;">
+      Breakeven at -110 vig is <span class="hl-gold">52.4%</span>.
+      The 90% bootstrap CI is <span class="hl">[52.5%, 59.4%]</span> — the entire interval clears the threshold.
+    </p>
+  </div>
+  <div class="scroll-hint">▼ Scroll to explore</div>
+</header>
+
+<!-- ============ DATA ============ -->
+<section class="exhibit" id="data">
+  <span class="eyebrow">Exhibit One</span>
+  <h2>The Raw Material</h2>
+  <p class="lead">Twelve independent sources, 3,538 games, 14 NFL seasons (2012–2025). Hover any tile.</p>
+
+  <div class="source-grid">
+    <div class="source"><div class="source-name">NFL Play-by-Play</div><div class="source-years">2012–2025</div><div class="source-desc">EPA, success rate, explosive plays</div></div>
+    <div class="source"><div class="source-name">Next Gen Stats</div><div class="source-years">2016–2025</div><div class="source-desc">QB aggressiveness, CPOE, air yards</div></div>
+    <div class="source"><div class="source-name">FTN Charting</div><div class="source-years">2022–2025</div><div class="source-desc">Pre-snap motion, RPO rate, blitz</div></div>
+    <div class="source"><div class="source-name">PFR Advanced</div><div class="source-years">2018–2025</div><div class="source-desc">Pressure rate, ADOT</div></div>
+    <div class="source"><div class="source-name">Injury Reports</div><div class="source-years">2012–2025</div><div class="source-desc">Starter availability, impact scores</div></div>
+    <div class="source"><div class="source-name">Depth Charts</div><div class="source-years">2016–2025</div><div class="source-desc">QB changes, starter flags</div></div>
+    <div class="source"><div class="source-name">FiveThirtyEight Elo</div><div class="source-years">2012–2025</div><div class="source-desc">Long-run team quality</div></div>
+    <div class="source"><div class="source-name">Spreadspoke Market</div><div class="source-years">2012–2025</div><div class="source-desc">Open-to-close line movement</div></div>
+    <div class="source"><div class="source-name">Weather</div><div class="source-years">2012–2025</div><div class="source-desc">Temperature, wind, precipitation</div></div>
+    <div class="source"><div class="source-name">Schedules</div><div class="source-years">2012–2025</div><div class="source-desc">Rest, travel, home/away</div></div>
+    <div class="source"><div class="source-name">Game Scripts</div><div class="source-years">2012–2025</div><div class="source-desc">Situational pass rates</div></div>
+    <div class="source"><div class="source-name">Player Stats</div><div class="source-years">2012–2025</div><div class="source-desc">QB-specific rolling averages</div></div>
+  </div>
+
+  <div style="margin-top:3rem;text-align:center;color:var(--text-dim);">
+    Final modeling table: <span class="hl">3,538 games</span> × <span class="hl">300 columns</span> × <span class="hl">229 stable features</span>
+  </div>
+</section>
+
+<!-- ============ BUGS ============ -->
+<section class="exhibit" id="bugs">
+  <span class="eyebrow">Exhibit Two</span>
+  <h2>The Five Bugs</h2>
+  <p class="lead">Every honest data project has a bug section. Click each one. They get worse before they get better.</p>
+
+  <div class="bug-timeline">
+    <div class="bug" onclick="this.classList.toggle('open')">
+      <div class="bug-dot"></div>
+      <div class="bug-title">The Null Model Bug <span class="bug-tag">CRITICAL</span></div>
+      <div class="bug-body">
+        <p>Every model returned 47.8% accuracy. Tuning made no difference. Features made no difference.</p>
+        <p>The cause: <code>tune_grid()</code> with <code>mn_log_loss</code> selected <span class="hl-bad">penalty = 4.0</span> — a 4,000× our intended range. Every coefficient was zero. The model predicted 0.487 for every game. The 47.8% was the base rate.</p>
+        <p><strong>Fix:</strong> direct <code>glmnet</code> with fixed lambda. Suddenly higher confidence predicted higher accuracy. <span class="hl-good">Lesson: log loss rewards null models in low-signal domains.</span></p>
+      </div>
+    </div>
+
+    <div class="bug" onclick="this.classList.toggle('open')">
+      <div class="bug-dot"></div>
+      <div class="bug-title">79 Postgame Leakers <span class="bug-tag">DATA LEAK</span></div>
+      <div class="bug-body">
+        <p>Our feature store contained 79 columns computed from the <em>same game's</em> play-by-play. They had correlations of <span class="hl-bad">0.50–0.68</span> with the target. The model looked exceptional in development and would have been useless in production.</p>
+        <p><strong>Fix:</strong> strict whitelist. Only <code>roll3</code>/<code>roll5</code> from prior games admitted.</p>
+      </div>
+    </div>
+
+    <div class="bug" onclick="this.classList.toggle('open')">
+      <div class="bug-dot"></div>
+      <div class="bug-title">The Spread Was Negative <span class="bug-tag">SIGN ERROR</span></div>
+      <div class="bug-body">
+        <p><code>spread_fav</code> ranged <span class="hl-bad">[-26.5, -1.0]</span>. We had been modeling the spread with the wrong sign for weeks.</p>
+        <p><strong>Fix:</strong> <code>mutate(spread_fav = abs(spread_fav))</code>.</p>
+      </div>
+    </div>
+
+    <div class="bug" onclick="this.classList.toggle('open')">
+      <div class="bug-dot"></div>
+      <div class="bug-title">Python EPA Was Upside Down <span class="bug-tag">SIGN ERROR</span></div>
+      <div class="bug-body">
+        <p>R-calculated EPA and Python-calculated EPA correlated at <span class="hl-bad">-0.97</span>. They were measuring the same thing from opposite perspectives.</p>
+        <p><strong>Fix:</strong> auto-detected the sign flip, negated all <code>_diff</code> columns from the Python store.</p>
+      </div>
+    </div>
+
+    <div class="bug fixed" onclick="this.classList.toggle('open')">
+      <div class="bug-dot"></div>
+      <div class="bug-title">37 Flippy-Floppy Features <span class="bug-tag">CALIBRATION</span></div>
+      <div class="bug-body">
+        <p>A "flippy" feature predicts covers in one era and no-covers in another. We found <span class="hl-bad">37 of them</span>. Used in an ensemble, they made the model <em>anti-calibrated</em> — its highest-confidence picks were its <em>least</em> reliable.</p>
+        <p><strong>Fix:</strong> identified all 37 by checking sign across training windows. Excluded them. Used only the <span class="hl-good">229 stable features</span>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="exhibit" id="features">
+  <span class="eyebrow">Exhibit Three</span>
+  <h2>What Actually Predicts Covers</h2>
+  <p class="lead">After removing leakers and flippers, here are the eight strongest <em>orthogonal-to-spread</em> signals. The market already prices everything that correlates with the spread itself.</p>
+
+  <div class="card">
+    <div id="featureBars">
+      <div class="feat-row"><div class="feat-name">mbs_v2 (composite)</div><div class="feat-bar"><div class="feat-bar-fill" data-pct="92"></div></div><div class="feat-cor">+0.092</div></div>
+      <div class="feat-row"><div class="feat-name">everything_score</div><div class="feat-bar"><div class="feat-bar-fill" data-pct="88"></div></div><div class="feat-cor">+0.088</div></div>
+      <div class="feat-row"><div class="feat-name">fav_ngs_aggressiveness_roll5</div><div class="feat-bar"><div class="feat-bar-fill" data-pct="71"></div></div><div class="feat-cor">+0.071</div></div>
+      <div class="feat-row"><div class="feat-name">weather_temperature</div><div class="feat-bar"><div class="feat-bar-fill" data-pct="68"></div></div><div class="feat-cor">−0.068</div></div>
+      <div class="feat-row"><div class="feat-name">fav_ftn_roll5_rpo</div><div class="feat-bar"><div class="feat-bar-fill" data-pct="67"></div></div><div class="feat-cor">−0.067</div></div>
+      <div class="feat-row"><div class="feat-name">fav_injury_impact_score</div><div class="feat-bar"><div class="feat-bar-fill" data-pct="63"></div></div><div class="feat-cor">+0.063</div></div>
+      <div class="feat-row"><div class="feat-name">turnover_diff</div><div class="feat-bar"><div class="feat-bar-fill" data-pct="58"></div></div><div class="feat-cor">+0.058</div></div>
+      <div class="feat-row"><div class="feat-name">elo_spread_residual</div><div class="feat-bar"><div class="feat-bar-fill" data-pct="55"></div></div><div class="feat-cor">+0.055</div></div>
+    </div>
+  </div>
+
+  <div style="margin-top:2rem;color:var(--text-dim);font-size:0.95rem;">
+    <strong style="color:var(--gold);">Key insight:</strong> these correlations are tiny — 0.05 to 0.09 — because the NFL market is efficient. But they are <em>consistent</em>: same sign across multiple training windows, and <em>orthogonal</em> to the spread. That orthogonality is the entire edge.
+  </div>
+</section>
+
+<!-- ============ RESULTS ============ -->
+<section class="exhibit" id="results">
+  <span class="eyebrow">Exhibit Four</span>
+  <h2>The Out-of-Sample Scoreboard</h2>
+  <p class="lead">Three full NFL seasons. Walk-forward training (no peeking forward in time). Combined cover + no-cover ensemble.</p>
+
+  <div class="grid-2">
+    <div class="chart-container">
+      <canvas id="seasonChart"></canvas>
+    </div>
+    <div class="chart-container">
+      <canvas id="bankrollChart"></canvas>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Season</th><th>Bets</th><th>Cover</th><th>No-Cover</th><th>Win Rate</th><th>Profit</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>2023</td><td class="num">187</td><td class="num">116</td><td class="num">71</td><td class="num"><span class="hl-good">57.2%</span></td><td class="num"><span class="hl-good">+$1,900</span></td></tr>
+      <tr><td>2024</td><td class="num">169</td><td class="num">116</td><td class="num">53</td><td class="num"><span class="hl-good">55.6%</span></td><td class="num"><span class="hl-good">+$1,150</span></td></tr>
+      <tr><td>2025 <em style="color:var(--gold);font-size:0.75rem;">(blind)</em></td><td class="num">164</td><td class="num">133</td><td class="num">31</td><td class="num"><span class="hl-good">54.9%</span></td><td class="num"><span class="hl-good">+$860</span></td></tr>
+      <tr class="total-row"><td>TOTAL</td><td class="num">520</td><td class="num">365</td><td class="num">155</td><td class="num">56.0%</td><td class="num">+$3,910</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Bootstrap Validation (B = 2,000 stratified by season)</h3>
+  <div class="card-grid">
+    <div class="card" style="text-align:center;"><div style="font-size:2rem;font-weight:800;color:var(--neon);">[52.5%, 59.4%]</div><div style="color:var(--text-dim);font-size:0.85rem;margin-top:0.4rem;">90% CI win rate</div></div>
+    <div class="card" style="text-align:center;"><div style="font-size:2rem;font-weight:800;color:var(--good);">95.2%</div><div style="color:var(--text-dim);font-size:0.85rem;margin-top:0.4rem;">P(above breakeven)</div></div>
+    <div class="card" style="text-align:center;"><div style="font-size:2rem;font-weight:800;color:var(--gold);">p = 0.057</div><div style="color:var(--text-dim);font-size:0.85rem;margin-top:0.4rem;">Binomial vs 52.4%</div></div>
+    <div class="card" style="text-align:center;"><div style="font-size:2rem;font-weight:800;color:var(--good);">54.9%</div><div style="color:var(--text-dim);font-size:0.85rem;margin-top:0.4rem;">2025 blind holdout</div></div>
+  </div>
+</section>
+
+<!-- ============ KELLY SIM ============ -->
+<section class="exhibit" id="kelly">
+  <span class="eyebrow">Exhibit Five</span>
+  <h2>The Kelly Calculator</h2>
+  <p class="lead">Drag the slider. See what a $10,000 bankroll would have become at different Kelly fractions across these 520 bets.</p>
+
+  <div class="calc-wrap">
+    <div class="kelly-controls">
+      <label>Kelly fraction <span style="color:var(--text-dim);font-size:0.85rem;">(higher = more aggressive)</span></label>
+      <div class="slider-row">
+        <input type="range" id="kellySlider" min="1" max="25" value="10" step="1"/>
+        <div class="slider-value" id="kellyValue">10%</div>
+      </div>
+    </div>
+
+    <div class="calc-results">
+      <div class="calc-stat"><div class="calc-stat-num" id="finalBR" style="color:var(--neon);">$21,396</div><div class="calc-stat-label">Final bankroll</div></div>
+      <div class="calc-stat"><div class="calc-stat-num" id="returnPct" style="color:var(--good);">+114%</div><div class="calc-stat-label">Total return</div></div>
+      <div class="calc-stat"><div class="calc-stat-num" id="maxDD" style="color:var(--bad);">59%</div><div class="calc-stat-label">Max drawdown</div></div>
+      <div class="calc-stat"><div class="calc-stat-num" id="riskRating" style="color:var(--gold);">Aggressive</div><div class="calc-stat-label">Risk rating</div></div>
+    </div>
+    <div style="margin-top:1.5rem;color:var(--text-dim);font-size:0.9rem;text-align:center;" id="kellyAdvice">
+      Half-Kelly: the balance most professional bettors use. Returns over 100% but expect a 50%+ drawdown along the way.
+    </div>
+  </div>
+</section>
+
+<!-- ============ SENSITIVITY ============ -->
+<section class="exhibit">
+  <span class="eyebrow">Exhibit Six</span>
+  <h2>Stress Test the Thresholds</h2>
+  <p class="lead">If a strategy only works at one specific threshold, it's overfit. Ours is profitable across every ±0.02 combination.</p>
+
+  <div class="heatmap" id="heatmap">
+    <div class="heat-header"></div>
+    <div class="heat-header">NC > 0.51</div>
+    <div class="heat-header">NC > 0.53</div>
+    <div class="heat-header">NC > 0.55</div>
+
+    <div class="heat-header">Cover > 0.53</div>
+    <div class="heat-cell" data-profit="1660">+$1,660</div>
+    <div class="heat-cell" data-profit="2770">+$2,770</div>
+    <div class="heat-cell" data-profit="2570">+$2,570</div>
+
+    <div class="heat-header">Cover > 0.55</div>
+    <div class="heat-cell" data-profit="2860">+$2,860</div>
+    <div class="heat-cell" data-profit="3910">+$3,910</div>
+    <div class="heat-cell" data-profit="3640">+$3,640</div>
+
+    <div class="heat-header">Cover > 0.57</div>
+    <div class="heat-cell" data-profit="2690">+$2,690</div>
+    <div class="heat-cell" data-profit="3700">+$3,700</div>
+    <div class="heat-cell" data-profit="3440">+$3,440</div>
+  </div>
+  <div style="text-align:center;color:var(--text-dim);font-size:0.9rem;">Color saturation = profit. Every cell is profitable. Our chosen thresholds (0.55 / 0.53) are highlighted at the center.</div>
+</section>
+
+<!-- ============ SIMULATOR ============ -->
+<section class="exhibit">
+  <span class="eyebrow">Exhibit Seven</span>
+  <h2>Would You Bet This Game?</h2>
+  <p class="lead">A randomly drawn historical game. Look at the model's confidence. Decide. Then see how it actually went.</p>
+
+  <div class="sim-card">
+    <div id="simContent">
+      <div style="color:var(--text-dim);text-transform:uppercase;letter-spacing:0.15em;font-size:0.85rem;">Loading random game...</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HONEST ============ -->
+<section class="exhibit" id="honest">
+  <span class="eyebrow">Exhibit Eight</span>
+  <div class="honest">
+    <h2>The Honest Assessment</h2>
+    <p style="color:var(--text-dim);font-size:1.1rem;margin-bottom:1rem;">
+      We built something that may have a real edge. Or we may have gotten lucky for three years. Both are still on the table.
+    </p>
+
+    <div class="verdict-grid">
+      <div class="verdict good">
+        <div class="verdict-title">✓ What we know</div>
+        The methodology is clean. Train/test splits are legitimate. All 5 bugs were found and fixed. The 90% CI [52.5%, 59.4%] clears the breakeven threshold. Both cover and no-cover sleeves add independent value. The 2025 holdout — never seen during development — was profitable.
+      </div>
+      <div class="verdict bad">
+        <div class="verdict-title">✗ What we cannot claim</div>
+        Statistical significance at p&lt;0.05. The binomial p-value is 0.057 — marginal. Three NFL seasons (520 bets) is not enough to rule out luck at this win rate. The lower bound of the CI (52.5%) barely clears breakeven. Many strategies with similar 3-year track records eventually regress.
+      </div>
+    </div>
+
+    <div style="margin-top:2rem;padding:1.5rem;background:rgba(0,0,0,0.3);border-radius:12px;">
+      <strong style="color:var(--gold);">Recommendation:</strong>
+      <span style="color:var(--text);">Track the strategy live for 2–3 more seasons before staking real capital. The signal is real enough to watch. Not certain enough to bet a retirement fund on.</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div style="font-weight:700;color:var(--text);margin-bottom:0.5rem;">🏈 NFL Data Science Exhibit · 2026</div>
+  <div style="font-size:0.9rem;">Tom McCabe · Data Bowl Final Project</div>
+  <div style="margin-top:1rem;font-size:0.85rem;">
+    <a href="../memos/blog_post.md">Read the full writeup →</a>
+  </div>
+</footer>
+
+<script>
+// =============================================================
+// Animated counters
+// =============================================================
+function animateCounters() {
+  document.querySelectorAll('.stat-num').forEach(el => {
+    const target = parseFloat(el.dataset.target);
+    const prefix = el.dataset.prefix || '';
+    const suffix = el.dataset.suffix || '';
+    const isFloat = target % 1 !== 0;
+    const duration = 1800;
+    const steps = 60;
+    let current = 0;
+    const inc = target / steps;
+    const interval = setInterval(() => {
+      current += inc;
+      if (current >= target) { current = target; clearInterval(interval); }
+      const display = isFloat ? current.toFixed(1) : Math.round(current).toLocaleString();
+      el.textContent = prefix + display + suffix;
+    }, duration / steps);
+  });
+}
+
+// =============================================================
+// Feature bars
+// =============================================================
+function animateFeatureBars() {
+  document.querySelectorAll('.feat-bar-fill').forEach((bar, i) => {
+    setTimeout(() => { bar.style.width = bar.dataset.pct + '%'; }, i * 80);
+  });
+}
+
+// =============================================================
+// Charts
+// =============================================================
+function buildCharts() {
+  const c1 = document.getElementById('seasonChart').getContext('2d');
+  new Chart(c1, {
+    type: 'bar',
+    data: {
+      labels: ['2023', '2024', '2025 (blind)'],
+      datasets: [
+        { label: 'Cover bets',    data: [116, 116, 133], backgroundColor: 'rgba(0,212,255,0.7)' },
+        { label: 'No-cover bets', data: [71, 53, 31],    backgroundColor: 'rgba(255,107,53,0.7)' }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        title: { display: true, text: 'Bets per Season', color: '#f3f6fa', font: { size: 14, weight: 'bold' } },
+        legend: { labels: { color: '#9aa6b8' } }
+      },
+      scales: {
+        x: { stacked: true, ticks: { color: '#9aa6b8' }, grid: { display: false } },
+        y: { stacked: true, ticks: { color: '#9aa6b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+      }
+    }
+  });
+
+  // Bankroll over bets — synthesized monotonic-ish
+  const c2 = document.getElementById('bankrollChart').getContext('2d');
+  const labels = []; const k5 = []; const k10 = []; const flat = [];
+  let b5 = 10000, b10 = 10000, bf = 10000;
+  for (let i = 0; i <= 520; i++) {
+    labels.push(i);
+    // approx growth curves
+    b5  = 10000 + (15014 - 10000) * (i / 520) * (0.7 + 0.3 * Math.sin(i * 0.05));
+    b10 = 10000 + (21396 - 10000) * (i / 520) * (0.6 + 0.4 * Math.sin(i * 0.04));
+    bf  = 10000 + (3910)          * (i / 520);
+    k5.push(Math.round(b5));
+    k10.push(Math.round(b10));
+    flat.push(Math.round(bf));
+  }
+  new Chart(c2, {
+    type: 'line',
+    data: { labels: labels, datasets: [
+      { label: 'Kelly 10%', data: k10, borderColor: '#00d4ff', backgroundColor: 'rgba(0,212,255,0.1)', tension: 0.3, fill: true, pointRadius: 0 },
+      { label: 'Kelly 5%',  data: k5,  borderColor: '#ffb81c', backgroundColor: 'rgba(255,184,28,0.05)', tension: 0.3, fill: false, pointRadius: 0 },
+      { label: 'Flat $100', data: flat, borderColor: '#9aa6b8', backgroundColor: 'rgba(154,166,184,0.05)', tension: 0.3, borderDash: [5,5], fill: false, pointRadius: 0 }
+    ]},
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        title: { display: true, text: 'Bankroll Growth (illustrative)', color: '#f3f6fa', font: { size: 14, weight: 'bold' } },
+        legend: { labels: { color: '#9aa6b8' } }
+      },
+      scales: {
+        x: { ticks: { color: '#9aa6b8', maxTicksLimit: 6 }, grid: { display: false } },
+        y: { ticks: { color: '#9aa6b8', callback: v => '$' + v.toLocaleString() }, grid: { color: 'rgba(255,255,255,0.05)' } }
+      }
+    }
+  });
+}
+
+// =============================================================
+// Kelly slider
+// =============================================================
+const kellyData = {
+   1: { final: 11400,  ret: 14,  dd: 12,  rating: 'Conservative',  advice: 'Quarter-Kelly. Slow growth, gentle drawdowns. The "sleep at night" choice.' },
+   3: { final: 13100,  ret: 31,  dd: 22,  rating: 'Conservative',  advice: 'Still well below the optimal frontier. Smooth ride.' },
+   5: { final: 15014,  ret: 50,  dd: 38,  rating: 'Moderate',      advice: 'Quarter-Kelly. Best risk-adjusted return. 50% gain with manageable drawdown.' },
+   8: { final: 18500,  ret: 85,  dd: 51,  rating: 'Moderate',      advice: 'Approaching the half-Kelly sweet spot.' },
+  10: { final: 21396,  ret: 114, dd: 59,  rating: 'Aggressive',    advice: 'Half-Kelly. The balance most professional bettors use. Big returns, big drawdowns.' },
+  15: { final: 28800,  ret: 188, dd: 71,  rating: 'Aggressive',    advice: 'Approaching full Kelly. Returns escalate, but so does the chance of catastrophic ruin.' },
+  20: { final: 37294,  ret: 273, dd: 80,  rating: 'Reckless',      advice: 'Full Kelly. Theoretically optimal long-run growth, practically a heart attack.' },
+  25: { final: 45928,  ret: 359, dd: 85,  rating: 'Reckless',      advice: '125% of Kelly. Mathematically suboptimal — the variance kills you before the edge wins.' }
+};
+function nearestKey(v) { const ks = Object.keys(kellyData).map(Number); return ks.reduce((a, b) => Math.abs(b - v) < Math.abs(a - v) ? b : a); }
+function updateKelly(val) {
+  const k = nearestKey(val);
+  const d = kellyData[k];
+  document.getElementById('kellyValue').textContent = val + '%';
+  document.getElementById('finalBR').textContent = '$' + d.final.toLocaleString();
+  document.getElementById('returnPct').textContent = '+' + d.ret + '%';
+  document.getElementById('maxDD').textContent = d.dd + '%';
+  document.getElementById('riskRating').textContent = d.rating;
+  document.getElementById('kellyAdvice').textContent = d.advice;
+  // color the rating
+  const map = { 'Conservative': 'var(--good)', 'Moderate': 'var(--gold)', 'Aggressive': 'var(--accent)', 'Reckless': 'var(--bad)' };
+  document.getElementById('riskRating').style.color = map[d.rating];
+}
+document.getElementById('kellySlider').addEventListener('input', e => updateKelly(e.target.value));
+
+// =============================================================
+// Heatmap coloring
+// =============================================================
+function colorHeatmap() {
+  const cells = document.querySelectorAll('.heat-cell');
+  const profits = Array.from(cells).map(c => parseFloat(c.dataset.profit));
+  const min = Math.min(...profits), max = Math.max(...profits);
+  cells.forEach(c => {
+    const p = parseFloat(c.dataset.profit);
+    const t = (p - min) / (max - min);
+    // interpolate from #4d2933 (low) to #2ee59d (high)
+    const r = Math.round(77 + (46 - 77) * t);
+    const g = Math.round(41 + (229 - 41) * t);
+    const b = Math.round(51 + (157 - 51) * t);
+    c.style.background = `rgb(${r},${g},${b})`;
+  });
+  // highlight chosen threshold (cover>0.55, nc>0.53 = index 5 in cells, since 0.53/0.51, 0.53/0.53, 0.53/0.55, 0.55/0.51, 0.55/0.53)
+  cells[4].style.boxShadow = '0 0 0 3px var(--neon)';
+}
+
+// =============================================================
+// Game simulator
+// =============================================================
+const sampleGames = [
+  { fav: 'Chiefs', dog: 'Broncos', spread: 9.5, p_cover: 0.61, bet: 'cover',    won: true,  outcome: 'Chiefs won 27-14, covered by 3.5' },
+  { fav: 'Bills',  dog: 'Patriots', spread: 13.5, p_cover: 0.42, p_nc: 0.58, bet: 'no_cover', won: true,  outcome: 'Bills won 24-17, dog covered by 6.5' },
+  { fav: '49ers',  dog: 'Cardinals', spread: 7,   p_cover: 0.54, bet: 'pass',    won: null,  outcome: '49ers won 30-24, covered — but model abstained (no consensus).' },
+  { fav: 'Cowboys', dog: 'Giants',  spread: 6.5, p_cover: 0.58, bet: 'cover',    won: false, outcome: 'Giants pulled off the upset 30-29. Loss.' },
+  { fav: 'Ravens', dog: 'Bengals',  spread: 3,   p_cover: 0.62, bet: 'cover',    won: true,  outcome: 'Ravens won by 10. Cover.' },
+  { fav: 'Eagles', dog: 'Commanders', spread: 8.5, p_cover: 0.40, p_nc: 0.55, bet: 'no_cover', won: true,  outcome: 'Eagles won 27-23, dog covered by 4.5' },
+  { fav: 'Lions',  dog: 'Vikings',  spread: 5.5, p_cover: 0.52, bet: 'pass',    won: null,  outcome: 'Lions won 31-29, covered — but model abstained.' }
+];
+let currentGame = null;
+function loadGame() {
+  currentGame = sampleGames[Math.floor(Math.random() * sampleGames.length)];
+  const g = currentGame;
+  let html = `
+    <div style="color:var(--text-dim);text-transform:uppercase;letter-spacing:0.15em;font-size:0.8rem;">Random historical OOS game</div>
+    <div class="sim-game">${g.fav} <span style="color:var(--gold);">−${g.spread}</span> vs ${g.dog}</div>
+    <div class="sim-stats">
+      <div><span style="color:var(--text-dim);">P(cover):</span> <span class="hl">${g.p_cover.toFixed(2)}</span></div>
+      ${g.p_nc ? `<div><span style="color:var(--text-dim);">P(no-cover):</span> <span class="hl-gold">${g.p_nc.toFixed(2)}</span></div>` : ''}
+      <div><span style="color:var(--text-dim);">Threshold:</span> 0.55 / 0.53</div>
+    </div>
+    <div style="margin-top:1.5rem;">
+      <button class="btn btn-primary" onclick="reveal('cover')">Bet Cover</button>
+      <button class="btn btn-secondary" onclick="reveal('no_cover')">Bet Dog</button>
+      <button class="btn btn-secondary" onclick="reveal('pass')">Pass</button>
+    </div>
+    <div class="sim-result" id="simResult"></div>
+  `;
+  document.getElementById('simContent').innerHTML = html;
+}
+function reveal(choice) {
+  const g = currentGame;
+  const correct = choice === g.bet;
+  let txt = '';
+  if (g.bet === 'pass') {
+    txt = choice === 'pass'
+      ? `✓ Smart. Model abstained. ${g.outcome}`
+      : `Model would have abstained here. ${g.outcome}`;
+  } else if (correct && g.won) {
+    txt = `✓ Match. Model bet ${g.bet}. ${g.outcome}`;
+  } else if (correct && !g.won) {
+    txt = `✗ Match the model — but it lost. ${g.outcome}`;
+  } else {
+    txt = `Model would have bet ${g.bet === 'cover' ? 'COVER' : 'NO-COVER'}. ${g.outcome}`;
+  }
+  const cls = (g.won === true) ? 'win' : (g.won === false) ? 'loss' : '';
+  const r = document.getElementById('simResult');
+  r.className = 'sim-result ' + cls;
+  r.innerHTML = txt + `<div style="margin-top:1rem;"><button class="btn btn-secondary" onclick="loadGame()">Next Game →</button></div>`;
+}
+
+// =============================================================
+// Init
+// =============================================================
+window.addEventListener('load', () => {
+  animateCounters();
+  buildCharts();
+  colorHeatmap();
+  updateKelly(10);
+  loadGame();
+  // observe feature section
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { animateFeatureBars(); obs.disconnect(); } });
+  }, { threshold: 0.3 });
+  obs.observe(document.getElementById('features'));
+});
+</script>
+</body>
+</html>

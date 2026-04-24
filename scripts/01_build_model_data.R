@@ -21,7 +21,7 @@ games_all <- read_csv(here("data", "nfl_all_seasons.csv"), show_col_types = FALS
   clean_names()
 
 # Load play-by-play data for EPA features
-pbp_seasons <- 2012:2023
+pbp_seasons <- 2012:2025
 
 pbp_raw <- map(pbp_seasons, ~ load_pbp(.x)) |>
   bind_rows()
