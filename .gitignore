@@ -48,5 +48,9 @@ objects/expanded_workflow_results.rds
 results/workflows/xgb_basic.rds
 results/workflows/xgb_engineered.rds
 data/weekly_player_stats_offense.csv
+
+# Archived large file (63MB — unused by v3.5 pipeline)
+archive/data/weekly_player_stats_defense.csv
+
 # Ignore large files >25MB
 .claude/
