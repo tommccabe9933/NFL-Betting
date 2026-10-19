@@ -1,4 +1,6 @@
 # Kelly Criterion Sizing — Calibration-First
+# SUPERSEDED by 45_calibrated_kelly.R (v3.5). Kept for the record; its inputs
+# (modeling_data_v3.rds, tuned_stable_predictions.rds) now live in archive/.
 # Step 0: Calibration audit in betting region
 # Step 1: Kelly implementation (only if calibration passes)
 # Step 2: Bankroll simulation
@@ -98,6 +100,7 @@ if (kelly_safe) {
     bankroll <- 10000
     peak <- bankroll
     trough <- bankroll
+    max_drawdown <- 0
     history <- tibble(bet_num = 0, bankroll = bankroll, season = NA_real_)
 
     for (i in seq_len(nrow(betting_games))) {
@@ -108,7 +111,7 @@ if (kelly_safe) {
       if (edge <= 0) next  # skip negative edge
 
       # Kelly fraction
-      kelly_f <- edge * 1.1  # edge / (payout/risk) = edge * (110/100)
+      kelly_f <- edge * 2.1  # full Kelly at -110: (b*p - q)/b = 2.1 * (p - 0.524)
       bet_size <- kelly_f * bankroll * kelly_mult
       bet_size <- min(bet_size, 0.05 * bankroll)  # cap at 5%
       bet_size <- max(bet_size, 10)  # minimum bet
@@ -122,11 +125,11 @@ if (kelly_safe) {
 
       peak <- max(peak, bankroll)
       trough <- min(trough, bankroll)
+      max_drawdown <- max(max_drawdown, (peak - bankroll) / peak)
       history <- bind_rows(history, tibble(bet_num = i, bankroll = bankroll,
                                             season = game$test_season))
     }
 
-    max_drawdown <- (peak - trough) / peak
     total_return <- (bankroll - 10000) / 10000
 
     cat(sprintf("Kelly %.0f%%: Final=$%.0f | Return=%.1f%% | Peak=$%.0f | Trough=$%.0f | MaxDD=%.1f%%\n",

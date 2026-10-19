@@ -10,7 +10,7 @@ This is not a story about discovering a secret formula to beat Las Vegas. It is 
 
 **The short version:** Using 12 data sources, 3,538 games (2012–2025), and a combined cover/no-cover ensemble, we achieved **56.0% against the spread over 520 out-of-sample bets** across three full NFL seasons (2023–2025). The 90% bootstrap confidence interval is [52.5%, 59.4%]. The breakeven rate at -110 vig is 52.4%. The 2025 holdout — data we never touched during strategy development — came in at **54.9%**, profitable in every phase of the season.
 
-Kelly 10% sizing would have turned $10,000 into $21,396 (+114%) over that same stretch.
+Betting 1% of the bankroll on each pick would have turned $10,000 into about $13,900 (+39%) over that same stretch, with the worst drawdown under 10%.
 
 That is either a real edge or a very lucky 3-year run. We will be honest about which is more likely.
 
@@ -176,7 +176,7 @@ We verified that the no-cover model bets **different games** than the cover mode
 2. Bet cover when cover ensemble P > 0.55
 3. Bet no-cover when no-cover model P > 0.53
 4. When both models flag the same game: take the higher-confidence side
-5. Size each bet flat ($100 risk) or by Kelly fraction
+5. Size each bet at 1% of the bankroll (see Bet Sizing below for why not Kelly)
 
 ### Out-of-Sample Results (2023–2025)
 
@@ -198,18 +198,44 @@ All three seasons profitable. Win rate decreasing over time (57.2% → 55.6% →
 
 Both sides profitable. The no-cover sleeve adds +$1,010 in profit (+26%) with only a small increase in total bets.
 
-### Kelly Sizing
+### Bet Sizing (revised October 2026)
 
-Starting bankroll: $10,000
+The first version of this section said a "Kelly 10%" strategy turned $10,000 into $21,396 with a 59% max drawdown. That table had three problems:
 
-| Kelly Fraction | Final | Return | Max Drawdown |
-|----------------|-------|--------|--------------|
-| 5% | $15,014 | +50% | 38% |
-| **10%** | **$21,396** | **+114%** | **59%** |
-| 20% | $37,294 | +273% | 80% |
-| 25% | $45,928 | +359% | 85% |
+1. **Wrong Kelly formula.** At -110 odds, full Kelly is `2.1 × (p − 0.524)` of the bankroll. The code used `1.1 × (p − 0.524)`, so every "Kelly %" label was off by about half, and "5%" and "10%" were nowhere near quarter- and half-Kelly.
+2. **Overconfident probabilities.** Kelly assumes the win probability you feed it is true. Ours wasn't: on 2024–2025 bets, games the model rated about 0.79 won 58%, and games rated 0.62–0.70 won 51%.
+3. **Wrong drawdown math.** Drawdown was measured as (peak − lowest point ever) / peak, even when the low came before the peak. That inflated every drawdown figure.
 
-Quarter-Kelly (5%) is the most risk-adjusted: +50% return with manageable 38% max drawdown. Half-Kelly (10%) is the balance point most professional bettors use.
+`scripts/45_calibrated_kelly.R` fixes all three. Each season's probabilities are calibrated (Platt scaling) on every game from the earlier test seasons only. 2023 has no earlier out-of-sample data, so it is a flat 1% burn-in year for every strategy. All bets in a week are sized off that week's starting bankroll, capped at 5% per game and 25% per week.
+
+Starting bankroll: $10,000, 2023–2025
+
+| Sizing | Final | Return | Max Drawdown | Bets |
+|--------|-------|--------|--------------|------|
+| **Flat 1% of bankroll** | **$13,932** | **+39%** | **9%** | 520 |
+| Calibrated 1/10 Kelly | $13,238 | +32% | 7% | 444 |
+| Calibrated 1/4 Kelly | $15,123 | +51% | 17% | 444 |
+| Calibrated 1/2 Kelly | $17,223 | +72% | 30% | 444 |
+| Calibrated full Kelly | $16,681 | +67% | 34% | 444 |
+| Raw-probability 1/4 Kelly (old way) | $24,600 | +146% | 34% | 520 |
+
+The "old way" row looks best only because the highest-confidence bets happened to win often enough to reward overbetting. It averaged 2.5% of the bankroll per bet on probabilities that were about 11 points too high.
+
+**What calibration revealed:** after calibration, almost every bet is worth about 54–57%. The cover ensemble's probabilities barely separate a strong bet from a weak one (calibration slope 0.10), so varying the stake by confidence mostly adds noise. The 76 bets that calibration says have no edge still won 53.9%, above breakeven, so skipping them doesn't help either.
+
+**Recommendation:** bet a flat 1% of the bankroll per pick, reset each week. At a true 56% win rate full Kelly is about 7.6% per bet, so 1% is roughly 1/8 Kelly. That leaves room for the real edge being smaller than the backtest. Don't go above 2% (about 1/4 Kelly).
+
+What one season of 164 bets at 1% per bet could look like (5,000 simulations, `results/kelly_risk_one_season.csv`):
+
+| True win rate | Median return | Chance of losing money | Worst 5% of seasons |
+|---------------|---------------|------------------------|---------------------|
+| 52.4% (no edge) | −0.6% | 55% | −19% |
+| 54.2% (half the backtest edge) | +5.3% | 35% | −13% |
+| 56.0% (backtest edge) | +11.4% | 20% | −8% |
+
+Even if the edge is real, about one season in five loses money.
+
+![Calibration](../figures/calibration_v35.png)
 
 ---
 
@@ -314,6 +340,7 @@ That is the most honest thing we can say.
 - `scripts/26_tuned_stable_model.R` — cover model training
 - `scripts/41_nocover_model.R` — no-cover model training
 - `scripts/44_bootstrap_combined.R` — this final validation
+- `scripts/45_calibrated_kelly.R` — calibrated bet sizing
 
 **Environment**: R 4.4, glmnet 4.1, tidyverse 2.0, Python 3.11, nfl_data_py 0.3
 

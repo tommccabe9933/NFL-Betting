@@ -314,7 +314,8 @@
     border: none;
   }
   .slider-value {
-    min-width: 80px;
+    min-width: 120px;
+    white-space: nowrap;
     text-align: right;
     font-family: "SF Mono", monospace;
     color: var(--neon);
@@ -531,8 +532,8 @@
         <div class="stat-label">Profit (flat $100)</div>
       </div>
       <div class="stat">
-        <div class="stat-num" data-target="114" data-prefix="+" data-suffix="%">0%</div>
-        <div class="stat-label">Kelly 10% return</div>
+        <div class="stat-num" data-target="39" data-prefix="+" data-suffix="%">0%</div>
+        <div class="stat-label">Return at 1% per bet</div>
       </div>
       <div class="stat">
         <div class="stat-num" data-target="520">0</div>
@@ -692,26 +693,26 @@
 <!-- ============ KELLY SIM ============ -->
 <section class="exhibit" id="kelly">
   <span class="eyebrow">Exhibit Five</span>
-  <h2>The Kelly Calculator</h2>
-  <p class="lead">Drag the slider. See what a $10,000 bankroll would have become at different Kelly fractions across these 520 bets.</p>
+  <h2>How Much to Bet</h2>
+  <p class="lead">Drag the slider to see what a $10,000 bankroll would have become under each sizing rule across 2023–2025. Kelly sizing only works if the model's probabilities are honest. Ours weren't: bets it rated around 79% won 58%. These numbers use probabilities recalibrated walk-forward, so no season's results size its own bets.</p>
 
   <div class="calc-wrap">
     <div class="kelly-controls">
-      <label>Kelly fraction <span style="color:var(--text-dim);font-size:0.85rem;">(higher = more aggressive)</span></label>
+      <label>Sizing rule <span style="color:var(--text-dim);font-size:0.85rem;">(right = more aggressive)</span></label>
       <div class="slider-row">
-        <input type="range" id="kellySlider" min="1" max="25" value="10" step="1"/>
-        <div class="slider-value" id="kellyValue">10%</div>
+        <input type="range" id="kellySlider" min="0" max="5" value="1" step="1"/>
+        <div class="slider-value" id="kellyValue">Flat 1%</div>
       </div>
     </div>
 
     <div class="calc-results">
-      <div class="calc-stat"><div class="calc-stat-num" id="finalBR" style="color:var(--neon);">$21,396</div><div class="calc-stat-label">Final bankroll</div></div>
-      <div class="calc-stat"><div class="calc-stat-num" id="returnPct" style="color:var(--good);">+114%</div><div class="calc-stat-label">Total return</div></div>
-      <div class="calc-stat"><div class="calc-stat-num" id="maxDD" style="color:var(--bad);">59%</div><div class="calc-stat-label">Max drawdown</div></div>
-      <div class="calc-stat"><div class="calc-stat-num" id="riskRating" style="color:var(--gold);">Aggressive</div><div class="calc-stat-label">Risk rating</div></div>
+      <div class="calc-stat"><div class="calc-stat-num" id="finalBR" style="color:var(--neon);">$13,932</div><div class="calc-stat-label">Final bankroll</div></div>
+      <div class="calc-stat"><div class="calc-stat-num" id="returnPct" style="color:var(--good);">+39%</div><div class="calc-stat-label">Total return</div></div>
+      <div class="calc-stat"><div class="calc-stat-num" id="maxDD" style="color:var(--bad);">9%</div><div class="calc-stat-label">Max drawdown</div></div>
+      <div class="calc-stat"><div class="calc-stat-num" id="riskRating" style="color:var(--good);">Conservative</div><div class="calc-stat-label">Risk rating</div></div>
     </div>
     <div style="margin-top:1.5rem;color:var(--text-dim);font-size:0.9rem;text-align:center;" id="kellyAdvice">
-      Half-Kelly: the balance most professional bettors use. Returns over 100% but expect a 50%+ drawdown along the way.
+      Recommended. About 1/8 Kelly at a 56% edge, which leaves room for the real edge being smaller than the backtest.
     </div>
   </div>
 </section>
@@ -853,31 +854,25 @@ function buildCharts() {
     }
   });
 
-  // Bankroll over bets — synthesized monotonic-ish
+  // Bankroll by week — real output of scripts/45_calibrated_kelly.R
+  // (results/kelly_bankroll_paths_v35.csv). 2023 is a flat 1% burn-in year.
   const c2 = document.getElementById('bankrollChart').getContext('2d');
-  const labels = []; const k5 = []; const k10 = []; const flat = [];
-  let b5 = 10000, b10 = 10000, bf = 10000;
-  for (let i = 0; i <= 520; i++) {
-    labels.push(i);
-    // approx growth curves
-    b5  = 10000 + (15014 - 10000) * (i / 520) * (0.7 + 0.3 * Math.sin(i * 0.05));
-    b10 = 10000 + (21396 - 10000) * (i / 520) * (0.6 + 0.4 * Math.sin(i * 0.04));
-    bf  = 10000 + (3910)          * (i / 520);
-    k5.push(Math.round(b5));
-    k10.push(Math.round(b10));
-    flat.push(Math.round(bf));
-  }
+  const labels = [];
+  for (const yr of [23, 24, 25]) for (let w = 1; w <= 18; w++) labels.push(yr + '-W' + w);
+  const flat = [10309,10459,10602,10553,10813,10763,11331,11393,11113,10840,10692,10858,10917,10867,11559,11496,11872,11818,11754,11903,12401,12457,12752,12960,13149,13089,13529,12447,13002,13699,13251,12974,12938,12644,13311,12984,13197,12885,13201,13417,13490,13932,14274,15039,14561,14508,15141,15086,14002,13811,13874,13786,14124,13932];
+  const kq   = [10309,10459,10602,10553,10813,10763,11331,11393,11113,10840,10692,10858,10917,10867,11559,11496,11872,11818,12449,11210,12349,11862,12773,13265,13763,14097,15086,13541,14041,15048,14701,13463,12904,12799,14425,13975,14153,14084,14374,14966,14872,15350,15630,17017,16053,15541,16675,16386,14479,14090,14669,14854,15096,15123];
+  const kold = [10436,10994,11888,12240,13120,13200,14838,14959,14904,14055,13062,13600,14452,13148,16137,15929,16603,17416,17963,17065,19197,18585,20084,21454,22689,22438,25685,19264,21900,25787,23662,20262,19827,19301,23314,21346,22409,21655,23297,25517,25466,25924,27747,33404,28866,26591,29442,27981,23344,22184,23611,23749,25397,24600];
   new Chart(c2, {
     type: 'line',
     data: { labels: labels, datasets: [
-      { label: 'Kelly 10%', data: k10, borderColor: '#00d4ff', backgroundColor: 'rgba(0,212,255,0.1)', tension: 0.3, fill: true, pointRadius: 0 },
-      { label: 'Kelly 5%',  data: k5,  borderColor: '#ffb81c', backgroundColor: 'rgba(255,184,28,0.05)', tension: 0.3, fill: false, pointRadius: 0 },
-      { label: 'Flat $100', data: flat, borderColor: '#9aa6b8', backgroundColor: 'rgba(154,166,184,0.05)', tension: 0.3, borderDash: [5,5], fill: false, pointRadius: 0 }
+      { label: 'Flat 1% (recommended)', data: flat, borderColor: '#00d4ff', backgroundColor: 'rgba(0,212,255,0.1)', tension: 0.2, fill: true, pointRadius: 0 },
+      { label: 'Calibrated 1/4 Kelly',  data: kq,   borderColor: '#ffb81c', backgroundColor: 'rgba(255,184,28,0.05)', tension: 0.2, fill: false, pointRadius: 0 },
+      { label: 'Old way (raw-probability Kelly)', data: kold, borderColor: '#9aa6b8', backgroundColor: 'rgba(154,166,184,0.05)', tension: 0.2, borderDash: [5,5], fill: false, pointRadius: 0 }
     ]},
     options: {
       responsive: true, maintainAspectRatio: false,
       plugins: {
-        title: { display: true, text: 'Bankroll Growth (illustrative)', color: '#f3f6fa', font: { size: 14, weight: 'bold' } },
+        title: { display: true, text: 'Bankroll by week, $10k start', color: '#f3f6fa', font: { size: 14, weight: 'bold' } },
         legend: { labels: { color: '#9aa6b8' } }
       },
       scales: {
@@ -891,21 +886,18 @@ function buildCharts() {
 // =============================================================
 // Kelly slider
 // =============================================================
-const kellyData = {
-   1: { final: 11400,  ret: 14,  dd: 12,  rating: 'Conservative',  advice: 'Quarter-Kelly. Slow growth, gentle drawdowns. The "sleep at night" choice.' },
-   3: { final: 13100,  ret: 31,  dd: 22,  rating: 'Conservative',  advice: 'Still well below the optimal frontier. Smooth ride.' },
-   5: { final: 15014,  ret: 50,  dd: 38,  rating: 'Moderate',      advice: 'Quarter-Kelly. Best risk-adjusted return. 50% gain with manageable drawdown.' },
-   8: { final: 18500,  ret: 85,  dd: 51,  rating: 'Moderate',      advice: 'Approaching the half-Kelly sweet spot.' },
-  10: { final: 21396,  ret: 114, dd: 59,  rating: 'Aggressive',    advice: 'Half-Kelly. The balance most professional bettors use. Big returns, big drawdowns.' },
-  15: { final: 28800,  ret: 188, dd: 71,  rating: 'Aggressive',    advice: 'Approaching full Kelly. Returns escalate, but so does the chance of catastrophic ruin.' },
-  20: { final: 37294,  ret: 273, dd: 80,  rating: 'Reckless',      advice: 'Full Kelly. Theoretically optimal long-run growth, practically a heart attack.' },
-  25: { final: 45928,  ret: 359, dd: 85,  rating: 'Reckless',      advice: '125% of Kelly. Mathematically suboptimal — the variance kills you before the edge wins.' }
-};
-function nearestKey(v) { const ks = Object.keys(kellyData).map(Number); return ks.reduce((a, b) => Math.abs(b - v) < Math.abs(a - v) ? b : a); }
+// Real output of scripts/45_calibrated_kelly.R (results/kelly_calibrated_v35.csv)
+const kellyData = [
+  { name: '1/10 Kelly', final: 13238, ret: 32,  dd: 7,  rating: 'Conservative', advice: 'Calibrated 1/10 Kelly. Skips the 76 bets calibration says have no edge. Smallest swings, slightly less growth than flat 1%.' },
+  { name: 'Flat 1%',    final: 13932, ret: 39,  dd: 9,  rating: 'Conservative', advice: 'Recommended. About 1/8 Kelly at a 56% edge, which leaves room for the real edge being smaller than the backtest.' },
+  { name: '1/4 Kelly',  final: 15123, ret: 51,  dd: 17, rating: 'Moderate',     advice: 'Calibrated 1/4 Kelly, about 1.4% per bet. The most you should size up to.' },
+  { name: '1/2 Kelly',  final: 17223, ret: 72,  dd: 30, rating: 'Aggressive',   advice: 'Calibrated 1/2 Kelly. More growth in this backtest, but a 30% drawdown, and the edge here is not proven.' },
+  { name: 'Full Kelly', final: 16681, ret: 67,  dd: 34, rating: 'Reckless',     advice: 'Calibrated full Kelly. Less money than half-Kelly with bigger swings: overbetting starts to cost you.' },
+  { name: 'Old way',    final: 24600, ret: 146, dd: 34, rating: 'Reckless',     advice: 'The original method: Kelly on the raw, overconfident probabilities. It looks great because the high-confidence bets happened to win. That is luck, not a strategy.' }
+];
 function updateKelly(val) {
-  const k = nearestKey(val);
-  const d = kellyData[k];
-  document.getElementById('kellyValue').textContent = val + '%';
+  const d = kellyData[Number(val)];
+  document.getElementById('kellyValue').textContent = d.name;
   document.getElementById('finalBR').textContent = '$' + d.final.toLocaleString();
   document.getElementById('returnPct').textContent = '+' + d.ret + '%';
   document.getElementById('maxDD').textContent = d.dd + '%';
@@ -998,7 +990,7 @@ window.addEventListener('load', () => {
   animateCounters();
   buildCharts();
   colorHeatmap();
-  updateKelly(10);
+  updateKelly(1);
   loadGame();
   // observe feature section
   const obs = new IntersectionObserver(entries => {

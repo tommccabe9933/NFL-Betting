@@ -7,6 +7,8 @@
 
 A combined cover + no-cover ensemble achieves **56.0% against the spread** over **520 out-of-sample bets** across 2023–2025. Bootstrap 90% CI = [52.5%, 59.4%]; entire interval clears the 52.4% breakeven threshold. The 2025 holdout (never seen during development) was profitable: 54.9%, +$860.
 
+**Bet sizing (revised Oct 2026):** the model's raw probabilities are overconfident, so Kelly sizing off them overbets. After calibration (`scripts/45_calibrated_kelly.R`), the recommendation is a flat 1% of bankroll per bet: $10,000 → $13,932 (+39%) over 2023–2025, worst drawdown 9%.
+
 Read the full story: **`memos/blog_post.md`** or open the interactive exhibit: **`exhibit_beating_the_spread.html`**.
 
 ## Active Repository Structure
@@ -19,12 +21,13 @@ Read the full story: **`memos/blog_post.md`** or open the interactive exhibit: *
 │   ├── 19c_rebuild_v3_clean.R            # Clean rebuild — leaker removal, sign fixes
 │   ├── 26_tuned_stable_model.R           # Cover model (tuned glmnet, fixed lambda)
 │   ├── 36_ensemble_consensus.R           # 3-model cover ensemble
-│   ├── 37_kelly_sizing.R                 # Kelly bankroll simulation
+│   ├── 37_kelly_sizing.R                 # Superseded by 45 (kept for the record)
 │   ├── 40_nocover_feature_discovery.R    # No-cover feature search
 │   ├── 41_nocover_model.R                # No-cover model training
 │   ├── 42_nocover_audit.R                # Data integrity audit
 │   ├── 43_final_audit.R                  # End-to-end pipeline audit
 │   ├── 44_bootstrap_combined.R           # Bootstrap CI + permutation + sensitivity
+│   ├── 45_calibrated_kelly.R             # Calibrated probabilities + bet sizing
 │   └── run_pipeline.py                   # Python ingest pipeline entry point
 ├── src/                                  # Python ETL modules (12 sources, 28 tests)
 ├── data/                                  # Raw + processed datasets
@@ -34,9 +37,15 @@ Read the full story: **`memos/blog_post.md`** or open the interactive exhibit: *
 │   ├── v3_cover_ensemble.rds             # 3-model cover ensemble preds
 │   ├── nocover_ensemble_predictions.rds  # No-cover model preds
 │   ├── combined_portfolio_v35.rds        # Final combined bet log
+│   ├── cover_preds_v35.rds               # Per-game cover predictions (from 44)
+│   ├── nocover_preds_v35.rds             # Per-game no-cover predictions (from 44)
+│   ├── calibrators_v35.rds               # Platt calibrators for 2026 sizing
 │   └── team_game_full.rds                # Team-game level features
 ├── results/                               # Active result tables
 │   ├── bootstrap_combined_v35.csv        # Final bootstrap validation
+│   ├── kelly_calibrated_v35.csv          # Bet sizing comparison
+│   ├── kelly_bankroll_paths_v35.csv      # Week-by-week bankroll per sizing
+│   ├── kelly_risk_one_season.csv         # One-season risk simulation
 │   ├── ensemble_exhaustive_triplets.csv  # Cover ensemble grid search
 │   ├── final_exhaustive_with_composites.csv
 │   ├── nocover_exhaustive_search.csv
@@ -79,6 +88,7 @@ Rscript scripts/41_nocover_model.R
 # 5. Final audit + bootstrap validation
 Rscript scripts/43_final_audit.R
 Rscript scripts/44_bootstrap_combined.R
+Rscript scripts/45_calibrated_kelly.R
 ```
 
 ## Data Sources (12)

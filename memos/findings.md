@@ -283,9 +283,15 @@ Single elastic net, train on 2012+, α=0.25, λ=0.08, P>0.53 threshold
 Strategy is robust across ±0.02 threshold changes. Every configuration from
 cover>0.53/nc>0.51 through cover>0.57/nc>0.55 is profitable.
 
-### Kelly Sizing ($10K start)
-- Kelly 5% → $15,014 (+50%) | MaxDD 38%
-- Kelly 10% → $21,396 (+114%) | MaxDD 59%
+### Bet Sizing ($10K start, revised Oct 2026 — see 45_calibrated_kelly.R)
+- Old Kelly table was wrong: Kelly formula off by ~2x, sized on overconfident raw
+  probabilities, and drawdown measured peak-to-lowest-ever (inflated).
+- Raw probabilities are overconfident: bets rated ~0.79 won 58%. After walk-forward
+  Platt calibration nearly every bet is worth 54–57%; cover calibration slope = 0.10.
+- Flat 1% of bankroll → $13,932 (+39%) | MaxDD 9%
+- Calibrated 1/4 Kelly → $15,123 (+51%) | MaxDD 17%
+- Calibrated 1/2 Kelly → $17,223 (+72%) | MaxDD 30%
+- Recommendation: flat 1% per bet (~1/8 Kelly at 56%), never above 2%.
 
 ### Interpretation
 The combined strategy shows a real but marginal edge. The 90% CI clears breakeven,

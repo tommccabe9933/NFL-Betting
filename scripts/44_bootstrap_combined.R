@@ -165,35 +165,14 @@ cat(sprintf("Combined:   %d bets, %.1f%%, $%d\n",
   nrow(portfolio), mean(portfolio$win)*100, sum(portfolio$profit)))
 
 # ================================================================
-# STEP 4: Kelly bankroll simulation
+# STEP 4: Kelly bankroll simulation — moved to 45_calibrated_kelly.R
 # ================================================================
-cat("\n=== KELLY BANKROLL SIMULATION ===\n")
-
-simulate_kelly <- function(bets, kelly_frac, bankroll_start = 10000) {
-  bets <- bets |> arrange(season, week)
-  bankroll <- bankroll_start
-  peak <- bankroll
-  trough <- bankroll
-  for (i in seq_len(nrow(bets))) {
-    p_win   <- bets$p_used[i]
-    edge    <- p_win - 0.524
-    if (edge <= 0) next
-    kelly_f  <- edge / (100 / 110)  # Kelly = edge / odds_ratio
-    bet_size <- min(kelly_f * bankroll * kelly_frac, 0.10 * bankroll)
-    bet_size <- max(bet_size, 10)
-    bankroll <- bankroll + ifelse(bets$win[i], bet_size * (100/110), -bet_size)
-    peak     <- max(peak, bankroll)
-    trough   <- min(trough, bankroll)
-  }
-  list(final = bankroll, roi = (bankroll - bankroll_start)/bankroll_start,
-       max_dd = (peak - trough)/peak)
-}
-
-for (kf in c(0.05, 0.10, 0.20, 0.25)) {
-  r <- simulate_kelly(portfolio, kf)
-  cat(sprintf("  Kelly %3.0f%%: $%6.0f (%+.1f%%) MaxDD=%.1f%%\n",
-    kf*100, r$final, r$roi*100, r$max_dd*100))
-}
+# The old simulation here sized bets off the raw model probabilities, which
+# are overconfident above ~0.62, and computed drawdown as (peak - lowest
+# point ever) / peak even when the low came before the peak. 45 calibrates
+# the probabilities walk-forward first and tracks drawdown properly.
+write_rds(cover_preds,   here("objects", "cover_preds_v35.rds"))
+write_rds(nocover_preds, here("objects", "nocover_preds_v35.rds"))
 
 # ================================================================
 # STEP 5: Bootstrap CI (B=2000, stratified by season)
