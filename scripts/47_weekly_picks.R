@@ -17,9 +17,10 @@
 library(tidyverse); library(here)
 source(here("scripts", "model_functions.R"))
 
-v36 <- read_rds(here("objects", "modeling_data_v36.rds"))
+version <- Sys.getenv("MODEL_VERSION", "v37")
+v36 <- read_rds(here("objects", str_glue("modeling_data_{version}.rds")))
 upcoming <- read_rds(here("objects", "upcoming_games.rds"))
-calibrators <- read_rds(here("objects", "calibrators_v36.rds"))
+calibrators <- read_rds(here("objects", str_glue("calibrators_{version}.rds")))
 
 season_now <- max(upcoming$season)
 sf <- stable_features(v36)
@@ -64,7 +65,7 @@ picks <- games |>
   select(week, gameday, gametime, matchup, line = spread_fav, favorite, pick, stake,
          model_p, calibrated_p, p_cover, p_nocover)
 
-out <- here("results", str_glue("picks_{season_now}_wk{str_pad(max(picks$week), 2, pad = '0')}.csv"))
+out <- here("results", str_glue("picks_{season_now}_wk{str_pad(max(picks$week), 2, pad = '0')}_{version}.csv"))
 write_csv(picks, out)
 
 cat(sprintf("\n=== %d PICKS — weeks %s ===\n", season_now, paste(unique(picks$week), collapse = ", ")))

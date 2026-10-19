@@ -9,14 +9,25 @@ source(here("scripts", "composites.R"))
 
 v3_final <- read_rds(here("objects", "modeling_data_v3_FINAL.rds"))
 
-# Freeze composite scaling at the original 2012-2025 values (one-time)
-scaling_path <- here("objects", "composite_scaling.rds")
-if (!file.exists(scaling_path)) {
-  write_rds(attr(add_all_composites(v3_final), "composite_scaling"), scaling_path)
-}
-scaling <- read_rds(scaling_path)
+# v36: composite scaling frozen at the original 2012-2025 values, for an
+#      exact match with v3_FINAL (built on the swapped fav/dog columns).
+# v37: fav/dog fixed upstream (src/normalize/games.py); scaling learned on
+#      2012-2022 only, so no test season (2023+) feeds the composites.
+version <- Sys.getenv("MODEL_VERSION", "v37")
+base <- read_rds(here("objects", "modeling_data_v3.rds"))
 
-v36 <- read_rds(here("objects", "modeling_data_v3.rds")) |>
+if (version == "v36") {
+  scaling_path <- here("objects", "composite_scaling.rds")
+  if (!file.exists(scaling_path)) {
+    write_rds(attr(add_all_composites(v3_final), "composite_scaling"), scaling_path)
+  }
+  scaling <- read_rds(scaling_path)
+} else {
+  scaling <- attr(add_all_composites(base |> filter(season <= 2022)), "composite_scaling")
+  write_rds(scaling, here("objects", str_glue("composite_scaling_{version}.rds")))
+}
+
+v36 <- base |>
   add_all_composites(scaling) |>
   select(all_of(names(v3_final)))
 attr(v36, "composite_scaling") <- NULL
@@ -42,5 +53,5 @@ cov <- v36 |> filter(season >= 2024) |> group_by(season) |>
             pct_features_filled = mean(as.matrix(across(all_of(setdiff(num_cols, "season")), ~ !is.na(.x)))))
 print(cov)
 
-write_rds(v36, here("objects", "modeling_data_v36.rds"))
-cat("Saved objects/modeling_data_v36.rds:", nrow(v36), "x", ncol(v36), "\n")
+write_rds(v36, here("objects", str_glue("modeling_data_{version}.rds")))
+cat(sprintf("Saved objects/modeling_data_%s.rds: %d x %d\n", version, nrow(v36), ncol(v36)))

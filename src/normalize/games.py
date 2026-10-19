@@ -84,11 +84,12 @@ def build_canonical_games() -> pl.DataFrame:
     )
 
     # Determine favorite from spread_line
-    # In nflverse: negative spread_line means home team is favored
+    # In nflverse: positive spread_line means the home team is favored.
+    # (Before v3.7 this was read backwards, swapping every fav_/dog_ column.)
     sched = sched.with_columns([
-        pl.when(pl.col("spread_line") < 0)
+        pl.when(pl.col("spread_line") > 0)
         .then(pl.col("home_team"))
-        .when(pl.col("spread_line") > 0)
+        .when(pl.col("spread_line") < 0)
         .then(pl.col("away_team"))
         .otherwise(pl.col("home_team"))  # pick'em defaults to home
         .alias("team_favorite_id"),

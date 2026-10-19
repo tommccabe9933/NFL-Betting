@@ -283,6 +283,13 @@ Single elastic net, train on 2012+, α=0.25, λ=0.08, P>0.53 threshold
 Strategy is robust across ±0.02 threshold changes. Every configuration from
 cover>0.53/nc>0.51 through cover>0.57/nc>0.55 is profitable.
 
+### v3.7 — fav/dog fix (Oct 2026)
+- Fixed spread_line sign in src/normalize/games.py; fav_implied_prob now averages 0.66 (was 0.34); 19c no longer needs its sign flip
+- Composite scaling learned on 2012-2022 only (no test-season leakage)
+- Same strategy, no retuning: 2023 57.6% / 2024 53.5% / 2025 49.1%; 430 bets, 54.0%, CI [49.8, 57.7], p = 0.28
+- Walk-forward calibration slope ≈ 0 for both models → predicted probabilities don't separate winners from losers
+- Conclusion: no reliable edge; 2026 = paper trading only
+
 ### v3.6 Rebuild (Oct 2026)
 - v3_FINAL had 145 features 100% NA for 2025 (Kaggle team stats + Python PBP features ended 2024); 2025 was median-imputed
 - Rebuilt through 2026 (scripts 02, 10, 20, composites.R); 2012-2024 reproduces v3_FINAL (271/279 cols ≥99% identical)
