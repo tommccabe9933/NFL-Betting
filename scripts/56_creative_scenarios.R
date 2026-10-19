@@ -8,61 +8,11 @@
 library(tidyverse); library(here); library(nflreadr)
 set.seed(42)
 
-norm <- function(x) recode(x, LV = "LVR", LA = "LAR", OAK = "LVR", SD = "LAC", STL = "LAR")
-tz_of <- function(raw) case_when(
-  raw %in% c("SEA", "SF", "OAK", "LV", "LA", "LAR", "SD", "LAC") ~ -3,
-  raw %in% c("DEN", "ARI") ~ -2,
-  raw %in% c("CHI", "DAL", "GB", "HOU", "KC", "MIN", "NO", "TEN", "STL") ~ -1,
-  TRUE ~ 0)
-
-sched <- load_schedules(2011:2026) |> filter(game_type == "REG") |>
-  mutate(kickoff = as.POSIXct(str_c(gameday, " ", gametime), tz = "America/New_York"),
-         game_id_norm = str_c(season, "_", str_pad(week, 2, pad = "0"), "_", norm(away_team), "_", norm(home_team)),
-         neutral = location == "Neutral", site_tz = if_else(neutral, NA_real_, tz_of(home_team)))
-
-# One row per team per game, in date order
-tg <- bind_rows(
-  sched |> transmute(game_id_norm, season, week, kickoff, gametime, weekday, overtime, neutral, site_tz,
-                     raw = home_team, team = norm(home_team), opp = norm(away_team), home = TRUE,
-                     pts = home_score, opp_pts = away_score, line_for = spread_line),
-  sched |> transmute(game_id_norm, season, week, kickoff, gametime, weekday, overtime, neutral, site_tz,
-                     raw = away_team, team = norm(away_team), opp = norm(home_team), home = FALSE,
-                     pts = away_score, opp_pts = home_score, line_for = -spread_line)) |>
-  # line_for: points this team is favored by (negative = underdog)
-  mutate(margin = pts - opp_pts, ats = margin - line_for,
-         covered = ats > 0, was_fav = line_for > 0,
-         primetime = weekday %in% c("Monday", "Thursday") | (weekday == "Sunday" & gametime >= "19:00"),
-         tz_shift = site_tz - tz_of(raw)) |>
-  arrange(team, kickoff) |>
-  group_by(team) |>
-  mutate(
-    prev_margin = lag(margin), prev_covered = lag(covered), prev_was_fav = lag(was_fav),
-    prev_ot = coalesce(lag(overtime) == 1, FALSE), prev_mnf = coalesce(lag(weekday) == "Monday", FALSE),
-    covered_last3 = lag(covered) & lag(covered, 2) & lag(covered, 3),
-    days_rest = as.numeric(difftime(kickoff, lag(kickoff), units = "days")),
-    days_to_next = as.numeric(difftime(lead(kickoff), kickoff, units = "days")),
-    next_primetime = lead(primetime),
-    road_streak = { r <- !home; ave(r, cumsum(!r), FUN = cumsum) }
-  ) |>
-  group_by(team, season) |>
-  mutate(lost_to_opp_earlier = map_lgl(row_number(), function(i)
-    any(opp[seq_len(i - 1)] == opp[i] & margin[seq_len(i - 1)] < 0, na.rm = TRUE))) |>
-  ungroup()
-
-v <- read_rds(here("objects", "modeling_data_v37.rds")) |>
+source(here("scripts", "schedule_features.R"))
+g <- read_rds(here("objects", "modeling_data_v37.rds")) |>
   filter(!is.na(fav_cover), season >= 2012) |>
-  mutate(y = as.integer(fav_cover == "cover"),
-         fav = if_else(fav_at_home == "yes", str_extract(game_id_norm, "[A-Z]+$"),
-                       str_match(game_id_norm, "_\\d+_([A-Z]+)_")[, 2]),
-         dog = if_else(fav_at_home == "yes", str_match(game_id_norm, "_\\d+_([A-Z]+)_")[, 2],
-                       str_extract(game_id_norm, "[A-Z]+$")))
-
-side_feats <- tg |> select(game_id_norm, team, home, prev_margin, prev_covered, prev_was_fav, prev_ot, prev_mnf,
-                           covered_last3, days_rest, days_to_next, next_primetime, road_streak,
-                           lost_to_opp_earlier, tz_shift, gametime, weekday, neutral)
-g <- v |>
-  left_join(side_feats |> rename_with(~ str_c("f_", .x), -c(game_id_norm, team)), by = c("game_id_norm", "fav" = "team")) |>
-  left_join(side_feats |> rename_with(~ str_c("d_", .x), -c(game_id_norm, team)), by = c("game_id_norm", "dog" = "team"))
+  mutate(y = as.integer(fav_cover == "cover")) |>
+  add_schedule_features()
 
 yes <- function(x) coalesce(x, FALSE)
 public_teams <- c("DAL", "GB", "PIT", "KC", "SF", "NE")
