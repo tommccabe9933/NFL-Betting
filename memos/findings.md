@@ -283,6 +283,12 @@ Single elastic net, train on 2012+, α=0.25, λ=0.08, P>0.53 threshold
 Strategy is robust across ±0.02 threshold changes. Every configuration from
 cover>0.53/nc>0.51 through cover>0.57/nc>0.55 is profitable.
 
+### Signal composite (Oct 2026) — negative result
+- scripts/48_signal_composite.R: average of the K most sign-stable features, bet only at extreme scores
+- Features picked on 2016-2020, K/cutoff tuned on 2021-2022 (K=10, |z|>=0.5): 56.6% on 311 validation bets
+- Walk-forward test 2023-2025 (frozen settings): 2023 51.0% / 2024 49.4% / 2025 48.0%; 486 bets, 49.4%, -$3,060
+- Signals that were stable for years before 2023 did not carry forward. Stopped here rather than re-cutting the data.
+
 ### v3.7 — fav/dog fix (Oct 2026)
 - Fixed spread_line sign in src/normalize/games.py; fav_implied_prob now averages 0.66 (was 0.34); 19c no longer needs its sign flip
 - Composite scaling learned on 2012-2022 only (no test-season leakage)
