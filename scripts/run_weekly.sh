@@ -19,3 +19,5 @@ step "Merge (19c)"                     Rscript scripts/19c_rebuild_v3_clean.R
 step "Final table (20)"                env MODEL_VERSION=v37 Rscript scripts/20_finalize_modeling_table.R
 echo "== Injury tracker"
 Rscript scripts/53_injury_tracker.R 2>>"$log" || { echo "FAILED — see $log"; exit 1; }
+echo "== Scenario tracker"
+Rscript scripts/55_scenario_tracker.R 2>>"$log" || { echo "FAILED — see $log"; exit 1; }
