@@ -10,8 +10,11 @@
 #   base_rate_follow         — bet whichever side covered more over the last 100 games
 #   delta_model              — logistic regression on team-vs-team matchup deltas
 #   delta_model_recent       — same, trained only on the last 3 seasons (adapts to regimes)
+#   delta_enet               — elastic net (alpha 0.5), lambda tuned by season-blocked CV
+#   delta_xgb                — shallow XGBoost (depth 2, heavy regularization)
 
-library(tidyverse); library(here)
+library(tidyverse); library(here); library(glmnet); library(xgboost)
+set.seed(42)
 
 version <- Sys.getenv("MODEL_VERSION", "v37")
 v <- read_rds(here("objects", str_glue("modeling_data_{version}.rds"))) |>
@@ -35,14 +38,36 @@ v <- v |> mutate(
 deltas <- c("pass_matchup", "rush_matchup", "success_matchup", "explosive_matchup", "form_delta",
             "qb_delta", "injury_delta", "out_delta", "rest_delta", "market_gap", "spread_fav")
 
-fit_delta <- function(train, test) {
+# Median-fill and standardize with training-window stats only
+prep_xy <- function(train, test) {
   med <- map_dbl(deltas, ~ median(train[[.x]], na.rm = TRUE)) |> set_names(deltas)
   fill <- function(d) d |> mutate(across(all_of(deltas), ~ replace_na(.x, med[cur_column()])))
   tr <- fill(train); te <- fill(test)
   mu <- map_dbl(deltas, ~ mean(tr[[.x]])); s <- map_dbl(deltas, ~ sd(tr[[.x]]))
-  z <- function(d) as_tibble(scale(as.matrix(d[deltas]), mu, s))
-  m <- glm(y ~ ., family = binomial, data = bind_cols(z(tr), y = tr$y))
-  predict(m, z(te), type = "response")
+  list(xtr = scale(as.matrix(tr[deltas]), mu, s), xte = scale(as.matrix(te[deltas]), mu, s),
+       ytr = tr$y, season = tr$season)
+}
+
+fit_delta <- function(train, test) {
+  d <- prep_xy(train, test)
+  m <- glm(y ~ ., family = binomial, data = bind_cols(as_tibble(d$xtr), y = d$ytr))
+  predict(m, as_tibble(d$xte), type = "response")
+}
+
+fit_enet <- function(train, test) {
+  d <- prep_xy(train, test)
+  cv <- cv.glmnet(d$xtr, d$ytr, family = "binomial", alpha = 0.5,
+                  foldid = as.integer(factor(d$season)))
+  as.vector(predict(cv, d$xte, s = "lambda.min", type = "response"))
+}
+
+fit_xgb <- function(train, test) {
+  d <- prep_xy(train, test)
+  m <- xgb.train(params = list(objective = "binary:logistic", max_depth = 2, eta = 0.03,
+                               subsample = 0.8, colsample_bytree = 0.8, min_child_weight = 30,
+                               lambda = 5, nthread = 4),
+                 data = xgb.DMatrix(d$xtr, label = d$ytr), nrounds = 150, verbose = 0)
+  predict(m, xgb.DMatrix(d$xte))
 }
 
 side <- function(p, edge = 0.03) case_when(p > 0.5 + edge ~ "fav", p < 0.5 - edge ~ "dog", TRUE ~ "pass")
@@ -55,12 +80,15 @@ bets <- map_dfr(seq_len(nrow(weeks)), function(i) {
   last100 <- past |> slice_max(t, n = 100, with_ties = FALSE)
   p_all <- fit_delta(past |> filter(season >= 2016), te)
   p_rec <- fit_delta(past |> filter(season >= wk$season - 3), te)
+  p_enet <- fit_enet(past |> filter(season >= 2016), te)
+  p_xgb <- fit_xgb(past |> filter(season >= 2016), te)
   tibble(season = wk$season, week = wk$week, game_id_norm = te$game_id_norm, y = te$y,
          always_fav = "fav", always_dog = "dog",
          base_rate_follow = if_else(mean(last100$y) >= 0.5, "fav", "dog"),
-         delta_model = side(p_all), delta_model_recent = side(p_rec))
+         delta_model = side(p_all), delta_model_recent = side(p_rec),
+         delta_enet = side(p_enet), delta_xgb = side(p_xgb))
 }) |>
-  pivot_longer(always_fav:delta_model_recent, names_to = "strategy", values_to = "bet") |>
+  pivot_longer(always_fav:delta_xgb, names_to = "strategy", values_to = "bet") |>
   filter(bet != "pass") |>
   mutate(win = (bet == "fav" & y == 1) | (bet == "dog" & y == 0))
 

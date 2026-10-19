@@ -23,6 +23,14 @@ base_rate_follow,2023,260,51.5,-460
 base_rate_follow,2024,263,51,-790
 base_rate_follow,2025,264,50.4,-1110
 base_rate_follow,2026,85,54.1,310
+delta_enet,2019,127,50.4,-530
+delta_enet,2020,99,46.5,-1230
+delta_enet,2021,131,49.6,-760
+delta_enet,2022,90,54.4,390
+delta_enet,2023,76,40.8,-1850
+delta_enet,2024,42,47.6,-420
+delta_enet,2025,55,54.5,250
+delta_enet,2026,29,58.6,380
 delta_model,2019,203,52.7,140
 delta_model,2020,171,49.1,-1170
 delta_model,2021,184,52.7,130
@@ -39,3 +47,11 @@ delta_model_recent,2023,142,45.8,-1970
 delta_model_recent,2024,143,53.8,440
 delta_model_recent,2025,182,52.7,140
 delta_model_recent,2026,53,50.9,-160
+delta_xgb,2019,189,52.4,0
+delta_xgb,2020,169,44.4,-2840
+delta_xgb,2021,176,55.1,1010
+delta_xgb,2022,157,52.2,-50
+delta_xgb,2023,168,47.6,-1680
+delta_xgb,2024,150,48.7,-1170
+delta_xgb,2025,154,52.6,70
+delta_xgb,2026,40,67.5,1270
