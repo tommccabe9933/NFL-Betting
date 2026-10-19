@@ -6,7 +6,10 @@ library(tidyverse); library(here); library(glmnet)
 source(here("scripts", "00_project_setup.R"))
 
 set.seed(42)
-v3 <- read_rds(here("objects", "modeling_data_v3_FINAL.rds"))
+# MODEL_DATA / TAG let the same backtest run on the v3.6 rebuild
+data_file <- Sys.getenv("MODEL_DATA", "modeling_data_v3_FINAL.rds")
+tag <- Sys.getenv("TAG", "v35")
+v3 <- read_rds(here("objects", data_file)) |> filter(!is.na(fav_cover))
 
 cat("=== COMBINED PORTFOLIO BOOTSTRAP VALIDATION ===\n")
 cat(sprintf("Dataset: %d x %d | Seasons: %d-%d\n\n",
@@ -16,64 +19,17 @@ cat(sprintf("Dataset: %d x %d | Seasons: %d-%d\n\n",
 # STEP 1: Regenerate cover and no-cover predictions (walk-forward)
 # ================================================================
 
-flip_features <- c("ypp_diff","fav_roll5_ypp","is_primetime","qb_cpoe_diff",
-  "rush_epa_mismatch","fav_off_sit_roll5_pass_epa","dog_off_sit_roll5_pass_epa",
-  "injury_diff","fav_implied_prob_devigged","dog_implied_prob_devigged",
-  "fav_off_epa_play_roll5","fav_off_pass_epa_roll5","fav_off_success_rate_roll3",
-  "fav_def_pass_epa_roll3","dog_off_success_rate_roll3","dog_def_rush_epa_roll3",
-  "off_success_rate_roll5_diff","def_pass_epa_roll3_diff",
-  "fav_qb_air_yards_per_att_roll5","dog_qb_cpoe_roll5","qb_epa_per_play_roll5_diff",
-  "fav_n_out","dog_n_out","dog_n_questionable","fav_off_sit_pass_epa_roll5",
-  "fav_off_neg_play_rate_roll5","fav_def_rz_epa_roll5","fav_def_neg_play_rate_roll5",
-  "dog_off_explosive_rate_roll5","dog_def_3rd_epa_roll5","off_rz_epa_roll5_diff",
-  "off_explosive_rate_roll5_diff","def_3rd_epa_roll5_diff","def_explosive_rate_roll5_diff",
-  "def_neg_play_rate_roll5_diff","wind_over_12_hinge","rest_advantage")
-bad_new <- c("total_spread_script","high_total_big_spread","dog_cold_streak",
-  "dog_hot_streak","fade_dog_heat","qb_scheme_fit","defensive_style_clash",
-  "fav_expected_score","dog_expected_score","fav_pass_lean","dog_def_weakness")
-sf <- setdiff(v3 |> select(where(is.numeric), -season, -week) |> names(),
-              c(flip_features, bad_new))
+source(here("scripts", "model_functions.R"))
+sf <- stable_features(v3)
 
 make_preds <- function(data, start_yr, alpha_val, lambda_val, target_cover = TRUE) {
-  all_p <- list()
-  for (ts in c(2023, 2024, 2025)) {
+  map_dfr(c(2023, 2024, 2025), function(ts) {
     tr <- data |> filter(season >= start_yr, season < ts)
     te <- data |> filter(season == ts)
-    if (nrow(tr) < 100 || nrow(te) < 10) next
-
-    tc <- map_dbl(sf, ~mean(!is.na(tr[[.x]])))
-    fe <- sf[tc > 0.5]
-    tx <- tr |> select(all_of(fe))
-    md <- map_dbl(tx, ~median(.x, na.rm = TRUE))
-    tx <- tx |> mutate(across(everything(), ~replace_na(.x, md[cur_column()]))) |> as.matrix()
-    ex <- te |> select(all_of(fe)) |>
-      mutate(across(everything(), ~replace_na(.x, md[cur_column()]))) |> as.matrix()
-
-    m <- colMeans(tx); s <- apply(tx, 2, sd); s[s == 0] <- 1
-    txs <- scale(tx, m, s); exs <- scale(ex, m, s)
-    gc <- which(apply(txs, 2, sd) > 0)
-    txs <- txs[, gc]; exs <- exs[, gc]
-
-    if (target_cover) {
-      y <- factor(tr$fav_cover, levels = c("cover", "no_cover"))
-      fit <- glmnet(txs, y, family = "binomial", alpha = alpha_val, lambda = lambda_val)
-      pred_raw <- predict(fit, exs, type = "response")[, 1]
-      p_main <- 1 - pred_raw  # P(cover)
-    } else {
-      y <- factor(tr$fav_cover, levels = c("no_cover", "cover"))
-      fit <- glmnet(txs, y, family = "binomial", alpha = alpha_val, lambda = lambda_val)
-      pred_raw <- predict(fit, exs, type = "response")[, 1]
-      p_main <- 1 - pred_raw  # P(no_cover)
-    }
-
-    all_p[[as.character(ts)]] <- tibble(
-      game_id_norm = te$game_id_norm,
-      p = p_main,
-      fav_cover = te$fav_cover,
-      season = ts, week = te$week
-    )
-  }
-  bind_rows(all_p)
+    tibble(game_id_norm = te$game_id_norm,
+           p = fit_predict(tr, te, sf, alpha_val, lambda_val, target_cover),
+           fav_cover = te$fav_cover, season = ts, week = te$week)
+  })
 }
 
 cat("Generating cover predictions (Balanced ensemble)...\n")
@@ -171,8 +127,8 @@ cat(sprintf("Combined:   %d bets, %.1f%%, $%d\n",
 # are overconfident above ~0.62, and computed drawdown as (peak - lowest
 # point ever) / peak even when the low came before the peak. 45 calibrates
 # the probabilities walk-forward first and tracks drawdown properly.
-write_rds(cover_preds,   here("objects", "cover_preds_v35.rds"))
-write_rds(nocover_preds, here("objects", "nocover_preds_v35.rds"))
+write_rds(cover_preds,   here("objects", str_glue("cover_preds_{tag}.rds")))
+write_rds(nocover_preds, here("objects", str_glue("nocover_preds_{tag}.rds")))
 
 # ================================================================
 # STEP 5: Bootstrap CI (B=2000, stratified by season)
@@ -328,8 +284,8 @@ results_summary <- tibble(
                        ci_2025[1], ci_2025[2])
 )
 
-write_rds(portfolio,        here("objects", "combined_portfolio_v35.rds"))
-write_csv(results_summary,  here("results", "bootstrap_combined_v35.csv"))
+write_rds(portfolio,        here("objects", str_glue("combined_portfolio_{tag}.rds")))
+write_csv(results_summary,  here("results", str_glue("bootstrap_combined_{tag}.csv")))
 
 cat("\n=== BOOTSTRAP COMPLETE ===\n")
 cat(sprintf("Portfolio: %d bets | %.1f%% WR | $%d profit\n",

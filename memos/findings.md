@@ -283,6 +283,12 @@ Single elastic net, train on 2012+, α=0.25, λ=0.08, P>0.53 threshold
 Strategy is robust across ±0.02 threshold changes. Every configuration from
 cover>0.53/nc>0.51 through cover>0.57/nc>0.55 is profitable.
 
+### v3.6 Rebuild (Oct 2026)
+- v3_FINAL had 145 features 100% NA for 2025 (Kaggle team stats + Python PBP features ended 2024); 2025 was median-imputed
+- Rebuilt through 2026 (scripts 02, 10, 20, composites.R); 2012-2024 reproduces v3_FINAL (271/279 cols ≥99% identical)
+- Same strategy on complete data: 2025 = 151 bets, 51.7%, −$230; 2023-2025 = 507 bets, 55.0%, CI [51.3, 58.6], p = 0.13
+- Python fav_/dog_ columns are swapped (spread_line sign read backwards); only *_diff columns corrected in 19c. Left as-is for comparability.
+
 ### Bet Sizing ($10K start, revised Oct 2026 — see 45_calibrated_kelly.R)
 - Old Kelly table was wrong: Kelly formula off by ~2x, sized on overconfident raw
   probabilities, and drawdown measured peak-to-lowest-ever (inflated).

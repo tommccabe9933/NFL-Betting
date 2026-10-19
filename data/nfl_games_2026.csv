@@ -1,0 +1,273 @@
+schedule_date,schedule_season,schedule_week,schedule_playoff,team_home,score_home,score_away,team_away,team_favorite_id,spread_favorite,over_under_line,stadium,stadium_neutral,weather_temperature,weather_wind_mph,weather_humidity,weather_detail
+09/09/2026,2026,1,FALSE,Seattle Seahawks,13,10,New England Patriots,SEA,-3,44.5,Lumen Field,FALSE,74,6,NA,NA
+09/10/2026,2026,1,FALSE,Los Angeles Rams,7,27,San Francisco 49ers,LAR,-3.5,47.5,Melbourne Cricket Ground,TRUE,72,0,NA,NA
+09/13/2026,2026,1,FALSE,Carolina Panthers,37,59,Chicago Bears,CHI,-3,47.5,Bank of America Stadium,FALSE,89,2,NA,NA
+09/13/2026,2026,1,FALSE,Cincinnati Bengals,33,27,Tampa Bay Buccaneers,CIN,-3.5,50.5,Paycor Stadium,FALSE,85,7,NA,NA
+09/13/2026,2026,1,FALSE,Detroit Lions,31,30,New Orleans Saints,DET,-7,49.5,Ford Field,FALSE,72,0,NA,NA
+09/13/2026,2026,1,FALSE,Houston Texans,31,36,Buffalo Bills,BUF,-1.5,44.5,Reliant Stadium,FALSE,72,0,NA,NA
+09/13/2026,2026,1,FALSE,Indianapolis Colts,23,41,Baltimore Ravens,BAL,-3,48.5,Lucas Oil Stadium,FALSE,72,0,NA,NA
+09/13/2026,2026,1,FALSE,Jacksonville Jaguars,34,10,Cleveland Browns,JAX,-8.5,40.5,EverBank Stadium,FALSE,89,3,NA,NA
+09/13/2026,2026,1,FALSE,Pittsburgh Steelers,20,13,Atlanta Falcons,PIT,-6.5,40.5,Acrisure Stadium,FALSE,77,4,NA,NA
+09/13/2026,2026,1,FALSE,Tennessee Titans,10,23,New York Jets,TEN,-1.5,39.5,Nissan Stadium,FALSE,90,2,NA,NA
+09/13/2026,2026,1,FALSE,Los Angeles Chargers,14,26,Arizona Cardinals,LAC,-8.5,47.5,SoFi Stadium,FALSE,72,0,NA,NA
+09/13/2026,2026,1,FALSE,Las Vegas Raiders,27,13,Miami Dolphins,LVR,-3,40.5,Allegiant Stadium,FALSE,72,0,NA,NA
+09/13/2026,2026,1,FALSE,Minnesota Vikings,39,22,Green Bay Packers,MIN,-1.5,46.5,U.S. Bank Stadium,FALSE,72,0,NA,NA
+09/13/2026,2026,1,FALSE,Philadelphia Eagles,24,22,Washington Commanders,PHI,-6,43.5,Lincoln Financial Field,FALSE,82,7,NA,NA
+09/13/2026,2026,1,FALSE,New York Giants,28,20,Dallas Cowboys,DAL,-3,47.5,MetLife Stadium,FALSE,80,7,NA,NA
+09/14/2026,2026,1,FALSE,Kansas City Chiefs,31,10,Denver Broncos,KC,-2.5,42.5,GEHA Field at Arrowhead Stadium,FALSE,91,13,NA,NA
+09/17/2026,2026,2,FALSE,Buffalo Bills,41,31,Detroit Lions,BUF,-5.5,54.5,Highmark Stadium,FALSE,67,4,NA,NA
+09/20/2026,2026,2,FALSE,Atlanta Falcons,3,34,Carolina Panthers,CAR,-2.5,43.5,Mercedes-Benz Stadium,FALSE,72,0,NA,NA
+09/20/2026,2026,2,FALSE,Baltimore Ravens,17,24,New Orleans Saints,BAL,-8.5,45.5,M&T Bank Stadium,FALSE,79,10,NA,NA
+09/20/2026,2026,2,FALSE,Chicago Bears,3,9,Minnesota Vikings,CHI,-4.5,46.5,Soldier Field,FALSE,68,8,NA,NA
+09/20/2026,2026,2,FALSE,Houston Texans,6,20,Cincinnati Bengals,HOU,-3,45.5,Reliant Stadium,FALSE,72,0,NA,NA
+09/20/2026,2026,2,FALSE,New England Patriots,20,3,Pittsburgh Steelers,NE,-4.5,41.5,Gillette Stadium,FALSE,63,7,NA,NA
+09/20/2026,2026,2,FALSE,New York Jets,17,20,Green Bay Packers,GB,-3.5,44.5,MetLife Stadium,FALSE,69,7,NA,NA
+09/20/2026,2026,2,FALSE,Tampa Bay Buccaneers,19,23,Cleveland Browns,TB,-8.5,41.5,Raymond James Stadium,FALSE,86,4,NA,NA
+09/20/2026,2026,2,FALSE,Tennessee Titans,20,24,Philadelphia Eagles,PHI,-7,39.5,Nissan Stadium,FALSE,92,5,NA,NA
+09/20/2026,2026,2,FALSE,Denver Broncos,20,13,Jacksonville Jaguars,DEN,-2.5,45.5,Empower Field at Mile High,FALSE,73,12,NA,NA
+09/20/2026,2026,2,FALSE,Los Angeles Chargers,14,26,Las Vegas Raiders,LAC,-6.5,43.5,SoFi Stadium,FALSE,72,0,NA,NA
+09/20/2026,2026,2,FALSE,Arizona Cardinals,7,31,Seattle Seahawks,SEA,-3.5,40.5,State Farm Stadium,FALSE,72,0,NA,NA
+09/20/2026,2026,2,FALSE,Dallas Cowboys,37,20,Washington Commanders,DAL,-3.5,51.5,AT&T Stadium,FALSE,72,0,NA,NA
+09/20/2026,2026,2,FALSE,San Francisco 49ers,35,13,Miami Dolphins,SF,-12.5,44.5,Levi's Stadium,FALSE,69,5,NA,NA
+09/20/2026,2026,2,FALSE,Kansas City Chiefs,33,30,Indianapolis Colts,KC,-6,46.5,GEHA Field at Arrowhead Stadium,FALSE,71,10,NA,NA
+09/21/2026,2026,2,FALSE,Los Angeles Rams,28,6,New York Giants,LAR,-6.5,47.5,SoFi Stadium,FALSE,72,0,NA,NA
+09/24/2026,2026,3,FALSE,Green Bay Packers,14,35,Atlanta Falcons,GB,-4.5,43.5,Lambeau Field,FALSE,61,5,NA,NA
+09/27/2026,2026,3,FALSE,Buffalo Bills,24,16,Los Angeles Chargers,BUF,-7,50.5,Highmark Stadium,FALSE,68,12,NA,NA
+09/27/2026,2026,3,FALSE,Cleveland Browns,21,18,Carolina Panthers,CAR,-2.5,41.5,Huntington Bank Field,FALSE,68,12,NA,NA
+09/27/2026,2026,3,FALSE,Detroit Lions,31,24,New York Jets,DET,-7,49.5,Ford Field,FALSE,72,0,NA,NA
+09/27/2026,2026,3,FALSE,Indianapolis Colts,19,17,Houston Texans,HOU,-1.5,41.5,Lucas Oil Stadium,FALSE,NA,NA,NA,NA
+09/27/2026,2026,3,FALSE,Jacksonville Jaguars,35,6,New England Patriots,JAX,-3,46.5,EverBank Stadium,FALSE,80,7,NA,NA
+09/27/2026,2026,3,FALSE,Miami Dolphins,10,24,Kansas City Chiefs,KC,-10,45.5,Hard Rock Stadium,FALSE,86,5,NA,NA
+09/27/2026,2026,3,FALSE,New York Giants,12,7,Tennessee Titans,NYG,-2.5,37.5,MetLife Stadium,FALSE,62,10,NA,NA
+09/27/2026,2026,3,FALSE,Pittsburgh Steelers,30,27,Cincinnati Bengals,CIN,-3.5,42.5,Acrisure Stadium,FALSE,70,12,NA,NA
+09/27/2026,2026,3,FALSE,Washington Commanders,33,31,Seattle Seahawks,SEA,-8.5,40.5,Northwest Stadium,FALSE,63,13,NA,NA
+09/27/2026,2026,3,FALSE,San Francisco 49ers,36,30,Arizona Cardinals,SF,-7.5,48.5,Levi's Stadium,FALSE,70,4,NA,NA
+09/27/2026,2026,3,FALSE,Tampa Bay Buccaneers,16,23,Minnesota Vikings,MIN,-1.5,42.5,Raymond James Stadium,FALSE,84,7,NA,NA
+09/27/2026,2026,3,FALSE,Dallas Cowboys,31,34,Baltimore Ravens,BAL,-3,53.5,Maracana Stadium,TRUE,77,7,NA,NA
+09/27/2026,2026,3,FALSE,New Orleans Saints,27,35,Las Vegas Raiders,NO,-3.5,43.5,Caesars Superdome,FALSE,72,0,NA,NA
+09/27/2026,2026,3,FALSE,Denver Broncos,30,26,Los Angeles Rams,DEN,-1.5,43.5,Empower Field at Mile High,FALSE,83,10,NA,NA
+09/28/2026,2026,3,FALSE,Chicago Bears,27,7,Philadelphia Eagles,PHI,-3.5,42.5,Soldier Field,FALSE,64,3,NA,NA
+10/01/2026,2026,4,FALSE,Cleveland Browns,27,24,Pittsburgh Steelers,PIT,-2.5,38.5,Huntington Bank Field,FALSE,77,11,NA,NA
+10/04/2026,2026,4,FALSE,Washington Commanders,13,30,Indianapolis Colts,IND,-4.5,46.5,Tottenham Hotspur Stadium,TRUE,70,7,NA,NA
+10/04/2026,2026,4,FALSE,Baltimore Ravens,24,18,Tennessee Titans,BAL,-11.5,42.5,M&T Bank Stadium,FALSE,62,6,NA,NA
+10/04/2026,2026,4,FALSE,Buffalo Bills,26,29,New England Patriots,BUF,-7,49.5,Highmark Stadium,FALSE,69,11,NA,NA
+10/04/2026,2026,4,FALSE,Chicago Bears,23,12,New York Jets,CHI,-3.5,43.5,Soldier Field,FALSE,72,3,NA,NA
+10/04/2026,2026,4,FALSE,Cincinnati Bengals,17,22,Jacksonville Jaguars,CIN,-2.5,51.5,Paycor Stadium,FALSE,70,4,NA,NA
+10/04/2026,2026,4,FALSE,Houston Texans,30,34,Dallas Cowboys,HOU,-3,48.5,Reliant Stadium,FALSE,72,0,NA,NA
+10/04/2026,2026,4,FALSE,New York Giants,36,24,Arizona Cardinals,ARI,-2.5,44.5,MetLife Stadium,FALSE,63,9,NA,NA
+10/04/2026,2026,4,FALSE,Philadelphia Eagles,20,24,Los Angeles Rams,LAR,-3.5,42.5,Lincoln Financial Field,FALSE,62,9,NA,NA
+10/04/2026,2026,4,FALSE,Tampa Bay Buccaneers,14,17,Green Bay Packers,GB,-3,38.5,Raymond James Stadium,FALSE,86,3,NA,NA
+10/04/2026,2026,4,FALSE,Minnesota Vikings,15,10,Miami Dolphins,MIN,-10,38.5,U.S. Bank Stadium,FALSE,72,0,NA,NA
+10/04/2026,2026,4,FALSE,Las Vegas Raiders,27,30,Kansas City Chiefs,KC,-4.5,47.5,Allegiant Stadium,FALSE,72,0,NA,NA
+10/04/2026,2026,4,FALSE,Seattle Seahawks,30,23,Los Angeles Chargers,SEA,-7,42.5,Lumen Field,FALSE,63,3,NA,NA
+10/04/2026,2026,4,FALSE,San Francisco 49ers,24,14,Denver Broncos,SF,-3,48.5,Levi's Stadium,FALSE,87,4,NA,NA
+10/04/2026,2026,4,FALSE,Carolina Panthers,32,26,Detroit Lions,DET,-4.5,52.5,Bank of America Stadium,FALSE,66,2,NA,NA
+10/05/2026,2026,4,FALSE,New Orleans Saints,24,45,Atlanta Falcons,NO,-1.5,47.5,Caesars Superdome,FALSE,72,0,NA,NA
+10/08/2026,2026,5,FALSE,Dallas Cowboys,16,24,Tampa Bay Buccaneers,DAL,-9.5,49.5,AT&T Stadium,FALSE,72,0,NA,NA
+10/11/2026,2026,5,FALSE,Jacksonville Jaguars,19,17,Philadelphia Eagles,JAX,-7.5,41.5,Tottenham Hotspur Stadium,TRUE,NA,NA,NA,NA
+10/11/2026,2026,5,FALSE,Green Bay Packers,31,7,Chicago Bears,CHI,-1.5,46.5,Lambeau Field,FALSE,NA,NA,NA,NA
+10/11/2026,2026,5,FALSE,Miami Dolphins,24,31,Cincinnati Bengals,CIN,-7,44.5,Hard Rock Stadium,FALSE,NA,NA,NA,NA
+10/11/2026,2026,5,FALSE,New England Patriots,45,17,Las Vegas Raiders,NE,-3.5,45.5,Gillette Stadium,FALSE,NA,NA,NA,NA
+10/11/2026,2026,5,FALSE,New Orleans Saints,13,23,Minnesota Vikings,MIN,-2.5,41.5,Caesars Superdome,FALSE,72,0,NA,NA
+10/11/2026,2026,5,FALSE,New York Jets,17,12,Cleveland Browns,NYJ,-2.5,38.5,MetLife Stadium,FALSE,NA,NA,NA,NA
+10/11/2026,2026,5,FALSE,Pittsburgh Steelers,34,22,Indianapolis Colts,PIT,-3,41.5,Acrisure Stadium,FALSE,NA,NA,NA,NA
+10/11/2026,2026,5,FALSE,Tennessee Titans,3,26,Houston Texans,HOU,-6.5,37.5,Nissan Stadium,FALSE,NA,NA,NA,NA
+10/11/2026,2026,5,FALSE,Washington Commanders,27,27,New York Giants,WAS,-3.5,41.5,Northwest Stadium,FALSE,NA,NA,NA,NA
+10/11/2026,2026,5,FALSE,Los Angeles Chargers,17,23,Denver Broncos,DEN,-3.5,42.5,SoFi Stadium,FALSE,72,0,NA,NA
+10/11/2026,2026,5,FALSE,Arizona Cardinals,21,45,Detroit Lions,DET,-5.5,55.5,State Farm Stadium,FALSE,72,0,NA,NA
+10/11/2026,2026,5,FALSE,Seattle Seahawks,29,32,San Francisco 49ers,SEA,-3,46.5,Lumen Field,FALSE,NA,NA,NA,NA
+10/11/2026,2026,5,FALSE,Atlanta Falcons,23,30,Baltimore Ravens,ATL,-3.5,44.5,Mercedes-Benz Stadium,FALSE,NA,NA,NA,NA
+10/12/2026,2026,5,FALSE,Los Angeles Rams,34,37,Buffalo Bills,LAR,-3.5,55.5,SoFi Stadium,FALSE,72,0,NA,NA
+10/15/2026,2026,6,FALSE,Denver Broncos,17,14,Seattle Seahawks,SEA,-2.5,40.5,Empower Field at Mile High,FALSE,NA,NA,NA,NA
+10/18/2026,2026,6,FALSE,Jacksonville Jaguars,31,34,Houston Texans,JAX,-2.5,42.5,Wembley Stadium,TRUE,NA,NA,NA,NA
+10/18/2026,2026,6,FALSE,Atlanta Falcons,23,31,Chicago Bears,CHI,-1.5,51.5,Mercedes-Benz Stadium,FALSE,72,0,NA,NA
+10/18/2026,2026,6,FALSE,Cleveland Browns,13,10,Baltimore Ravens,BAL,-3,39.5,Huntington Bank Field,FALSE,NA,NA,NA,NA
+10/18/2026,2026,6,FALSE,Indianapolis Colts,20,26,Tennessee Titans,IND,-6.5,43.5,Lucas Oil Stadium,FALSE,NA,NA,NA,NA
+10/18/2026,2026,6,FALSE,New England Patriots,26,19,New York Jets,NE,-7.5,43.5,Gillette Stadium,FALSE,NA,NA,NA,NA
+10/18/2026,2026,6,FALSE,New York Giants,27,34,New Orleans Saints,NO,-1.5,46.5,MetLife Stadium,FALSE,NA,NA,NA,NA
+10/18/2026,2026,6,FALSE,Philadelphia Eagles,14,25,Carolina Panthers,CAR,-3,39.5,Lincoln Financial Field,FALSE,NA,NA,NA,NA
+10/18/2026,2026,6,FALSE,Tampa Bay Buccaneers,19,26,Pittsburgh Steelers,PIT,-2.5,38.5,Raymond James Stadium,FALSE,NA,NA,NA,NA
+10/18/2026,2026,6,FALSE,Los Angeles Rams,16,18,Arizona Cardinals,LAR,-12.5,51.5,SoFi Stadium,FALSE,72,0,NA,NA
+10/18/2026,2026,6,FALSE,Kansas City Chiefs,22,6,Los Angeles Chargers,KC,-7.5,41.5,GEHA Field at Arrowhead Stadium,FALSE,NA,NA,NA,NA
+10/18/2026,2026,6,FALSE,Las Vegas Raiders,30,33,Buffalo Bills,BUF,-5.5,53.5,Allegiant Stadium,FALSE,72,0,NA,NA
+10/18/2026,2026,6,FALSE,Green Bay Packers,NA,NA,Dallas Cowboys,DAL,-1.5,53.5,Lambeau Field,FALSE,56,6,NA,NA
+10/19/2026,2026,6,FALSE,San Francisco 49ers,NA,NA,Washington Commanders,SF,-7.5,52.5,Levi's Stadium,FALSE,60,12,NA,NA
+10/22/2026,2026,7,FALSE,Chicago Bears,NA,NA,New England Patriots,CHI,-2.5,49.5,Soldier Field,FALSE,63,4,NA,NA
+10/25/2026,2026,7,FALSE,New Orleans Saints,NA,NA,Pittsburgh Steelers,PIT,-2.5,44.5,Stade de France,TRUE,72,0,NA,NA
+10/25/2026,2026,7,FALSE,Atlanta Falcons,NA,NA,San Francisco 49ers,SF,-4.5,50.5,Mercedes-Benz Stadium,FALSE,72,0,NA,NA
+10/25/2026,2026,7,FALSE,Baltimore Ravens,NA,NA,Cincinnati Bengals,BAL,-3,50.5,M&T Bank Stadium,FALSE,62,5,NA,NA
+10/25/2026,2026,7,FALSE,Carolina Panthers,NA,NA,Tampa Bay Buccaneers,CAR,-3,43.5,Bank of America Stadium,FALSE,64,6,NA,NA
+10/25/2026,2026,7,FALSE,Houston Texans,NA,NA,New York Giants,HOU,-9.5,43.5,Reliant Stadium,FALSE,72,0,NA,NA
+10/25/2026,2026,7,FALSE,Minnesota Vikings,NA,NA,Indianapolis Colts,MIN,-6,41.5,U.S. Bank Stadium,FALSE,72,0,NA,NA
+10/25/2026,2026,7,FALSE,New York Jets,NA,NA,Miami Dolphins,NYJ,-4.5,38.5,MetLife Stadium,FALSE,60,8,NA,NA
+10/25/2026,2026,7,FALSE,Tennessee Titans,NA,NA,Cleveland Browns,CLE,-1.5,36.5,Nissan Stadium,FALSE,69,5,NA,NA
+10/25/2026,2026,7,FALSE,Arizona Cardinals,NA,NA,Denver Broncos,DEN,-4.5,43.5,State Farm Stadium,FALSE,72,0,NA,NA
+10/25/2026,2026,7,FALSE,Detroit Lions,NA,NA,Green Bay Packers,DET,NA,NA,Ford Field,FALSE,72,0,NA,NA
+10/25/2026,2026,7,FALSE,Las Vegas Raiders,NA,NA,Los Angeles Rams,LAR,-5.5,46.5,Allegiant Stadium,FALSE,72,0,NA,NA
+10/25/2026,2026,7,FALSE,Seattle Seahawks,NA,NA,Kansas City Chiefs,SEA,-2.5,42.5,Lumen Field,FALSE,54,2,NA,NA
+10/26/2026,2026,7,FALSE,Philadelphia Eagles,NA,NA,Dallas Cowboys,PHI,NA,NA,Lincoln Financial Field,FALSE,NA,NA,NA,NA
+10/29/2026,2026,8,FALSE,Green Bay Packers,NA,NA,Carolina Panthers,GB,NA,NA,Lambeau Field,FALSE,NA,NA,NA,NA
+11/01/2026,2026,8,FALSE,Buffalo Bills,NA,NA,Baltimore Ravens,BUF,NA,NA,Highmark Stadium,FALSE,NA,NA,NA,NA
+11/01/2026,2026,8,FALSE,Cincinnati Bengals,NA,NA,Tennessee Titans,CIN,NA,NA,Paycor Stadium,FALSE,NA,NA,NA,NA
+11/01/2026,2026,8,FALSE,Dallas Cowboys,NA,NA,Arizona Cardinals,DAL,NA,NA,AT&T Stadium,FALSE,72,0,NA,NA
+11/01/2026,2026,8,FALSE,Detroit Lions,NA,NA,Minnesota Vikings,DET,NA,NA,Ford Field,FALSE,72,0,NA,NA
+11/01/2026,2026,8,FALSE,Jacksonville Jaguars,NA,NA,Indianapolis Colts,JAX,NA,NA,EverBank Stadium,FALSE,NA,NA,NA,NA
+11/01/2026,2026,8,FALSE,New York Jets,NA,NA,Las Vegas Raiders,NYJ,NA,NA,MetLife Stadium,FALSE,NA,NA,NA,NA
+11/01/2026,2026,8,FALSE,Pittsburgh Steelers,NA,NA,Cleveland Browns,PIT,NA,NA,Acrisure Stadium,FALSE,NA,NA,NA,NA
+11/01/2026,2026,8,FALSE,Tampa Bay Buccaneers,NA,NA,Atlanta Falcons,TB,NA,NA,Raymond James Stadium,FALSE,NA,NA,NA,NA
+11/01/2026,2026,8,FALSE,Los Angeles Rams,NA,NA,Los Angeles Chargers,LAR,NA,NA,SoFi Stadium,FALSE,72,0,NA,NA
+11/01/2026,2026,8,FALSE,Denver Broncos,NA,NA,Kansas City Chiefs,DEN,NA,NA,Empower Field at Mile High,FALSE,NA,NA,NA,NA
+11/01/2026,2026,8,FALSE,Miami Dolphins,NA,NA,New England Patriots,MIA,NA,NA,Hard Rock Stadium,FALSE,NA,NA,NA,NA
+11/01/2026,2026,8,FALSE,Washington Commanders,NA,NA,Philadelphia Eagles,WAS,NA,NA,Northwest Stadium,FALSE,NA,NA,NA,NA
+11/02/2026,2026,8,FALSE,Seattle Seahawks,NA,NA,Chicago Bears,SEA,NA,NA,Lumen Field,FALSE,NA,NA,NA,NA
+11/05/2026,2026,9,FALSE,Baltimore Ravens,NA,NA,Jacksonville Jaguars,BAL,NA,NA,M&T Bank Stadium,FALSE,NA,NA,NA,NA
+11/08/2026,2026,9,FALSE,Atlanta Falcons,NA,NA,Cincinnati Bengals,ATL,NA,NA,Bernabeu,TRUE,72,0,NA,NA
+11/08/2026,2026,9,FALSE,Carolina Panthers,NA,NA,Denver Broncos,CAR,NA,NA,Bank of America Stadium,FALSE,NA,NA,NA,NA
+11/08/2026,2026,9,FALSE,Indianapolis Colts,NA,NA,Dallas Cowboys,IND,NA,NA,Lucas Oil Stadium,FALSE,72,0,NA,NA
+11/08/2026,2026,9,FALSE,Kansas City Chiefs,NA,NA,New York Jets,KC,NA,NA,GEHA Field at Arrowhead Stadium,FALSE,NA,NA,NA,NA
+11/08/2026,2026,9,FALSE,Miami Dolphins,NA,NA,Detroit Lions,MIA,NA,NA,Hard Rock Stadium,FALSE,NA,NA,NA,NA
+11/08/2026,2026,9,FALSE,New Orleans Saints,NA,NA,Cleveland Browns,NO,NA,NA,Caesars Superdome,FALSE,72,0,NA,NA
+11/08/2026,2026,9,FALSE,Philadelphia Eagles,NA,NA,New York Giants,PHI,NA,NA,Lincoln Financial Field,FALSE,NA,NA,NA,NA
+11/08/2026,2026,9,FALSE,Washington Commanders,NA,NA,Los Angeles Rams,WAS,NA,NA,Northwest Stadium,FALSE,NA,NA,NA,NA
+11/08/2026,2026,9,FALSE,Los Angeles Chargers,NA,NA,Houston Texans,LAC,NA,NA,SoFi Stadium,FALSE,72,0,NA,NA
+11/08/2026,2026,9,FALSE,San Francisco 49ers,NA,NA,Las Vegas Raiders,SF,NA,NA,Levi's Stadium,FALSE,NA,NA,NA,NA
+11/08/2026,2026,9,FALSE,New England Patriots,NA,NA,Green Bay Packers,NE,NA,NA,Gillette Stadium,FALSE,NA,NA,NA,NA
+11/08/2026,2026,9,FALSE,Seattle Seahawks,NA,NA,Arizona Cardinals,SEA,NA,NA,Lumen Field,FALSE,NA,NA,NA,NA
+11/08/2026,2026,9,FALSE,Chicago Bears,NA,NA,Tampa Bay Buccaneers,CHI,NA,NA,Soldier Field,FALSE,NA,NA,NA,NA
+11/09/2026,2026,9,FALSE,Minnesota Vikings,NA,NA,Buffalo Bills,MIN,NA,NA,U.S. Bank Stadium,FALSE,72,0,NA,NA
+11/12/2026,2026,10,FALSE,New York Giants,NA,NA,Washington Commanders,NYG,NA,NA,MetLife Stadium,FALSE,NA,NA,NA,NA
+11/15/2026,2026,10,FALSE,Detroit Lions,NA,NA,New England Patriots,DET,NA,NA,FC Bayern Munich Stadium,TRUE,72,0,NA,NA
+11/15/2026,2026,10,FALSE,Atlanta Falcons,NA,NA,Kansas City Chiefs,ATL,NA,NA,Mercedes-Benz Stadium,FALSE,72,0,NA,NA
+11/15/2026,2026,10,FALSE,Cleveland Browns,NA,NA,Houston Texans,CLE,NA,NA,Huntington Bank Field,FALSE,NA,NA,NA,NA
+11/15/2026,2026,10,FALSE,Green Bay Packers,NA,NA,Minnesota Vikings,GB,NA,NA,Lambeau Field,FALSE,NA,NA,NA,NA
+11/15/2026,2026,10,FALSE,Indianapolis Colts,NA,NA,Miami Dolphins,IND,NA,NA,Lucas Oil Stadium,FALSE,72,0,NA,NA
+11/15/2026,2026,10,FALSE,New Orleans Saints,NA,NA,Carolina Panthers,NO,NA,NA,Caesars Superdome,FALSE,72,0,NA,NA
+11/15/2026,2026,10,FALSE,New York Jets,NA,NA,Buffalo Bills,NYJ,NA,NA,MetLife Stadium,FALSE,NA,NA,NA,NA
+11/15/2026,2026,10,FALSE,Tennessee Titans,NA,NA,Jacksonville Jaguars,TEN,NA,NA,Nissan Stadium,FALSE,NA,NA,NA,NA
+11/15/2026,2026,10,FALSE,Arizona Cardinals,NA,NA,Los Angeles Rams,ARI,NA,NA,State Farm Stadium,FALSE,72,0,NA,NA
+11/15/2026,2026,10,FALSE,Las Vegas Raiders,NA,NA,Seattle Seahawks,LVR,NA,NA,Allegiant Stadium,FALSE,72,0,NA,NA
+11/15/2026,2026,10,FALSE,Dallas Cowboys,NA,NA,San Francisco 49ers,DAL,NA,NA,AT&T Stadium,FALSE,72,0,NA,NA
+11/15/2026,2026,10,FALSE,Cincinnati Bengals,NA,NA,Pittsburgh Steelers,CIN,NA,NA,Paycor Stadium,FALSE,NA,NA,NA,NA
+11/16/2026,2026,10,FALSE,Baltimore Ravens,NA,NA,Los Angeles Chargers,BAL,NA,NA,M&T Bank Stadium,FALSE,NA,NA,NA,NA
+11/19/2026,2026,11,FALSE,Houston Texans,NA,NA,Indianapolis Colts,HOU,NA,NA,Reliant Stadium,FALSE,72,0,NA,NA
+11/22/2026,2026,11,FALSE,Buffalo Bills,NA,NA,Miami Dolphins,BUF,NA,NA,Highmark Stadium,FALSE,NA,NA,NA,NA
+11/22/2026,2026,11,FALSE,Carolina Panthers,NA,NA,Baltimore Ravens,CAR,NA,NA,Bank of America Stadium,FALSE,NA,NA,NA,NA
+11/22/2026,2026,11,FALSE,Chicago Bears,NA,NA,New Orleans Saints,CHI,NA,NA,Soldier Field,FALSE,NA,NA,NA,NA
+11/22/2026,2026,11,FALSE,Dallas Cowboys,NA,NA,Tennessee Titans,DAL,NA,NA,AT&T Stadium,FALSE,72,0,NA,NA
+11/22/2026,2026,11,FALSE,Detroit Lions,NA,NA,Tampa Bay Buccaneers,DET,NA,NA,Ford Field,FALSE,72,0,NA,NA
+11/22/2026,2026,11,FALSE,Kansas City Chiefs,NA,NA,Arizona Cardinals,KC,NA,NA,GEHA Field at Arrowhead Stadium,FALSE,NA,NA,NA,NA
+11/22/2026,2026,11,FALSE,New York Giants,NA,NA,Jacksonville Jaguars,NYG,NA,NA,MetLife Stadium,FALSE,NA,NA,NA,NA
+11/22/2026,2026,11,FALSE,Los Angeles Chargers,NA,NA,New York Jets,LAC,NA,NA,SoFi Stadium,FALSE,72,0,NA,NA
+11/22/2026,2026,11,FALSE,Denver Broncos,NA,NA,Las Vegas Raiders,DEN,NA,NA,Empower Field at Mile High,FALSE,NA,NA,NA,NA
+11/22/2026,2026,11,FALSE,Philadelphia Eagles,NA,NA,Pittsburgh Steelers,PHI,NA,NA,Lincoln Financial Field,FALSE,NA,NA,NA,NA
+11/22/2026,2026,11,FALSE,San Francisco 49ers,NA,NA,Minnesota Vikings,SF,NA,NA,Estadio Banorte,TRUE,NA,NA,NA,NA
+11/23/2026,2026,11,FALSE,Washington Commanders,NA,NA,Cincinnati Bengals,WAS,NA,NA,Northwest Stadium,FALSE,NA,NA,NA,NA
+11/25/2026,2026,12,FALSE,Los Angeles Rams,NA,NA,Green Bay Packers,LAR,NA,NA,SoFi Stadium,FALSE,72,0,NA,NA
+11/26/2026,2026,12,FALSE,Detroit Lions,NA,NA,Chicago Bears,DET,NA,NA,Ford Field,FALSE,72,0,NA,NA
+11/26/2026,2026,12,FALSE,Dallas Cowboys,NA,NA,Philadelphia Eagles,DAL,NA,NA,AT&T Stadium,FALSE,72,0,NA,NA
+11/26/2026,2026,12,FALSE,Buffalo Bills,NA,NA,Kansas City Chiefs,BUF,NA,NA,Highmark Stadium,FALSE,NA,NA,NA,NA
+11/27/2026,2026,12,FALSE,Pittsburgh Steelers,NA,NA,Denver Broncos,PIT,NA,NA,Acrisure Stadium,FALSE,NA,NA,NA,NA
+11/29/2026,2026,12,FALSE,Cincinnati Bengals,NA,NA,New Orleans Saints,CIN,NA,NA,Paycor Stadium,FALSE,NA,NA,NA,NA
+11/29/2026,2026,12,FALSE,Cleveland Browns,NA,NA,Las Vegas Raiders,CLE,NA,NA,Huntington Bank Field,FALSE,NA,NA,NA,NA
+11/29/2026,2026,12,FALSE,Houston Texans,NA,NA,Baltimore Ravens,HOU,NA,NA,Reliant Stadium,FALSE,72,0,NA,NA
+11/29/2026,2026,12,FALSE,Indianapolis Colts,NA,NA,New York Giants,IND,NA,NA,Lucas Oil Stadium,FALSE,72,0,NA,NA
+11/29/2026,2026,12,FALSE,Miami Dolphins,NA,NA,New York Jets,MIA,NA,NA,Hard Rock Stadium,FALSE,NA,NA,NA,NA
+11/29/2026,2026,12,FALSE,Minnesota Vikings,NA,NA,Atlanta Falcons,MIN,NA,NA,U.S. Bank Stadium,FALSE,72,0,NA,NA
+11/29/2026,2026,12,FALSE,Jacksonville Jaguars,NA,NA,Tennessee Titans,JAX,NA,NA,EverBank Stadium,FALSE,NA,NA,NA,NA
+11/29/2026,2026,12,FALSE,Arizona Cardinals,NA,NA,Washington Commanders,ARI,NA,NA,State Farm Stadium,FALSE,72,0,NA,NA
+11/29/2026,2026,12,FALSE,San Francisco 49ers,NA,NA,Seattle Seahawks,SF,NA,NA,Levi's Stadium,FALSE,NA,NA,NA,NA
+11/29/2026,2026,12,FALSE,Los Angeles Chargers,NA,NA,New England Patriots,LAC,NA,NA,SoFi Stadium,FALSE,72,0,NA,NA
+11/30/2026,2026,12,FALSE,Tampa Bay Buccaneers,NA,NA,Carolina Panthers,TB,NA,NA,Raymond James Stadium,FALSE,NA,NA,NA,NA
+12/03/2026,2026,13,FALSE,Los Angeles Rams,NA,NA,Kansas City Chiefs,LAR,NA,NA,SoFi Stadium,FALSE,72,0,NA,NA
+12/06/2026,2026,13,FALSE,Atlanta Falcons,NA,NA,Detroit Lions,ATL,NA,NA,Mercedes-Benz Stadium,FALSE,72,0,NA,NA
+12/06/2026,2026,13,FALSE,Chicago Bears,NA,NA,Jacksonville Jaguars,CHI,NA,NA,Soldier Field,FALSE,NA,NA,NA,NA
+12/06/2026,2026,13,FALSE,Cleveland Browns,NA,NA,Cincinnati Bengals,CLE,NA,NA,Huntington Bank Field,FALSE,NA,NA,NA,NA
+12/06/2026,2026,13,FALSE,New Orleans Saints,NA,NA,Green Bay Packers,NO,NA,NA,Caesars Superdome,FALSE,72,0,NA,NA
+12/06/2026,2026,13,FALSE,New York Giants,NA,NA,San Francisco 49ers,NYG,NA,NA,MetLife Stadium,FALSE,NA,NA,NA,NA
+12/06/2026,2026,13,FALSE,Tampa Bay Buccaneers,NA,NA,Los Angeles Chargers,TB,NA,NA,Raymond James Stadium,FALSE,NA,NA,NA,NA
+12/06/2026,2026,13,FALSE,Tennessee Titans,NA,NA,Washington Commanders,TEN,NA,NA,Nissan Stadium,FALSE,NA,NA,NA,NA
+12/06/2026,2026,13,FALSE,Arizona Cardinals,NA,NA,Philadelphia Eagles,ARI,NA,NA,State Farm Stadium,FALSE,72,0,NA,NA
+12/06/2026,2026,13,FALSE,Denver Broncos,NA,NA,Miami Dolphins,DEN,NA,NA,Empower Field at Mile High,FALSE,NA,NA,NA,NA
+12/06/2026,2026,13,FALSE,Minnesota Vikings,NA,NA,Carolina Panthers,MIN,NA,NA,U.S. Bank Stadium,FALSE,72,0,NA,NA
+12/06/2026,2026,13,FALSE,New England Patriots,NA,NA,Buffalo Bills,NE,NA,NA,Gillette Stadium,FALSE,NA,NA,NA,NA
+12/06/2026,2026,13,FALSE,Pittsburgh Steelers,NA,NA,Houston Texans,PIT,NA,NA,Acrisure Stadium,FALSE,NA,NA,NA,NA
+12/07/2026,2026,13,FALSE,Seattle Seahawks,NA,NA,Dallas Cowboys,SEA,NA,NA,Lumen Field,FALSE,NA,NA,NA,NA
+12/10/2026,2026,14,FALSE,New England Patriots,NA,NA,Minnesota Vikings,NE,NA,NA,Gillette Stadium,FALSE,NA,NA,NA,NA
+12/13/2026,2026,14,FALSE,Baltimore Ravens,NA,NA,Tampa Bay Buccaneers,BAL,NA,NA,M&T Bank Stadium,FALSE,NA,NA,NA,NA
+12/13/2026,2026,14,FALSE,Carolina Panthers,NA,NA,New Orleans Saints,CAR,NA,NA,Bank of America Stadium,FALSE,NA,NA,NA,NA
+12/13/2026,2026,14,FALSE,Cleveland Browns,NA,NA,Atlanta Falcons,CLE,NA,NA,Huntington Bank Field,FALSE,NA,NA,NA,NA
+12/13/2026,2026,14,FALSE,Detroit Lions,NA,NA,Tennessee Titans,DET,NA,NA,Ford Field,FALSE,72,0,NA,NA
+12/13/2026,2026,14,FALSE,Miami Dolphins,NA,NA,Chicago Bears,MIA,NA,NA,Hard Rock Stadium,FALSE,NA,NA,NA,NA
+12/13/2026,2026,14,FALSE,New York Jets,NA,NA,Denver Broncos,NYJ,NA,NA,MetLife Stadium,FALSE,NA,NA,NA,NA
+12/13/2026,2026,14,FALSE,Philadelphia Eagles,NA,NA,Indianapolis Colts,PHI,NA,NA,Lincoln Financial Field,FALSE,NA,NA,NA,NA
+12/13/2026,2026,14,FALSE,Washington Commanders,NA,NA,Houston Texans,WAS,NA,NA,Northwest Stadium,FALSE,NA,NA,NA,NA
+12/13/2026,2026,14,FALSE,Las Vegas Raiders,NA,NA,Los Angeles Chargers,LVR,NA,NA,Allegiant Stadium,FALSE,72,0,NA,NA
+12/13/2026,2026,14,FALSE,Cincinnati Bengals,NA,NA,Kansas City Chiefs,CIN,NA,NA,Paycor Stadium,FALSE,NA,NA,NA,NA
+12/13/2026,2026,14,FALSE,Seattle Seahawks,NA,NA,New York Giants,SEA,NA,NA,Lumen Field,FALSE,NA,NA,NA,NA
+12/13/2026,2026,14,FALSE,San Francisco 49ers,NA,NA,Los Angeles Rams,SF,NA,NA,Levi's Stadium,FALSE,NA,NA,NA,NA
+12/13/2026,2026,14,FALSE,Green Bay Packers,NA,NA,Buffalo Bills,GB,NA,NA,Lambeau Field,FALSE,NA,NA,NA,NA
+12/14/2026,2026,14,FALSE,Jacksonville Jaguars,NA,NA,Pittsburgh Steelers,JAX,NA,NA,EverBank Stadium,FALSE,NA,NA,NA,NA
+12/17/2026,2026,15,FALSE,Los Angeles Chargers,NA,NA,San Francisco 49ers,LAC,NA,NA,SoFi Stadium,FALSE,72,0,NA,NA
+12/19/2026,2026,15,FALSE,Philadelphia Eagles,NA,NA,Seattle Seahawks,PHI,NA,NA,Lincoln Financial Field,FALSE,NA,NA,NA,NA
+12/19/2026,2026,15,FALSE,Buffalo Bills,NA,NA,Chicago Bears,BUF,NA,NA,Highmark Stadium,FALSE,NA,NA,NA,NA
+12/20/2026,2026,15,FALSE,Carolina Panthers,NA,NA,Cincinnati Bengals,CAR,NA,NA,Bank of America Stadium,FALSE,NA,NA,NA,NA
+12/20/2026,2026,15,FALSE,Green Bay Packers,NA,NA,Miami Dolphins,GB,NA,NA,Lambeau Field,FALSE,NA,NA,NA,NA
+12/20/2026,2026,15,FALSE,Houston Texans,NA,NA,Jacksonville Jaguars,HOU,NA,NA,Reliant Stadium,FALSE,72,0,NA,NA
+12/20/2026,2026,15,FALSE,New York Giants,NA,NA,Cleveland Browns,NYG,NA,NA,MetLife Stadium,FALSE,NA,NA,NA,NA
+12/20/2026,2026,15,FALSE,Pittsburgh Steelers,NA,NA,Baltimore Ravens,PIT,NA,NA,Acrisure Stadium,FALSE,NA,NA,NA,NA
+12/20/2026,2026,15,FALSE,Tampa Bay Buccaneers,NA,NA,New Orleans Saints,TB,NA,NA,Raymond James Stadium,FALSE,NA,NA,NA,NA
+12/20/2026,2026,15,FALSE,Tennessee Titans,NA,NA,Indianapolis Colts,TEN,NA,NA,Nissan Stadium,FALSE,NA,NA,NA,NA
+12/20/2026,2026,15,FALSE,Washington Commanders,NA,NA,Atlanta Falcons,WAS,NA,NA,Northwest Stadium,FALSE,NA,NA,NA,NA
+12/20/2026,2026,15,FALSE,Arizona Cardinals,NA,NA,New York Jets,ARI,NA,NA,State Farm Stadium,FALSE,72,0,NA,NA
+12/20/2026,2026,15,FALSE,Los Angeles Rams,NA,NA,Dallas Cowboys,LAR,NA,NA,SoFi Stadium,FALSE,72,0,NA,NA
+12/20/2026,2026,15,FALSE,Las Vegas Raiders,NA,NA,Denver Broncos,LVR,NA,NA,Allegiant Stadium,FALSE,72,0,NA,NA
+12/20/2026,2026,15,FALSE,Minnesota Vikings,NA,NA,Detroit Lions,MIN,NA,NA,U.S. Bank Stadium,FALSE,72,0,NA,NA
+12/21/2026,2026,15,FALSE,Kansas City Chiefs,NA,NA,New England Patriots,KC,NA,NA,GEHA Field at Arrowhead Stadium,FALSE,NA,NA,NA,NA
+12/24/2026,2026,16,FALSE,Philadelphia Eagles,NA,NA,Houston Texans,PHI,NA,NA,Lincoln Financial Field,FALSE,NA,NA,NA,NA
+12/25/2026,2026,16,FALSE,Chicago Bears,NA,NA,Green Bay Packers,CHI,NA,NA,Soldier Field,FALSE,NA,NA,NA,NA
+12/25/2026,2026,16,FALSE,Denver Broncos,NA,NA,Buffalo Bills,DEN,NA,NA,Empower Field at Mile High,FALSE,NA,NA,NA,NA
+12/25/2026,2026,16,FALSE,Seattle Seahawks,NA,NA,Los Angeles Rams,SEA,NA,NA,Lumen Field,FALSE,NA,NA,NA,NA
+12/27/2026,2026,16,FALSE,Atlanta Falcons,NA,NA,Tampa Bay Buccaneers,ATL,NA,NA,Mercedes-Benz Stadium,FALSE,72,0,NA,NA
+12/27/2026,2026,16,FALSE,Baltimore Ravens,NA,NA,Cleveland Browns,BAL,NA,NA,M&T Bank Stadium,FALSE,NA,NA,NA,NA
+12/27/2026,2026,16,FALSE,Indianapolis Colts,NA,NA,Cincinnati Bengals,IND,NA,NA,Lucas Oil Stadium,FALSE,72,0,NA,NA
+12/27/2026,2026,16,FALSE,Miami Dolphins,NA,NA,Los Angeles Chargers,MIA,NA,NA,Hard Rock Stadium,FALSE,NA,NA,NA,NA
+12/27/2026,2026,16,FALSE,Minnesota Vikings,NA,NA,Washington Commanders,MIN,NA,NA,U.S. Bank Stadium,FALSE,72,0,NA,NA
+12/27/2026,2026,16,FALSE,New Orleans Saints,NA,NA,Arizona Cardinals,NO,NA,NA,Caesars Superdome,FALSE,72,0,NA,NA
+12/27/2026,2026,16,FALSE,New York Jets,NA,NA,New England Patriots,NYJ,NA,NA,MetLife Stadium,FALSE,NA,NA,NA,NA
+12/27/2026,2026,16,FALSE,Pittsburgh Steelers,NA,NA,Carolina Panthers,PIT,NA,NA,Acrisure Stadium,FALSE,NA,NA,NA,NA
+12/27/2026,2026,16,FALSE,Las Vegas Raiders,NA,NA,Tennessee Titans,LVR,NA,NA,Allegiant Stadium,FALSE,72,0,NA,NA
+12/27/2026,2026,16,FALSE,Kansas City Chiefs,NA,NA,San Francisco 49ers,KC,NA,NA,GEHA Field at Arrowhead Stadium,FALSE,NA,NA,NA,NA
+12/27/2026,2026,16,FALSE,Dallas Cowboys,NA,NA,Jacksonville Jaguars,DAL,NA,NA,AT&T Stadium,FALSE,72,0,NA,NA
+12/28/2026,2026,16,FALSE,Detroit Lions,NA,NA,New York Giants,DET,NA,NA,Ford Field,FALSE,72,0,NA,NA
+12/31/2026,2026,17,FALSE,Cincinnati Bengals,NA,NA,Baltimore Ravens,CIN,NA,NA,Paycor Stadium,FALSE,NA,NA,NA,NA
+01/03/2027,2026,17,FALSE,Atlanta Falcons,NA,NA,New Orleans Saints,ATL,NA,NA,Mercedes-Benz Stadium,FALSE,72,0,NA,NA
+01/03/2027,2026,17,FALSE,Carolina Panthers,NA,NA,Seattle Seahawks,CAR,NA,NA,Bank of America Stadium,FALSE,NA,NA,NA,NA
+01/03/2027,2026,17,FALSE,Cleveland Browns,NA,NA,Indianapolis Colts,CLE,NA,NA,Huntington Bank Field,FALSE,NA,NA,NA,NA
+01/03/2027,2026,17,FALSE,Dallas Cowboys,NA,NA,New York Giants,DAL,NA,NA,AT&T Stadium,FALSE,72,0,NA,NA
+01/03/2027,2026,17,FALSE,Jacksonville Jaguars,NA,NA,Washington Commanders,JAX,NA,NA,EverBank Stadium,FALSE,NA,NA,NA,NA
+01/03/2027,2026,17,FALSE,Los Angeles Chargers,NA,NA,Kansas City Chiefs,LAC,NA,NA,SoFi Stadium,FALSE,72,0,NA,NA
+01/03/2027,2026,17,FALSE,Miami Dolphins,NA,NA,Buffalo Bills,MIA,NA,NA,Hard Rock Stadium,FALSE,NA,NA,NA,NA
+01/03/2027,2026,17,FALSE,New England Patriots,NA,NA,Denver Broncos,NE,NA,NA,Gillette Stadium,FALSE,NA,NA,NA,NA
+01/03/2027,2026,17,FALSE,New York Jets,NA,NA,Minnesota Vikings,NYJ,NA,NA,MetLife Stadium,FALSE,NA,NA,NA,NA
+01/03/2027,2026,17,FALSE,Tampa Bay Buccaneers,NA,NA,Los Angeles Rams,TB,NA,NA,Raymond James Stadium,FALSE,NA,NA,NA,NA
+01/03/2027,2026,17,FALSE,Tennessee Titans,NA,NA,Pittsburgh Steelers,TEN,NA,NA,Nissan Stadium,FALSE,NA,NA,NA,NA
+01/03/2027,2026,17,FALSE,Arizona Cardinals,NA,NA,Las Vegas Raiders,ARI,NA,NA,State Farm Stadium,FALSE,72,0,NA,NA
+01/03/2027,2026,17,FALSE,Chicago Bears,NA,NA,Detroit Lions,CHI,NA,NA,Soldier Field,FALSE,NA,NA,NA,NA
+01/03/2027,2026,17,FALSE,San Francisco 49ers,NA,NA,Philadelphia Eagles,SF,NA,NA,Levi's Stadium,FALSE,NA,NA,NA,NA
+01/04/2027,2026,17,FALSE,Green Bay Packers,NA,NA,Houston Texans,GB,NA,NA,Lambeau Field,FALSE,NA,NA,NA,NA
+01/10/2027,2026,18,FALSE,Arizona Cardinals,NA,NA,San Francisco 49ers,ARI,NA,NA,State Farm Stadium,FALSE,72,0,NA,NA
+01/10/2027,2026,18,FALSE,Baltimore Ravens,NA,NA,Pittsburgh Steelers,BAL,NA,NA,M&T Bank Stadium,FALSE,NA,NA,NA,NA
+01/10/2027,2026,18,FALSE,Buffalo Bills,NA,NA,New York Jets,BUF,NA,NA,Highmark Stadium,FALSE,NA,NA,NA,NA
+01/10/2027,2026,18,FALSE,Carolina Panthers,NA,NA,Atlanta Falcons,CAR,NA,NA,Bank of America Stadium,FALSE,NA,NA,NA,NA
+01/10/2027,2026,18,FALSE,Cincinnati Bengals,NA,NA,Cleveland Browns,CIN,NA,NA,Paycor Stadium,FALSE,NA,NA,NA,NA
+01/10/2027,2026,18,FALSE,Denver Broncos,NA,NA,Los Angeles Chargers,DEN,NA,NA,Empower Field at Mile High,FALSE,NA,NA,NA,NA
+01/10/2027,2026,18,FALSE,Green Bay Packers,NA,NA,Detroit Lions,GB,NA,NA,Lambeau Field,FALSE,NA,NA,NA,NA
+01/10/2027,2026,18,FALSE,Houston Texans,NA,NA,Tennessee Titans,HOU,NA,NA,Reliant Stadium,FALSE,72,0,NA,NA
+01/10/2027,2026,18,FALSE,Indianapolis Colts,NA,NA,Jacksonville Jaguars,IND,NA,NA,Lucas Oil Stadium,FALSE,72,0,NA,NA
+01/10/2027,2026,18,FALSE,Kansas City Chiefs,NA,NA,Las Vegas Raiders,KC,NA,NA,GEHA Field at Arrowhead Stadium,FALSE,NA,NA,NA,NA
+01/10/2027,2026,18,FALSE,Los Angeles Rams,NA,NA,Seattle Seahawks,LAR,NA,NA,SoFi Stadium,FALSE,72,0,NA,NA
+01/10/2027,2026,18,FALSE,Minnesota Vikings,NA,NA,Chicago Bears,MIN,NA,NA,U.S. Bank Stadium,FALSE,72,0,NA,NA
+01/10/2027,2026,18,FALSE,New England Patriots,NA,NA,Miami Dolphins,NE,NA,NA,Gillette Stadium,FALSE,NA,NA,NA,NA
+01/10/2027,2026,18,FALSE,New Orleans Saints,NA,NA,Tampa Bay Buccaneers,NO,NA,NA,Caesars Superdome,FALSE,72,0,NA,NA
+01/10/2027,2026,18,FALSE,New York Giants,NA,NA,Philadelphia Eagles,NYG,NA,NA,MetLife Stadium,FALSE,NA,NA,NA,NA
+01/10/2027,2026,18,FALSE,Washington Commanders,NA,NA,Dallas Cowboys,WAS,NA,NA,Northwest Stadium,FALSE,NA,NA,NA,NA

@@ -1,0 +1,17 @@
+metric,value
+n_bets,507
+cover_bets,341
+nocover_bets,166
+win_rate,0.5502958579881657
+profit,2820
+roi_pct,5.056481979558903
+boot_ci_lo,0.5128205128205128
+boot_ci_hi,0.5857988165680473
+p_above_breakeven,0.8805
+perm_pvalue,0.121
+dev_wr,0.5646067415730337
+dev_profit,3050
+holdout_wr,0.5165562913907285
+holdout_profit,-230
+holdout_ci_lo,0.4503311258278146
+holdout_ci_hi,0.5827814569536424

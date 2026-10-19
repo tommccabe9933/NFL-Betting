@@ -239,6 +239,21 @@ Even if the edge is real, about one season in five loses money.
 
 ---
 
+## October 2026 Update: The 2025 Holdout, Rebuilt
+
+The 2025 numbers above came from a table where 145 of ~300 features were blank for every 2025 game: EPA, QB form, situational stats and most composites. Two sources stopped at 2024, and the model quietly filled the gaps with training-set medians. A complete-data version was tried in April 2026, did worse, and was set aside. That means 2025 was not a clean blind test.
+
+The v3.6 rebuild extends every source through 2026, recovers the composite formulas exactly, and re-runs the same strategy unchanged:
+
+| Season | Bets | Win Rate | Profit |
+|--------|------|----------|--------|
+| 2023 | 187 | 57.2% | +$1,900 |
+| 2024 | 169 | 55.6% | +$1,150 |
+| 2025 (complete data) | 151 | **51.7%** | **−$230** |
+| **Total** | **507** | **55.0%** | **+$2,820** |
+
+The 90% CI is now [51.3%, 58.6%], with binomial p = 0.13. The honest reading: the strategy was profitable in the two seasons it was developed on, and broke even to slightly negative on the first season it hadn't seen. 2026 is the first truly out-of-sample test, and it should be paper-traded or bet very small.
+
 ## Phase 7: Honest Statistical Assessment
 
 ### Bootstrap Confidence Interval (B=2,000, stratified by season)

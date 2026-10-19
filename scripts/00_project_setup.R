@@ -304,3 +304,22 @@ fit_workflow_set <- function(workflow_ids, prepared_objects, workflow_objects, s
   names(workflow_results) <- workflow_info$workflow_id
   workflow_results
 }
+
+# Add empty team-week rows for upcoming games (objects/upcoming_games.rds,
+# written by 02_prepare_recent_data.R) so lagged rolling features land on
+# games that haven't been played yet. Both nflverse and normalized team
+# abbreviations are added since source tables differ.
+with_upcoming <- function(df, team_col) {
+  path <- here("objects", "upcoming_games.rds")
+  if (!file.exists(path)) return(df)
+  up <- read_rds(path)
+  teams <- c(up$home_team, up$away_team)
+  raw_alias <- c(LAR = "LA", LVR = "LV")
+  rows <- tibble(season = rep(c(up$season, up$season), 2),
+                 week = rep(c(up$week, up$week), 2),
+                 team = c(teams, coalesce(unname(raw_alias[teams]), teams))) |>
+    distinct()
+  names(rows)[3] <- team_col
+  rows <- rows |> mutate(season = as(season, class(df$season)[1]), week = as(week, class(df$week)[1]))
+  bind_rows(df, anti_join(rows, df, by = c("season", "week", team_col)))
+}

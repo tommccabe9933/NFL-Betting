@@ -16,7 +16,7 @@ team_game_full <- read_rds(here("objects", "team_game_full.rds"))
 
 # Load PBP early — needed by FTN join and situational EPA
 cat("Loading play-by-play data (this takes a minute)...\n")
-pbp_seasons <- 2012:2025
+pbp_seasons <- 2012:2026
 pbp_raw <- map(pbp_seasons, ~ {
   tryCatch(load_pbp(.x), error = function(e) NULL)
 }) |> compact() |> bind_rows()
@@ -35,7 +35,7 @@ game_team_map <- team_game_full |>
 # 1. SCHEDULE FEATURES (div_game, roof, surface, QBs, coaches)
 # ============================================================
 cat("Loading schedule data...\n")
-schedule_seasons <- 2012:2025
+schedule_seasons <- 2012:2026
 schedules <- load_schedules(seasons = schedule_seasons)
 
 schedule_features <- schedules |>
@@ -63,7 +63,7 @@ cat("  Schedule features:", nrow(schedule_features), "games\n")
 # 2. QB-LEVEL FEATURES (from player stats)
 # ============================================================
 cat("Loading player stats...\n")
-player_stats_seasons <- 2012:2025
+player_stats_seasons <- 2012:2026
 player_stats <- map(player_stats_seasons, ~ {
   tryCatch(load_player_stats(seasons = .x), error = function(e) NULL)
 }) |> compact() |> bind_rows()
@@ -92,6 +92,7 @@ qb_weekly <- player_stats |>
 
 # Rolling QB features (lagged)
 qb_rolling <- qb_weekly |>
+  with_upcoming("team") |>
   group_by(team) |>
   arrange(season, week, .by_group = TRUE) |>
   mutate(
@@ -109,7 +110,7 @@ cat("  QB rolling features:", nrow(qb_rolling), "team-weeks\n")
 # 3. NEXT GEN STATS (NGS)
 # ============================================================
 cat("Loading Next Gen Stats...\n")
-ngs_seasons <- 2021:2025  # NGS only available from 2016+
+ngs_seasons <- 2021:2026  # NGS only available from 2016+
 
 ngs_pass <- map(ngs_seasons, ~ {
   tryCatch(load_nextgen_stats(seasons = .x, stat_type = "passing"), error = function(e) NULL)
@@ -147,6 +148,7 @@ ngs_rush_team <- ngs_rush |>
 # Rolling NGS features
 ngs_team <- ngs_pass_team |>
   left_join(ngs_rush_team, by = c("season", "week", "team_abbr")) |>
+  with_upcoming("team_abbr") |>
   group_by(team_abbr) |>
   arrange(season, week, .by_group = TRUE) |>
   mutate(
@@ -165,7 +167,7 @@ cat("  NGS rolling features:", nrow(ngs_team), "team-weeks\n")
 # 4. FTN CHARTING (play action, RPO, blitz, pressure)
 # ============================================================
 cat("Loading FTN charting data...\n")
-ftn_seasons <- 2022:2025  # FTN typically available from 2022
+ftn_seasons <- 2022:2026  # FTN typically available from 2022
 
 ftn <- map(ftn_seasons, ~ {
   tryCatch(load_ftn_charting(seasons = .x), error = function(e) NULL)
@@ -207,6 +209,7 @@ if (nrow(ftn) > 0) {
 
   # Rolling FTN features
   ftn_off_rolling <- ftn_offense |>
+    with_upcoming("posteam") |>
     group_by(posteam) |>
     arrange(season, week, .by_group = TRUE) |>
     mutate(
@@ -217,6 +220,7 @@ if (nrow(ftn) > 0) {
     select(season, week, posteam, starts_with("ftn_roll5_"))
 
   ftn_def_rolling <- ftn_defense |>
+    with_upcoming("defteam") |>
     group_by(defteam) |>
     arrange(season, week, .by_group = TRUE) |>
     mutate(
@@ -237,7 +241,7 @@ if (nrow(ftn) > 0) {
 # 5. INJURIES (weekly injury impact score)
 # ============================================================
 cat("Loading injury data...\n")
-injury_seasons <- 2012:2025
+injury_seasons <- 2012:2026
 
 injuries <- map(injury_seasons, ~ {
   tryCatch(load_injuries(seasons = .x), error = function(e) NULL)
@@ -281,7 +285,7 @@ cat("  Injury impact scores:", nrow(injury_impact), "team-weeks\n")
 # 6. PFR ADVANCED STATS (pressure, drops, yards before/after contact)
 # ============================================================
 cat("Loading PFR advanced stats...\n")
-pfr_seasons <- 2018:2025  # PFR available from 2018
+pfr_seasons <- 2018:2026  # PFR available from 2018
 
 pfr_pass <- map(pfr_seasons, ~ {
   tryCatch(load_pfr_advstats(seasons = .x, stat_type = "pass"), error = function(e) NULL)
@@ -320,6 +324,7 @@ if (nrow(pfr_pass) > 0) {
 
   # Rolling PFR features
   pfr_pass_rolling <- pfr_pass_team |>
+    with_upcoming("team") |>
     group_by(team) |>
     arrange(season, week, .by_group = TRUE) |>
     mutate(
@@ -357,6 +362,7 @@ if (nrow(pfr_def) > 0) {
     )
 
   pfr_def_rolling <- pfr_def_team |>
+    with_upcoming("team") |>
     group_by(team) |>
     arrange(season, week, .by_group = TRUE) |>
     mutate(
@@ -407,6 +413,7 @@ sit_epa_def <- pbp_plays |>
 
 # Rolling situational EPA (lagged)
 sit_off_rolling <- sit_epa_off |>
+  with_upcoming("posteam") |>
   group_by(posteam) |>
   arrange(season, week, .by_group = TRUE) |>
   mutate(
@@ -421,6 +428,7 @@ sit_off_rolling <- sit_epa_off |>
   select(season, week, posteam, starts_with("sit_roll5_"))
 
 sit_def_rolling <- sit_epa_def |>
+  with_upcoming("defteam") |>
   group_by(defteam) |>
   arrange(season, week, .by_group = TRUE) |>
   mutate(
@@ -442,14 +450,14 @@ cat("\nMerging all features into fav/dog perspective...\n")
 # Start with the existing model_data and join advanced features
 # We need to map game_id_norm -> fav_team, dog_team from team_game_full
 fav_rows_map <- team_game_full |>
-  filter(cover != "push", team_norm == team_favorite_id) |>
+  filter(is.na(cover) | cover != "push", team_norm == team_favorite_id) |>
   select(game_id_norm, team_norm) |>
   rename(team_fav = team_norm) |>
   mutate(team_fav = as.character(team_fav)) |>
   distinct(game_id_norm, .keep_all = TRUE)
 
 dog_rows_map <- team_game_full |>
-  filter(cover != "push", team_norm != team_favorite_id) |>
+  filter(is.na(cover) | cover != "push", team_norm != team_favorite_id) |>
   select(game_id_norm, team_norm) |>
   rename(team_dog = team_norm) |>
   mutate(team_dog = as.character(team_dog)) |>

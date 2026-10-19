@@ -16,6 +16,31 @@ from typing import List, Optional
 
 import polars as pl
 
+from src import paths
+
+_RAW_ALIAS = {"LAR": "LA", "LVR": "LV"}
+
+
+def _with_upcoming(df: pl.DataFrame, group_col: str) -> pl.DataFrame:
+    """Append empty team-week rows for upcoming games so lagged rolling
+    means land on games not yet played (see scripts/02_prepare_recent_data.R)."""
+    path = paths.NORMALIZED / "upcoming_team_weeks.parquet"
+    if not path.exists() or "season" not in df.columns or "week" not in df.columns:
+        return df
+    up = pl.read_parquet(path)
+    teams = up["team"].to_list()
+    rows = pl.DataFrame({
+        "season": up["season"].to_list() * 2,
+        "week": up["week"].to_list() * 2,
+        group_col: teams + [_RAW_ALIAS.get(t, t) for t in teams],
+    }).unique().with_columns([
+        pl.col("season").cast(df.schema["season"]),
+        pl.col("week").cast(df.schema["week"]),
+        pl.col(group_col).cast(df.schema[group_col]),
+    ])
+    rows = rows.join(df.select(["season", "week", group_col]), on=["season", "week", group_col], how="anti")
+    return pl.concat([df, rows], how="diagonal_relaxed")
+
 
 def lagged_rolling_mean(
     df: pl.DataFrame,
@@ -49,7 +74,7 @@ def lagged_rolling_mean(
 
     # Sort within groups then compute
     result = (
-        df.sort(sort_cols)
+        _with_upcoming(df, group_col).sort(sort_cols)
         .with_columns(
             pl.col(value_col)
             .rolling_mean(window_size=window, min_samples=1)
@@ -83,7 +108,7 @@ def lagged_rolling_mean_multi(
             .alias(f"{col}{suffix}")
         )
 
-    return df.sort(sort_cols).with_columns(expressions)
+    return _with_upcoming(df, group_col).sort(sort_cols).with_columns(expressions)
 
 
 def season_cumulative_mean(

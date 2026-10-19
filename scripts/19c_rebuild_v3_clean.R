@@ -190,12 +190,12 @@ if (nrow(ngs_pass_extra) > 0) {
   team_game_full <- read_rds(here("objects", "team_game_full.rds"))
 
   fav_teams <- team_game_full |>
-    filter(cover != "push", team_norm == team_favorite_id) |>
+    filter(is.na(cover) | cover != "push", team_norm == team_favorite_id) |>
     distinct(game_id_norm, .keep_all = TRUE) |>
     select(game_id_norm, season, week, team_fav = team_norm)
 
   dog_teams <- team_game_full |>
-    filter(cover != "push", team_norm != team_favorite_id) |>
+    filter(is.na(cover) | cover != "push", team_norm != team_favorite_id) |>
     distinct(game_id_norm, .keep_all = TRUE) |>
     select(game_id_norm, team_dog = team_norm)
 

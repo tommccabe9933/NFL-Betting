@@ -11,17 +11,29 @@ library(slider)
 source(here("scripts", "00_project_setup.R"))
 
 # Load raw data
+# Kaggle team stats end at 2024; 2025+ come from 02_prepare_recent_data.R
 team_offense <- read_csv(here("data", "weekly_team_stats_offense.csv"), show_col_types = FALSE) |>
-  clean_names()
+  clean_names() |>
+  filter(season <= 2024) |>
+  bind_rows(read_csv(here("data", "weekly_team_stats_offense_recent.csv"), show_col_types = FALSE))
 
 team_defense <- read_csv(here("data", "weekly_team_stats_defense.csv"), show_col_types = FALSE) |>
-  clean_names()
+  clean_names() |>
+  filter(season <= 2024) |>
+  bind_rows(read_csv(here("data", "weekly_team_stats_defense_recent.csv"), show_col_types = FALSE))
 
-games_all <- read_csv(here("data", "nfl_all_seasons.csv"), show_col_types = FALSE) |>
-  clean_names()
+# Spreadspoke ends at 2025; current-season rows come from 02_prepare_recent_data.R
+games_all <- read_csv(here("data", "nfl_all_seasons.csv"), show_col_types = FALSE,
+                      col_types = cols(schedule_week = "c", .default = col_guess())) |>
+  clean_names() |>
+  select(schedule_date:weather_detail) |>
+  bind_rows(read_csv(here("data", "nfl_games_2026.csv"), show_col_types = FALSE,
+                     col_types = cols(schedule_week = "c", .default = col_guess())))
+
+upcoming <- read_rds(here("objects", "upcoming_games.rds"))
 
 # Load play-by-play data for EPA features
-pbp_seasons <- 2012:2025
+pbp_seasons <- 2012:2026
 
 pbp_raw <- map(pbp_seasons, ~ load_pbp(.x)) |>
   bind_rows()
@@ -121,6 +133,8 @@ team_features <- team_combined |>
     fourth_down_rate = safe_ratio(fourth_down_converted_off, fourth_down_converted_off + fourth_down_failed_off),
     qb_hit_rate = safe_ratio(qb_hit_def, defense_snaps)
   ) |>
+  # Upcoming-game placeholder rows carry no stats; keep them NA, not 0
+  mutate(across(c(yards_per_play:qb_hit_rate), ~ if_else(is.na(offense_snaps), NA_real_, .x))) |>
   left_join(epa_weekly, by = c("season", "week", "team_norm" = "team"))
 
 # Compute rolling averages with my various lags
@@ -200,6 +214,7 @@ team_game_full <- games_team |>
     margin = team_score - opponent_score,
     margin_vs_spread = margin + spread_team,
     cover = case_when(
+      is.na(margin_vs_spread) ~ NA_character_,
       margin_vs_spread > 0 ~ "cover",
       margin_vs_spread < 0 ~ "no_cover",
       TRUE ~ "push"
@@ -208,7 +223,7 @@ team_game_full <- games_team |>
 
 # split into favorite and underdog perspectives
 fav_rows <- team_game_full |>
-  filter(team_norm == team_favorite_id, cover != "push") |>
+  filter(team_norm == team_favorite_id, is.na(cover) | cover != "push") |>
   select(
     game_id_norm, season, week, fav_team = team_norm, fav_home = home_away,
     spread_fav = spread_favorite, over_under_line, weather_temperature, weather_wind_mph,
@@ -223,7 +238,7 @@ fav_rows <- team_game_full |>
 # underdogs
 
 dog_rows <- team_game_full |>
-  filter(team_norm != team_favorite_id, cover != "push") |>
+  filter(team_norm != team_favorite_id, is.na(cover) | cover != "push") |>
   select(
     game_id_norm, dog_team = team_norm, dog_elo = team_elo,
     dog_roll5_ypp = roll5_ypp, dog_roll5_pass = roll5_pass_eff, dog_roll5_rush = roll5_rush_eff,
@@ -267,7 +282,8 @@ model_data <- fav_rows |>
     rest_diff, fav_at_home, fav_short_week, dog_short_week, stadium_neutral,
     weather_temperature, weather_wind_mph
   ) |>
-  filter(!is.na(fav_cover), !is.na(spread_fav), !is.na(over_under_line))
+  filter(!is.na(fav_cover) | game_id_norm %in% upcoming$game_id_norm,
+         !is.na(spread_fav), !is.na(over_under_line))
 
 # Summary statistics
 data_summary <- tibble(

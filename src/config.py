@@ -1,7 +1,7 @@
 """Central configuration for the NFL pregame feature pipeline."""
 
 MIN_SEASON = 2012
-MAX_SEASON = 2025
+MAX_SEASON = 2026
 
 ROLLING_WINDOW = 5
 SHORT_ROLLING_WINDOW = 3

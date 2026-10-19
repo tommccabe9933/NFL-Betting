@@ -39,6 +39,13 @@ def ingest_market(force: bool = False) -> None:
     )
     # Normalize column names
     df = df.rename({c: c.lower().replace(" ", "_") for c in df.columns})
+
+    # Current-season rows in Spreadspoke format (scripts/02_prepare_recent_data.R)
+    for extra in sorted(paths.LEGACY_DATA.glob("nfl_games_20*.csv")):
+        cur = pl.read_csv(extra, infer_schema_length=10000, schema_overrides={
+            "weather_temperature": pl.Utf8, "weather_wind_mph": pl.Utf8,
+            "weather_humidity": pl.Utf8, "schedule_week": pl.Utf8})
+        df = pl.concat([df.with_columns(pl.col("schedule_week").cast(pl.Utf8)), cur], how="diagonal_relaxed")
     # Cast weather columns to numeric (non-numeric values become null)
     for col in ["weather_temperature", "weather_wind_mph", "weather_humidity"]:
         if col in df.columns:

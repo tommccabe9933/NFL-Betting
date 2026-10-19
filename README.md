@@ -7,6 +7,8 @@
 
 A combined cover + no-cover ensemble achieves **56.0% against the spread** over **520 out-of-sample bets** across 2023–2025. Bootstrap 90% CI = [52.5%, 59.4%]; entire interval clears the 52.4% breakeven threshold. The 2025 holdout (never seen during development) was profitable: 54.9%, +$860.
 
+**v3.6 rebuild (Oct 2026) — read this first.** The v3.5 table (`modeling_data_v3_FINAL.rds`) had 145 of its ~300 features blank for every 2025 game, because the Kaggle team stats and the Python play-by-play features stopped at 2024. The model filled those blanks with training medians, so the 54.9% "2025 holdout" tested a partial model. A complete-data version was tried in April, scored worse, and was set aside, so 2025 was not a clean blind test either. With every feature rebuilt (`objects/modeling_data_v36.rds`), the same strategy goes **51.7% on 151 bets in 2025 (−$230)**. That is below the 52.4% breakeven. Over 2023–2025 it goes 55.0% on 507 bets: 90% CI [51.3%, 58.6%], binomial p = 0.13. Known issue, kept so results stay comparable: the Python feature store reads nflverse `spread_line` backwards, so its `fav_*`/`dog_*` columns describe the opposite team. Only their `*_diff` columns are corrected. Weekly 2026 picks: `scripts/47_weekly_picks.R`.
+
 **Bet sizing (revised Oct 2026):** the model's raw probabilities are overconfident, so Kelly sizing off them overbets. After calibration (`scripts/45_calibrated_kelly.R`), the recommendation is a flat 1% of bankroll per bet: $10,000 → $13,932 (+39%) over 2023–2025, worst drawdown 9%.
 
 Read the full story: **`memos/blog_post.md`** or open the interactive exhibit: **`exhibit_beating_the_spread.html`**.
@@ -69,13 +71,18 @@ Read the full story: **`memos/blog_post.md`** or open the interactive exhibit: *
 ## How to Reproduce
 
 ```bash
+# 0. Pull current-season data, rebuilt team stats, lines/weather, upcoming games
+Rscript scripts/02_prepare_recent_data.R
+
 # 1. Ingest raw data (Python)
 python scripts/run_pipeline.py
 
 # 2. Build R modeling table
 Rscript scripts/01_build_model_data.R
 Rscript scripts/19b_merge_python_features.R
+Rscript scripts/10_build_advanced_features.R   # NGS, FTN, PFR, injuries, QB (modeling_data_v2)
 Rscript scripts/19c_rebuild_v3_clean.R
+Rscript scripts/20_finalize_modeling_table.R   # composites (scripts/composites.R) → modeling_data_v36.rds
 
 # 3. Train cover ensemble
 Rscript scripts/26_tuned_stable_model.R
@@ -89,6 +96,10 @@ Rscript scripts/41_nocover_model.R
 Rscript scripts/43_final_audit.R
 Rscript scripts/44_bootstrap_combined.R
 Rscript scripts/45_calibrated_kelly.R
+# v3.6: MODEL_DATA=modeling_data_v36.rds TAG=v36 for 44 and 45
+
+# 6. This week's picks
+Rscript scripts/47_weekly_picks.R
 ```
 
 ## Data Sources (12)

@@ -18,10 +18,11 @@ bank_start <- 10000
 bet_cap    <- 0.05                 # max 5% of bankroll on one game
 week_cap   <- 0.25                 # max 25% of bankroll at risk in one week
 flat_pct   <- 0.01                 # burn-in / baseline stake
+tag        <- Sys.getenv("TAG", "v35")
 
-cover_preds   <- read_rds(here("objects", "cover_preds_v35.rds"))
-nocover_preds <- read_rds(here("objects", "nocover_preds_v35.rds"))
-portfolio     <- read_rds(here("objects", "combined_portfolio_v35.rds"))
+cover_preds   <- read_rds(here("objects", str_glue("cover_preds_{tag}.rds")))
+nocover_preds <- read_rds(here("objects", str_glue("nocover_preds_{tag}.rds")))
+portfolio     <- read_rds(here("objects", str_glue("combined_portfolio_{tag}.rds")))
 
 cat("=== CALIBRATED KELLY SIZING ===\n\n")
 
@@ -182,7 +183,7 @@ risk_table <- expand_grid(scenario = names(scenarios), sizing = names(fracs)) |>
     frac <- fracs[[sizing]]
     stake_fn <- if (is.na(frac)) function(wk) rep(flat_pct, nrow(wk)) else
       function(wk) frac * kelly_full(wk$p_cal_final)
-    sims <- map_dfr(1:5000, function(i) {
+    sims <- map_dfr(seq_len(as.integer(Sys.getenv("N_SIMS", "5000"))), function(i) {
       wk_bets <- season_template |> mutate(win = runif(n()) < scenarios[[scenario]])
       simulate_bankroll(wk_bets, stake_fn)
     })
@@ -230,14 +231,14 @@ calibration_plot <- ggplot(plot_df, aes(predicted, actual, colour = version)) +
        colour = NULL, size = "Bets") +
   theme_minimal()
 
-ggsave(here("figures", "calibration_v35.png"), calibration_plot,
+ggsave(here("figures", str_glue("calibration_{tag}.png")), calibration_plot,
        width = 7, height = 5, dpi = 150)
 
-write_rds(calibrators, here("objects", "calibrators_v35.rds"))
-write_rds(bets,        here("objects", "combined_portfolio_v35_calibrated.rds"))
-write_csv(sim_table,   here("results", "kelly_calibrated_v35.csv"))
-write_csv(risk_table,  here("results", "kelly_risk_one_season.csv"))
-write_csv(bankroll_paths, here("results", "kelly_bankroll_paths_v35.csv"))
+write_rds(calibrators, here("objects", str_glue("calibrators_{tag}.rds")))
+write_rds(bets,        here("objects", str_glue("combined_portfolio_{tag}_calibrated.rds")))
+write_csv(sim_table,   here("results", str_glue("kelly_calibrated_{tag}.csv")))
+write_csv(risk_table,  here("results", str_glue("kelly_risk_one_season_{tag}.csv")))
+write_csv(bankroll_paths, here("results", str_glue("kelly_bankroll_paths_{tag}.csv")))
 
 cat("\nSaved: objects/calibrators_v35.rds\n")
 cat("       objects/combined_portfolio_v35_calibrated.rds\n")

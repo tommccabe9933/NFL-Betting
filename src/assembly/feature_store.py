@@ -136,16 +136,20 @@ def assemble_feature_store() -> pl.DataFrame:
     ])
 
     spine = spine.with_columns([
-        pl.when(pl.col("cover_margin") > 0).then(pl.lit("cover"))
+        pl.when(pl.col("cover_margin").is_null()).then(pl.lit(None, dtype=pl.Utf8))
+        .when(pl.col("cover_margin") > 0).then(pl.lit("cover"))
         .when(pl.col("cover_margin") < 0).then(pl.lit("no_cover"))
         .otherwise(pl.lit("push"))
         .alias("fav_cover"),
     ])
 
-    # Exclude pushes and games without scores
+    # Exclude pushes and games without scores, except upcoming games to predict
+    upcoming_path = paths.NORMALIZED / "upcoming_team_weeks.parquet"
+    upcoming_ids = (pl.read_parquet(upcoming_path)["game_id_norm"].unique().to_list()
+                    if upcoming_path.exists() else [])
     spine = spine.filter(
-        (pl.col("fav_cover") != "push")
-        & pl.col("home_score").is_not_null()
+        ((pl.col("fav_cover") != "push") & pl.col("home_score").is_not_null())
+        | pl.col("game_id_norm").is_in(upcoming_ids)
     )
 
     # 2. Join feature families
