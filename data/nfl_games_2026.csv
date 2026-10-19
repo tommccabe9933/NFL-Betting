@@ -90,7 +90,7 @@ schedule_date,schedule_season,schedule_week,schedule_playoff,team_home,score_hom
 10/18/2026,2026,6,FALSE,Los Angeles Rams,16,18,Arizona Cardinals,LAR,-12.5,51.5,SoFi Stadium,FALSE,72,0,NA,NA
 10/18/2026,2026,6,FALSE,Kansas City Chiefs,22,6,Los Angeles Chargers,KC,-7.5,41.5,GEHA Field at Arrowhead Stadium,FALSE,NA,NA,NA,NA
 10/18/2026,2026,6,FALSE,Las Vegas Raiders,30,33,Buffalo Bills,BUF,-5.5,53.5,Allegiant Stadium,FALSE,72,0,NA,NA
-10/18/2026,2026,6,FALSE,Green Bay Packers,NA,NA,Dallas Cowboys,DAL,-1.5,53.5,Lambeau Field,FALSE,56,6,NA,NA
+10/18/2026,2026,6,FALSE,Green Bay Packers,23,13,Dallas Cowboys,DAL,-1.5,53.5,Lambeau Field,FALSE,NA,NA,NA,NA
 10/19/2026,2026,6,FALSE,San Francisco 49ers,NA,NA,Washington Commanders,SF,-7.5,52.5,Levi's Stadium,FALSE,60,12,NA,NA
 10/22/2026,2026,7,FALSE,Chicago Bears,NA,NA,New England Patriots,CHI,-2.5,49.5,Soldier Field,FALSE,63,4,NA,NA
 10/25/2026,2026,7,FALSE,New Orleans Saints,NA,NA,Pittsburgh Steelers,PIT,-2.5,44.5,Stade de France,TRUE,72,0,NA,NA
@@ -98,14 +98,14 @@ schedule_date,schedule_season,schedule_week,schedule_playoff,team_home,score_hom
 10/25/2026,2026,7,FALSE,Baltimore Ravens,NA,NA,Cincinnati Bengals,BAL,-3,50.5,M&T Bank Stadium,FALSE,62,5,NA,NA
 10/25/2026,2026,7,FALSE,Carolina Panthers,NA,NA,Tampa Bay Buccaneers,CAR,-3,43.5,Bank of America Stadium,FALSE,64,6,NA,NA
 10/25/2026,2026,7,FALSE,Houston Texans,NA,NA,New York Giants,HOU,-9.5,43.5,Reliant Stadium,FALSE,72,0,NA,NA
-10/25/2026,2026,7,FALSE,Minnesota Vikings,NA,NA,Indianapolis Colts,MIN,-6,41.5,U.S. Bank Stadium,FALSE,72,0,NA,NA
+10/25/2026,2026,7,FALSE,Minnesota Vikings,NA,NA,Indianapolis Colts,MIN,-6,42.5,U.S. Bank Stadium,FALSE,72,0,NA,NA
 10/25/2026,2026,7,FALSE,New York Jets,NA,NA,Miami Dolphins,NYJ,-4.5,38.5,MetLife Stadium,FALSE,60,8,NA,NA
 10/25/2026,2026,7,FALSE,Tennessee Titans,NA,NA,Cleveland Browns,CLE,-1.5,36.5,Nissan Stadium,FALSE,69,5,NA,NA
 10/25/2026,2026,7,FALSE,Arizona Cardinals,NA,NA,Denver Broncos,DEN,-4.5,43.5,State Farm Stadium,FALSE,72,0,NA,NA
-10/25/2026,2026,7,FALSE,Detroit Lions,NA,NA,Green Bay Packers,DET,NA,NA,Ford Field,FALSE,72,0,NA,NA
+10/25/2026,2026,7,FALSE,Detroit Lions,NA,NA,Green Bay Packers,DET,-3,52.5,Ford Field,FALSE,72,0,NA,NA
 10/25/2026,2026,7,FALSE,Las Vegas Raiders,NA,NA,Los Angeles Rams,LAR,-5.5,46.5,Allegiant Stadium,FALSE,72,0,NA,NA
 10/25/2026,2026,7,FALSE,Seattle Seahawks,NA,NA,Kansas City Chiefs,SEA,-2.5,42.5,Lumen Field,FALSE,54,2,NA,NA
-10/26/2026,2026,7,FALSE,Philadelphia Eagles,NA,NA,Dallas Cowboys,PHI,NA,NA,Lincoln Financial Field,FALSE,NA,NA,NA,NA
+10/26/2026,2026,7,FALSE,Philadelphia Eagles,NA,NA,Dallas Cowboys,DAL,-4.5,44.5,Lincoln Financial Field,FALSE,60,4,NA,NA
 10/29/2026,2026,8,FALSE,Green Bay Packers,NA,NA,Carolina Panthers,GB,NA,NA,Lambeau Field,FALSE,NA,NA,NA,NA
 11/01/2026,2026,8,FALSE,Buffalo Bills,NA,NA,Baltimore Ravens,BUF,NA,NA,Highmark Stadium,FALSE,NA,NA,NA,NA
 11/01/2026,2026,8,FALSE,Cincinnati Bengals,NA,NA,Tennessee Titans,CIN,NA,NA,Paycor Stadium,FALSE,NA,NA,NA,NA

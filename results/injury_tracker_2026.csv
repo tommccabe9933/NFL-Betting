@@ -1,0 +1,102 @@
+game_id_norm,week,kickoff,favorite,underdog,line,injury_net,side,pick,type,logged_at,result,units
+2026_01_SF_LAR,1,2026-09-10 20:35,LAR,SF,3.5,-0.074,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_01_TB_CIN,1,2026-09-13 13:00,CIN,TB,3.5,0.056,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_01_NO_DET,1,2026-09-13 13:00,DET,NO,7,0.929,favorite,DET -7,backfill,2026-10-19 00:36,loss,-1.1
+2026_01_CLE_JAX,1,2026-09-13 13:00,JAX,CLE,8.5,0.186,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_01_ATL_PIT,1,2026-09-13 13:00,PIT,ATL,6.5,1.8,favorite,PIT -6.5,backfill,2026-10-19 00:36,win,1
+2026_01_NYJ_TEN,1,2026-09-13 13:00,TEN,NYJ,1.5,0.613,favorite,TEN -1.5,backfill,2026-10-19 00:36,loss,-1.1
+2026_01_CHI_CAR,1,2026-09-13 13:00,CHI,CAR,3,0.055,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_01_BUF_HOU,1,2026-09-13 13:00,BUF,HOU,1.5,-0.221,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_01_BAL_IND,1,2026-09-13 13:00,BAL,IND,3,-0.51,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_01_ARI_LAC,1,2026-09-13 16:25,LAC,ARI,8.5,0.486,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_01_MIA_LVR,1,2026-09-13 16:25,LVR,MIA,3,-0.415,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_01_GB_MIN,1,2026-09-13 16:25,MIN,GB,1.5,0.358,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_01_WAS_PHI,1,2026-09-13 16:25,PHI,WAS,6,-0.759,underdog,WAS +6,backfill,2026-10-19 00:36,win,1
+2026_01_DAL_NYG,1,2026-09-13 20:20,DAL,NYG,3,-0.369,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_01_DEN_KC,1,2026-09-14 20:15,KC,DEN,2.5,-0.682,underdog,DEN +2.5,backfill,2026-10-19 00:36,loss,-1.1
+2026_02_DET_BUF,2,2026-09-17 20:15,BUF,DET,5.5,0.373,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_02_NO_BAL,2,2026-09-20 13:00,BAL,NO,8.5,-0.961,underdog,NO +8.5,backfill,2026-10-19 00:36,win,1
+2026_02_MIN_CHI,2,2026-09-20 13:00,CHI,MIN,4.5,0.914,favorite,CHI -4.5,backfill,2026-10-19 00:36,loss,-1.1
+2026_02_CIN_HOU,2,2026-09-20 13:00,HOU,CIN,3,-1.324,underdog,CIN +3,backfill,2026-10-19 00:36,win,1
+2026_02_PIT_NE,2,2026-09-20 13:00,NE,PIT,4.5,-0.36,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_02_CLE_TB,2,2026-09-20 13:00,TB,CLE,8.5,0.163,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_02_CAR_ATL,2,2026-09-20 13:00,CAR,ATL,2.5,0.901,favorite,CAR -2.5,backfill,2026-10-19 00:36,win,1
+2026_02_GB_NYJ,2,2026-09-20 13:00,GB,NYJ,3.5,0.815,favorite,GB -3.5,backfill,2026-10-19 00:36,loss,-1.1
+2026_02_PHI_TEN,2,2026-09-20 13:00,PHI,TEN,7,-0.323,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_02_JAX_DEN,2,2026-09-20 16:05,DEN,JAX,2.5,-0.488,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_02_LVR_LAC,2,2026-09-20 16:05,LAC,LVR,6.5,-0.168,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_02_WAS_DAL,2,2026-09-20 16:25,DAL,WAS,3.5,-0.046,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_02_MIA_SF,2,2026-09-20 16:25,SF,MIA,12.5,0.156,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_02_SEA_ARI,2,2026-09-20 16:25,SEA,ARI,3.5,-0.712,underdog,ARI +3.5,backfill,2026-10-19 00:36,loss,-1.1
+2026_02_IND_KC,2,2026-09-20 20:20,KC,IND,6,-0.379,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_02_NYG_LAR,2,2026-09-21 20:15,LAR,NYG,6.5,-0.492,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_03_ATL_GB,3,2026-09-24 20:15,GB,ATL,4.5,-0.995,underdog,ATL +4.5,backfill,2026-10-19 00:36,win,1
+2026_03_LAC_BUF,3,2026-09-27 13:00,BUF,LAC,7,1.034,favorite,BUF -7,backfill,2026-10-19 00:36,win,1
+2026_03_NE_JAX,3,2026-09-27 13:00,JAX,NE,3,0.876,favorite,JAX -3,backfill,2026-10-19 00:36,win,1
+2026_03_TEN_NYG,3,2026-09-27 13:00,NYG,TEN,2.5,-0.105,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_03_CAR_CLE,3,2026-09-27 13:00,CAR,CLE,2.5,-0.846,underdog,CLE +2.5,backfill,2026-10-19 00:36,win,1
+2026_03_HOU_IND,3,2026-09-27 13:00,HOU,IND,1.5,-1.04,underdog,IND +1.5,backfill,2026-10-19 00:36,win,1
+2026_03_KC_MIA,3,2026-09-27 13:00,KC,MIA,10,0.547,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_03_CIN_PIT,3,2026-09-27 13:00,CIN,PIT,3.5,0.21,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_03_SEA_WAS,3,2026-09-27 13:00,SEA,WAS,8.5,1.054,favorite,SEA -8.5,backfill,2026-10-19 00:36,loss,-1.1
+2026_03_ARI_SF,3,2026-09-27 16:05,SF,ARI,7.5,-1.286,underdog,ARI +7.5,backfill,2026-10-19 00:36,win,1
+2026_03_MIN_TB,3,2026-09-27 16:05,MIN,TB,1.5,-0.015,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_03_LVR_NO,3,2026-09-27 16:25,NO,LVR,3.5,-0.353,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_03_LAR_DEN,3,2026-09-27 20:20,DEN,LAR,1.5,-0.212,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_03_PHI_CHI,3,2026-09-28 20:15,PHI,CHI,3.5,0.362,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_04_PIT_CLE,4,2026-10-01 20:15,PIT,CLE,2.5,0.023,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_04_IND_WAS,4,2026-10-04 09:30,IND,WAS,4.5,1.443,favorite,IND -4.5,backfill,2026-10-19 00:36,win,1
+2026_04_TEN_BAL,4,2026-10-04 13:00,BAL,TEN,11.5,-1.138,underdog,TEN +11.5,backfill,2026-10-19 00:36,win,1
+2026_04_NE_BUF,4,2026-10-04 13:00,BUF,NE,7,1.018,favorite,BUF -7,backfill,2026-10-19 00:36,loss,-1.1
+2026_04_NYJ_CHI,4,2026-10-04 13:00,CHI,NYJ,3.5,-0.508,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_04_JAX_CIN,4,2026-10-04 13:00,CIN,JAX,2.5,-0.763,underdog,JAX +2.5,backfill,2026-10-19 00:36,win,1
+2026_04_DAL_HOU,4,2026-10-04 13:00,HOU,DAL,3,-0.177,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_04_ARI_NYG,4,2026-10-04 13:00,ARI,NYG,2.5,-0.45,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_04_LAR_PHI,4,2026-10-04 13:00,LAR,PHI,3.5,0.713,favorite,LAR -3.5,backfill,2026-10-19 00:36,win,1
+2026_04_MIA_MIN,4,2026-10-04 16:05,MIN,MIA,10,-0.026,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_04_DEN_SF,4,2026-10-04 16:25,SF,DEN,3,-1.134,underdog,DEN +3,backfill,2026-10-19 00:36,loss,-1.1
+2026_04_KC_LVR,4,2026-10-04 16:25,KC,LVR,4.5,0.034,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_04_DET_CAR,4,2026-10-04 20:20,DET,CAR,4.5,0.382,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_04_ATL_NO,4,2026-10-05 20:15,NO,ATL,1.5,-1.045,underdog,ATL +1.5,backfill,2026-10-19 00:36,win,1
+2026_05_TB_DAL,5,2026-10-08 20:15,DAL,TB,9.5,0.519,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_05_PHI_JAX,5,2026-10-11 09:30,JAX,PHI,7.5,1.195,favorite,JAX -7.5,backfill,2026-10-19 00:36,loss,-1.1
+2026_05_LVR_NE,5,2026-10-11 13:00,NE,LVR,3.5,-1.545,underdog,LVR +3.5,backfill,2026-10-19 00:36,loss,-1.1
+2026_05_CLE_NYJ,5,2026-10-11 13:00,NYJ,CLE,2.5,1.11,favorite,NYJ -2.5,backfill,2026-10-19 00:36,win,1
+2026_05_IND_PIT,5,2026-10-11 13:00,PIT,IND,3,0.288,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_05_NYG_WAS,5,2026-10-11 13:00,WAS,NYG,3.5,-1.971,underdog,NYG +3.5,backfill,2026-10-19 00:36,win,1
+2026_05_CHI_GB,5,2026-10-11 13:00,CHI,GB,1.5,-0.069,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_05_MIN_NO,5,2026-10-11 13:00,MIN,NO,2.5,0.245,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_05_HOU_TEN,5,2026-10-11 13:00,HOU,TEN,6.5,-0.108,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_05_DEN_LAC,5,2026-10-11 16:05,DEN,LAC,3.5,1.813,favorite,DEN -3.5,backfill,2026-10-19 00:36,win,1
+2026_05_SF_SEA,5,2026-10-11 16:25,SEA,SF,3,0.191,waiting for injury report,waiting for injury report,backfill,2026-10-19 00:36,NA,NA
+2026_05_DET_ARI,5,2026-10-11 16:25,DET,ARI,5.5,-0.822,underdog,ARI +5.5,backfill,2026-10-19 00:36,loss,-1.1
+2026_05_BAL_ATL,5,2026-10-11 20:20,ATL,BAL,3.5,0.808,favorite,ATL -3.5,backfill,2026-10-19 00:36,loss,-1.1
+2026_05_BUF_LAR,5,2026-10-12 20:15,LAR,BUF,3.5,0.838,favorite,LAR -3.5,backfill,2026-10-19 00:36,loss,-1.1
+2026_06_SEA_DEN,6,2026-10-15 20:15,SEA,DEN,2.5,-0.302,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_06_HOU_JAX,6,2026-10-18 09:30,JAX,HOU,2.5,0.353,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_06_TEN_IND,6,2026-10-18 13:00,IND,TEN,6.5,-0.035,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_06_NYJ_NE,6,2026-10-18 13:00,NE,NYJ,7.5,0.344,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_06_CHI_ATL,6,2026-10-18 13:00,CHI,ATL,1.5,-1.286,underdog,ATL +1.5,backfill,2026-10-19 00:36,loss,-1.1
+2026_06_BAL_CLE,6,2026-10-18 13:00,BAL,CLE,3,0.283,waiting for injury report,waiting for injury report,backfill,2026-10-19 00:36,NA,NA
+2026_06_NO_NYG,6,2026-10-18 13:00,NO,NYG,1.5,0.191,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_06_CAR_PHI,6,2026-10-18 13:00,CAR,PHI,3,2.812,favorite,CAR -3,backfill,2026-10-19 00:36,win,1
+2026_06_PIT_TB,6,2026-10-18 13:00,PIT,TB,2.5,0.212,no bet,no bet,backfill,2026-10-19 00:36,NA,NA
+2026_06_ARI_LAR,6,2026-10-18 16:05,LAR,ARI,12.5,0.952,favorite,LAR -12.5,backfill,2026-10-19 00:36,loss,-1.1
+2026_06_LAC_KC,6,2026-10-18 16:25,KC,LAC,7.5,1.28,favorite,KC -7.5,backfill,2026-10-19 00:36,win,1
+2026_06_BUF_LVR,6,2026-10-18 16:25,BUF,LVR,5.5,0.776,favorite,BUF -5.5,backfill,2026-10-19 00:36,loss,-1.1
+2026_06_DAL_GB,6,2026-10-18 20:20,DAL,GB,1.5,0.92,favorite,DAL -1.5,backfill,2026-10-19 00:36,loss,-1.1
+2026_06_WAS_SF,6,2026-10-19 20:15,SF,WAS,7.5,0.163,no bet,no bet,live,2026-10-19 00:36,NA,NA
+2026_07_NE_CHI,7,2026-10-22 20:15,CHI,NE,2.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-19 00:36,NA,NA
+2026_07_PIT_NO,7,2026-10-25 09:30,PIT,NO,2.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-19 00:36,NA,NA
+2026_07_CIN_BAL,7,2026-10-25 13:00,BAL,CIN,3,-0.143,waiting for injury report,waiting for injury report,live,2026-10-19 00:36,NA,NA
+2026_07_TB_CAR,7,2026-10-25 13:00,CAR,TB,3,-0.143,waiting for injury report,waiting for injury report,live,2026-10-19 00:36,NA,NA
+2026_07_NYG_HOU,7,2026-10-25 13:00,HOU,NYG,9.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-19 00:36,NA,NA
+2026_07_IND_MIN,7,2026-10-25 13:00,MIN,IND,6,-0.143,waiting for injury report,waiting for injury report,live,2026-10-19 00:36,NA,NA
+2026_07_MIA_NYJ,7,2026-10-25 13:00,NYJ,MIA,4.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-19 00:36,NA,NA
+2026_07_SF_ATL,7,2026-10-25 13:00,SF,ATL,4.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-19 00:36,NA,NA
+2026_07_CLE_TEN,7,2026-10-25 13:00,CLE,TEN,1.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-19 00:36,NA,NA
+2026_07_DEN_ARI,7,2026-10-25 16:05,DEN,ARI,4.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-19 00:36,NA,NA
+2026_07_GB_DET,7,2026-10-25 16:25,DET,GB,3,-0.143,waiting for injury report,waiting for injury report,live,2026-10-19 00:36,NA,NA
+2026_07_LAR_LVR,7,2026-10-25 16:25,LAR,LVR,5.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-19 00:36,NA,NA
+2026_07_KC_SEA,7,2026-10-25 20:20,SEA,KC,2.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-19 00:36,NA,NA
+2026_07_DAL_PHI,7,2026-10-26 20:15,DAL,PHI,4.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-19 00:36,NA,NA
