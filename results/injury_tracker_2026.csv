@@ -100,3 +100,30 @@ game_id_norm,week,kickoff,favorite,underdog,line,injury_net,side,pick,type,logge
 2026_07_LAR_LVR,7,2026-10-25 16:25,LAR,LVR,5.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-19 00:36,NA,NA
 2026_07_KC_SEA,7,2026-10-25 20:20,SEA,KC,2.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-19 00:36,NA,NA
 2026_07_DAL_PHI,7,2026-10-26 20:15,DAL,PHI,4.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-19 00:36,NA,NA
+2026_08_CAR_GB,8,2026-10-29 20:15,GB,CAR,3.5,0.104,no bet,no bet,backfill,2026-10-30 00:21,NA,NA
+2026_08_BAL_BUF,8,2026-11-01 13:00,BUF,BAL,3,-0.071,no bet,no bet,live,2026-10-30 00:21,NA,NA
+2026_08_TEN_CIN,8,2026-11-01 13:00,CIN,TEN,11.5,-0.071,no bet,no bet,live,2026-10-30 00:21,NA,NA
+2026_08_ARI_DAL,8,2026-11-01 13:00,DAL,ARI,7,-0.071,no bet,no bet,live,2026-10-30 00:21,NA,NA
+2026_08_MIN_DET,8,2026-11-01 13:00,DET,MIN,3,-0.071,no bet,no bet,live,2026-10-30 00:21,NA,NA
+2026_08_IND_JAX,8,2026-11-01 13:00,JAX,IND,10,-0.071,no bet,no bet,live,2026-10-30 00:21,NA,NA
+2026_08_LVR_NYJ,8,2026-11-01 13:00,NYJ,LVR,1.5,-0.071,no bet,no bet,live,2026-10-30 00:21,NA,NA
+2026_08_CLE_PIT,8,2026-11-01 13:00,PIT,CLE,3.5,-0.071,no bet,no bet,live,2026-10-30 00:21,NA,NA
+2026_08_ATL_TB,8,2026-11-01 13:00,TB,ATL,2.5,-0.071,no bet,no bet,live,2026-10-30 00:21,NA,NA
+2026_08_LAC_LAR,8,2026-11-01 16:05,LAR,LAC,6.5,-0.071,no bet,no bet,live,2026-10-30 00:21,NA,NA
+2026_08_KC_DEN,8,2026-11-01 16:25,KC,DEN,1.5,-0.071,no bet,no bet,live,2026-10-30 00:21,NA,NA
+2026_08_NE_MIA,8,2026-11-01 16:25,NE,MIA,7,-0.071,no bet,no bet,live,2026-10-30 00:21,NA,NA
+2026_08_PHI_WAS,8,2026-11-01 20:20,WAS,PHI,6,-0.071,no bet,no bet,live,2026-10-30 00:21,NA,NA
+2026_08_CHI_SEA,8,2026-11-02 20:15,SEA,CHI,3,-0.143,waiting for injury report,waiting for injury report,live,2026-10-30 00:21,NA,NA
+2026_09_JAX_BAL,9,2026-11-05 20:15,BAL,JAX,3,-0.143,waiting for injury report,waiting for injury report,live,2026-10-30 00:21,NA,NA
+2026_09_CIN_ATL,9,2026-11-08 09:30,CIN,ATL,3,-0.143,waiting for injury report,waiting for injury report,live,2026-10-30 00:21,NA,NA
+2026_09_NYJ_KC,9,2026-11-08 13:00,KC,NYJ,9.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-30 00:21,NA,NA
+2026_09_CLE_NO,9,2026-11-08 13:00,NO,CLE,2.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-30 00:21,NA,NA
+2026_09_DAL_IND,9,2026-11-08 13:00,DAL,IND,4.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-30 00:21,NA,NA
+2026_09_DET_MIA,9,2026-11-08 13:00,DET,MIA,7,-0.143,waiting for injury report,waiting for injury report,live,2026-10-30 00:21,NA,NA
+2026_09_NYG_PHI,9,2026-11-08 13:00,NYG,PHI,1.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-30 00:21,NA,NA
+2026_09_LAR_WAS,9,2026-11-08 13:00,LAR,WAS,5.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-30 00:21,NA,NA
+2026_09_LVR_SF,9,2026-11-08 16:05,SF,LVR,9.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-30 00:21,NA,NA
+2026_09_HOU_LAC,9,2026-11-08 16:05,HOU,LAC,3.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-30 00:21,NA,NA
+2026_09_ARI_SEA,9,2026-11-08 16:25,SEA,ARI,10.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-30 00:21,NA,NA
+2026_09_TB_CHI,9,2026-11-08 20:20,CHI,TB,6,-0.143,waiting for injury report,waiting for injury report,live,2026-10-30 00:21,NA,NA
+2026_09_BUF_MIN,9,2026-11-09 20:15,BUF,MIN,2.5,-0.143,waiting for injury report,waiting for injury report,live,2026-10-30 00:21,NA,NA

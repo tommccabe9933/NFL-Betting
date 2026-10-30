@@ -340,26 +340,80 @@ game_id_norm,set,week,kickoff,favorite,underdog,line,scenario,side,logged_at,typ
 2026_06_DAL_GB,combos_14,6,2026-10-18 20:20,DAL,GB,1.5,dog_upset_win_last & dog_hot,favorite,2026-10-19 01:25,backfill,-11.5,dog covered
 2026_06_DAL_GB,scenarios_23,6,2026-10-18 20:20,DAL,GB,1.5,fav_rest_edge & dog_to_lucky,underdog,2026-10-19 01:25,backfill,-11.5,dog covered
 2026_06_DAL_GB,scenarios_23,6,2026-10-18 20:20,DAL,GB,1.5,elo_likes_dog & epa_fav_weak,underdog,2026-10-19 01:25,backfill,-11.5,dog covered
-2026_06_WAS_SF,scenarios_23,6,2026-10-19 20:15,SF,WAS,7.5,spread_7_9h & dog_to_lucky,favorite,2026-10-19 01:25,live,NA,NA
-2026_07_NE_CHI,scenarios_23,7,2026-10-22 20:15,CHI,NE,2.5,dog_short_week & fav_run_edge,favorite,2026-10-19 01:25,live,NA,NA
-2026_07_NE_CHI,scenarios_23,7,2026-10-22 20:15,CHI,NE,2.5,elo_likes_dog & epa_fav_weak,underdog,2026-10-19 01:25,live,NA,NA
-2026_07_PIT_NO,NA,7,2026-10-25 09:30,PIT,NO,2.5,NA,NA,2026-10-19 01:25,live,NA,NA
-2026_07_CIN_BAL,combos_14,7,2026-10-25 13:00,BAL,CIN,3,dog_no_cover_last3 & spread_le3,underdog,2026-10-19 01:25,live,NA,NA
-2026_07_CIN_BAL,combos_14,7,2026-10-25 13:00,BAL,CIN,3,fav_upset_last & dog_hot,favorite,2026-10-19 01:25,live,NA,NA
-2026_07_IND_MIN,scenarios_23,7,2026-10-25 13:00,MIN,IND,6,spread_3h_6h & fav_home,underdog,2026-10-19 01:25,live,NA,NA
-2026_07_MIA_NYJ,scenarios_23,7,2026-10-25 13:00,NYJ,MIA,4.5,spread_3h_6h & fav_home,underdog,2026-10-19 01:25,live,NA,NA
-2026_07_CLE_TEN,scenarios_23,7,2026-10-25 13:00,CLE,TEN,1.5,spread_le3 & low_total,underdog,2026-10-19 01:25,live,NA,NA
-2026_07_TB_CAR,NA,7,2026-10-25 13:00,CAR,TB,3,NA,NA,2026-10-19 01:25,live,NA,NA
-2026_07_NYG_HOU,NA,7,2026-10-25 13:00,HOU,NYG,9.5,NA,NA,2026-10-19 01:25,live,NA,NA
-2026_07_SF_ATL,NA,7,2026-10-25 13:00,SF,ATL,4.5,NA,NA,2026-10-19 01:25,live,NA,NA
-2026_07_DEN_ARI,combos_14,7,2026-10-25 16:05,DEN,ARI,4.5,dog_upset_win_last & epa_fav_strong,favorite,2026-10-19 01:25,live,NA,NA
-2026_07_DEN_ARI,combos_14,7,2026-10-25 16:05,DEN,ARI,4.5,dog_upset_win_last & dog_hot,favorite,2026-10-19 01:25,live,NA,NA
-2026_07_GB_DET,combos_14,7,2026-10-25 16:25,DET,GB,3,fav_off_bye & division,underdog,2026-10-19 01:25,live,NA,NA
-2026_07_LAR_LVR,combos_14,7,2026-10-25 16:25,LAR,LVR,5.5,fav_upset_last & dog_hot,favorite,2026-10-19 01:25,live,NA,NA
-2026_07_GB_DET,scenarios_23,7,2026-10-25 16:25,DET,GB,3,elo_likes_dog & epa_fav_weak,underdog,2026-10-19 01:25,live,NA,NA
-2026_07_LAR_LVR,scenarios_23,7,2026-10-25 16:25,LAR,LVR,5.5,spread_3h_6h & dog_to_lucky,underdog,2026-10-19 01:25,live,NA,NA
-2026_07_KC_SEA,combos_14,7,2026-10-25 20:20,SEA,KC,2.5,fav_upset_last & dog_hot,favorite,2026-10-19 01:25,live,NA,NA
-2026_07_KC_SEA,scenarios_23,7,2026-10-25 20:20,SEA,KC,2.5,fav_rest_edge & dog_to_lucky,underdog,2026-10-19 01:25,live,NA,NA
-2026_07_KC_SEA,scenarios_23,7,2026-10-25 20:20,SEA,KC,2.5,elo_likes_dog & epa_fav_weak,underdog,2026-10-19 01:25,live,NA,NA
-2026_07_DAL_PHI,combos_14,7,2026-10-26 20:15,DAL,PHI,4.5,fav_upset_last & dog_hot,favorite,2026-10-19 01:25,live,NA,NA
-2026_07_DAL_PHI,scenarios_23,7,2026-10-26 20:15,DAL,PHI,4.5,spread_3h_6h & dog_to_lucky,underdog,2026-10-19 01:25,live,NA,NA
+2026_06_WAS_SF,scenarios_23,6,2026-10-19 20:15,SF,WAS,7.5,spread_7_9h & dog_to_lucky,favorite,2026-10-19 01:25,live,-1.5,dog covered
+2026_07_NE_CHI,scenarios_23,7,2026-10-22 20:15,CHI,NE,2.5,dog_short_week & fav_run_edge,favorite,2026-10-19 01:25,live,3.5,fav covered
+2026_07_NE_CHI,scenarios_23,7,2026-10-22 20:15,CHI,NE,2.5,elo_likes_dog & epa_fav_weak,underdog,2026-10-19 01:25,live,3.5,fav covered
+2026_07_PIT_NO,NA,7,2026-10-25 09:30,PIT,NO,2.5,NA,NA,2026-10-19 01:25,live,3.5,fav covered
+2026_07_CIN_BAL,combos_14,7,2026-10-25 13:00,BAL,CIN,3,dog_no_cover_last3 & spread_le3,underdog,2026-10-19 01:25,live,-25,dog covered
+2026_07_CIN_BAL,combos_14,7,2026-10-25 13:00,BAL,CIN,3,fav_upset_last & dog_hot,favorite,2026-10-19 01:25,live,-25,dog covered
+2026_07_IND_MIN,scenarios_23,7,2026-10-25 13:00,MIN,IND,6,spread_3h_6h & fav_home,underdog,2026-10-19 01:25,live,0,push
+2026_07_MIA_NYJ,scenarios_23,7,2026-10-25 13:00,NYJ,MIA,4.5,spread_3h_6h & fav_home,underdog,2026-10-19 01:25,live,-7.5,dog covered
+2026_07_CLE_TEN,scenarios_23,7,2026-10-25 13:00,CLE,TEN,1.5,spread_le3 & low_total,underdog,2026-10-19 01:25,live,1.5,fav covered
+2026_07_CIN_BAL,scenarios_23,7,2026-10-25 13:00,CIN,BAL,3,division & fav_hot,underdog,2026-10-30 00:21,backfill,19,fav covered
+2026_07_CIN_BAL,scenarios_23,7,2026-10-25 13:00,CIN,BAL,3,elo_likes_dog & epa_fav_weak,underdog,2026-10-30 00:21,backfill,19,fav covered
+2026_07_TB_CAR,NA,7,2026-10-25 13:00,CAR,TB,3,NA,NA,2026-10-19 01:25,live,-33,dog covered
+2026_07_NYG_HOU,NA,7,2026-10-25 13:00,HOU,NYG,9.5,NA,NA,2026-10-19 01:25,live,-15.5,dog covered
+2026_07_SF_ATL,NA,7,2026-10-25 13:00,SF,ATL,4.5,NA,NA,2026-10-19 01:25,live,-13.5,dog covered
+2026_07_DEN_ARI,combos_14,7,2026-10-25 16:05,DEN,ARI,4.5,dog_upset_win_last & epa_fav_strong,favorite,2026-10-19 01:25,live,9.5,fav covered
+2026_07_DEN_ARI,combos_14,7,2026-10-25 16:05,DEN,ARI,4.5,dog_upset_win_last & dog_hot,favorite,2026-10-19 01:25,live,9.5,fav covered
+2026_07_GB_DET,combos_14,7,2026-10-25 16:25,DET,GB,3,fav_off_bye & division,underdog,2026-10-19 01:25,live,0,push
+2026_07_LAR_LVR,combos_14,7,2026-10-25 16:25,LAR,LVR,5.5,fav_upset_last & dog_hot,favorite,2026-10-19 01:25,live,8.5,fav covered
+2026_07_GB_DET,scenarios_23,7,2026-10-25 16:25,DET,GB,3,elo_likes_dog & epa_fav_weak,underdog,2026-10-19 01:25,live,0,push
+2026_07_LAR_LVR,scenarios_23,7,2026-10-25 16:25,LAR,LVR,5.5,spread_3h_6h & dog_to_lucky,underdog,2026-10-19 01:25,live,8.5,fav covered
+2026_07_KC_SEA,combos_14,7,2026-10-25 20:20,SEA,KC,2.5,fav_upset_last & dog_hot,favorite,2026-10-19 01:25,live,14.5,fav covered
+2026_07_KC_SEA,scenarios_23,7,2026-10-25 20:20,SEA,KC,2.5,fav_rest_edge & dog_to_lucky,underdog,2026-10-19 01:25,live,14.5,fav covered
+2026_07_KC_SEA,scenarios_23,7,2026-10-25 20:20,SEA,KC,2.5,elo_likes_dog & epa_fav_weak,underdog,2026-10-19 01:25,live,14.5,fav covered
+2026_07_DAL_PHI,combos_14,7,2026-10-26 20:15,DAL,PHI,4.5,fav_upset_last & dog_hot,favorite,2026-10-19 01:25,live,12.5,fav covered
+2026_07_DAL_PHI,scenarios_23,7,2026-10-26 20:15,DAL,PHI,4.5,spread_3h_6h & dog_to_lucky,underdog,2026-10-19 01:25,live,12.5,fav covered
+2026_08_CAR_GB,blowout_dog,8,2026-10-29 20:15,GB,CAR,3.5,dog_blowout_loss,underdog,2026-10-30 00:21,backfill,4.5,fav covered
+2026_08_CAR_GB,scenarios_23,8,2026-10-29 20:15,GB,CAR,3.5,spread_3h_6h & fav_home,underdog,2026-10-30 00:21,backfill,4.5,fav covered
+2026_08_BAL_BUF,blowout_dog,8,2026-11-01 13:00,BUF,BAL,3,dog_blowout_loss,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_BAL_BUF,combos_14,8,2026-11-01 13:00,BUF,BAL,3,dog_blowout_loss & dog_to_lucky,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_IND_JAX,combos_14,8,2026-11-01 13:00,JAX,IND,10,fav_off_bye & division,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_BAL_BUF,scenarios_23,8,2026-11-01 13:00,BUF,BAL,3,fav_rest_edge & dog_to_lucky,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_ARI_DAL,scenarios_23,8,2026-11-01 13:00,DAL,ARI,7,spread_7_9h & dog_to_lucky,favorite,2026-10-30 00:21,live,NA,NA
+2026_08_MIN_DET,scenarios_23,8,2026-11-01 13:00,DET,MIN,3,elo_likes_dog & epa_fav_weak,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_CLE_PIT,scenarios_23,8,2026-11-01 13:00,PIT,CLE,3.5,spread_3h_6h & epa_fav_weak,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_CLE_PIT,scenarios_23,8,2026-11-01 13:00,PIT,CLE,3.5,spread_3h_6h & fav_home,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_ATL_TB,scenarios_23,8,2026-11-01 13:00,TB,ATL,2.5,division & fav_hot,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_ATL_TB,scenarios_23,8,2026-11-01 13:00,TB,ATL,2.5,elo_likes_dog & epa_fav_weak,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_TEN_CIN,NA,8,2026-11-01 13:00,CIN,TEN,11.5,NA,NA,2026-10-30 00:21,live,NA,NA
+2026_08_LVR_NYJ,NA,8,2026-11-01 13:00,NYJ,LVR,1.5,NA,NA,2026-10-30 00:21,live,NA,NA
+2026_08_LAC_LAR,combos_14,8,2026-11-01 16:05,LAR,LAC,6.5,dog_no_cover_last3 & fav_hot,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_LAC_LAR,scenarios_23,8,2026-11-01 16:05,LAR,LAC,6.5,spread_3h_6h & fav_home,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_NE_MIA,combos_14,8,2026-11-01 16:25,NE,MIA,7,dog_upset_win_last & epa_fav_strong,favorite,2026-10-30 00:21,live,NA,NA
+2026_08_KC_DEN,scenarios_23,8,2026-11-01 16:25,KC,DEN,1.5,spread_le3 & low_total,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_KC_DEN,scenarios_23,8,2026-11-01 16:25,KC,DEN,1.5,elo_likes_dog & epa_fav_weak,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_NE_MIA,scenarios_23,8,2026-11-01 16:25,NE,MIA,7,spread_7_9h & dog_to_lucky,favorite,2026-10-30 00:21,live,NA,NA
+2026_08_NE_MIA,scenarios_23,8,2026-11-01 16:25,NE,MIA,7,division & fav_hot,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_NE_MIA,scenarios_23,8,2026-11-01 16:25,NE,MIA,7,fav_rest_edge & dog_to_lucky,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_NE_MIA,scenarios_23,8,2026-11-01 16:25,NE,MIA,7,spread_7_9h & fav_road,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_PHI_WAS,combos_14,8,2026-11-01 20:20,WAS,PHI,6,fav_off_bye & division,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_PHI_WAS,scenarios_23,8,2026-11-01 20:20,WAS,PHI,6,dog_short_week & dog_run_edge,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_PHI_WAS,scenarios_23,8,2026-11-01 20:20,WAS,PHI,6,spread_3h_6h & fav_home,underdog,2026-10-30 00:21,live,NA,NA
+2026_08_CHI_SEA,NA,8,2026-11-02 20:15,SEA,CHI,3,NA,NA,2026-10-30 00:21,live,NA,NA
+2026_09_JAX_BAL,scenarios_23,9,2026-11-05 20:15,BAL,JAX,3,elo_likes_dog & epa_fav_weak,underdog,2026-10-30 00:21,live,NA,NA
+2026_09_CIN_ATL,NA,9,2026-11-08 09:30,CIN,ATL,3,NA,NA,2026-10-30 00:21,live,NA,NA
+2026_09_NYG_PHI,combos_14,9,2026-11-08 13:00,NYG,PHI,1.5,fav_off_bye & division,underdog,2026-10-30 00:21,live,NA,NA
+2026_09_NYJ_KC,scenarios_23,9,2026-11-08 13:00,KC,NYJ,9.5,spread_7_9h & dog_hot,favorite,2026-10-30 00:21,live,NA,NA
+2026_09_CLE_NO,scenarios_23,9,2026-11-08 13:00,NO,CLE,2.5,fav_rest_edge & dog_to_lucky,underdog,2026-10-30 00:21,live,NA,NA
+2026_09_CLE_NO,scenarios_23,9,2026-11-08 13:00,NO,CLE,2.5,elo_likes_dog & epa_fav_weak,underdog,2026-10-30 00:21,live,NA,NA
+2026_09_DAL_IND,scenarios_23,9,2026-11-08 13:00,DAL,IND,4.5,spread_3h_6h & dog_to_lucky,underdog,2026-10-30 00:21,live,NA,NA
+2026_09_DAL_IND,scenarios_23,9,2026-11-08 13:00,DAL,IND,4.5,spread_3h_6h & epa_fav_weak,underdog,2026-10-30 00:21,live,NA,NA
+2026_09_DAL_IND,scenarios_23,9,2026-11-08 13:00,DAL,IND,4.5,elo_likes_dog & epa_fav_weak,underdog,2026-10-30 00:21,live,NA,NA
+2026_09_DET_MIA,scenarios_23,9,2026-11-08 13:00,DET,MIA,7,spread_7_9h & dog_hot,favorite,2026-10-30 00:21,live,NA,NA
+2026_09_DET_MIA,scenarios_23,9,2026-11-08 13:00,DET,MIA,7,spread_7_9h & fav_road,underdog,2026-10-30 00:21,live,NA,NA
+2026_09_NYG_PHI,scenarios_23,9,2026-11-08 13:00,NYG,PHI,1.5,fav_rest_edge & dog_to_lucky,underdog,2026-10-30 00:21,live,NA,NA
+2026_09_NYG_PHI,scenarios_23,9,2026-11-08 13:00,NYG,PHI,1.5,spread_le3 & low_total,underdog,2026-10-30 00:21,live,NA,NA
+2026_09_LAR_WAS,scenarios_23,9,2026-11-08 13:00,LAR,WAS,5.5,spread_3h_6h & dog_to_lucky,underdog,2026-10-30 00:21,live,NA,NA
+2026_09_LVR_SF,combos_14,9,2026-11-08 16:05,SF,LVR,9.5,fav_upset_last & dog_hot,favorite,2026-10-30 00:21,live,NA,NA
+2026_09_LVR_SF,scenarios_23,9,2026-11-08 16:05,SF,LVR,9.5,spread_7_9h & dog_to_lucky,favorite,2026-10-30 00:21,live,NA,NA
+2026_09_LVR_SF,scenarios_23,9,2026-11-08 16:05,SF,LVR,9.5,fav_rest_edge & dog_to_lucky,underdog,2026-10-30 00:21,live,NA,NA
+2026_09_LVR_SF,scenarios_23,9,2026-11-08 16:05,SF,LVR,9.5,spread_7_9h & dog_hot,favorite,2026-10-30 00:21,live,NA,NA
+2026_09_HOU_LAC,NA,9,2026-11-08 16:05,HOU,LAC,3.5,NA,NA,2026-10-30 00:21,live,NA,NA
+2026_09_ARI_SEA,scenarios_23,9,2026-11-08 16:25,SEA,ARI,10.5,division & fav_hot,underdog,2026-10-30 00:21,live,NA,NA
+2026_09_TB_CHI,scenarios_23,9,2026-11-08 20:20,CHI,TB,6,spread_3h_6h & dog_to_lucky,underdog,2026-10-30 00:21,live,NA,NA
+2026_09_TB_CHI,scenarios_23,9,2026-11-08 20:20,CHI,TB,6,spread_3h_6h & epa_fav_weak,underdog,2026-10-30 00:21,live,NA,NA
+2026_09_TB_CHI,scenarios_23,9,2026-11-08 20:20,CHI,TB,6,elo_likes_dog & epa_fav_weak,underdog,2026-10-30 00:21,live,NA,NA
+2026_09_TB_CHI,scenarios_23,9,2026-11-08 20:20,CHI,TB,6,spread_3h_6h & fav_home,underdog,2026-10-30 00:21,live,NA,NA
+2026_09_BUF_MIN,scenarios_23,9,2026-11-09 20:15,BUF,MIN,2.5,elo_likes_dog & epa_fav_weak,underdog,2026-10-30 00:21,live,NA,NA

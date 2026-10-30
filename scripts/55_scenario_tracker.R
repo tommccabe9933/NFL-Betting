@@ -52,7 +52,7 @@ rows <- games |>
             favorite, underdog, line, set, scenario, side, logged_at = format(now, "%Y-%m-%d %H:%M"))
 
 old <- if (file.exists(log_path)) read_csv(log_path, show_col_types = FALSE,
-  col_types = cols(.default = col_guess(), game_id_norm = "c", set = "c", scenario = "c", side = "c")) else
+  col_types = cols(.default = col_guess(), game_id_norm = "c", set = "c", scenario = "c", side = "c", kickoff = "c", logged_at = "c")) else
   tibble(game_id_norm = character(), set = character())
 old <- old |> filter("set" %in% names(old))  # older log format is replaced
 
@@ -99,12 +99,17 @@ per_rule <- graded |> filter(!is.na(set)) |>
   summarize(bets = n(), wins = sum(win), win_pct = round(100 * mean(win), 1), .groups = "drop") |>
   arrange(set, desc(bets))
 
+live_port <- portfolio(graded |> filter(type == "live"))
+cat("LIVE picks only (logged before kickoff):\n")
+print(live_port |> group_by(strategy = set) |> reframe(rec((bet == "favorite") == (fav_result == "fav covered"))), width = Inf)
+cat("\n")
 cat("2026 RECORD — portfolios vs underdog baselines (52.4% = breakeven)\n")
 print(summary_tbl |> arrange(strategy), width = Inf)
 cat("\nBy rule:\n"); print(per_rule, n = Inf)
 
 cat("\nUPCOMING PAPER PICKS\n")
-upcoming <- portfolio(log |> filter(type == "live") |> mutate(fav_result = NA_character_)) |>
+upcoming <- portfolio(log |> filter(type == "live", as.POSIXct(kickoff, tz = "America/New_York") > now) |>
+                        mutate(fav_result = NA_character_)) |>
   left_join(games |> select(game_id_norm, week, kickoff, favorite, underdog, line), by = "game_id_norm") |>
   mutate(pick = if_else(bet == "favorite", str_glue("{favorite} -{line}"), str_glue("{underdog} +{line}"))) |>
   arrange(kickoff)

@@ -64,7 +64,7 @@ scored <- v |> filter(season == 2026) |>
                           side == "underdog" ~ str_glue("{underdog} +{line}"), TRUE ~ side) |> as.character())
 
 old <- if (file.exists(log_path)) read_csv(log_path, show_col_types = FALSE,
-                                          col_types = cols(.default = col_guess(), game_id_norm = "c")) else tibble(game_id_norm = character())
+                                          col_types = cols(.default = col_guess(), game_id_norm = "c", kickoff = "c", logged_at = "c")) else tibble(game_id_norm = character())
 now <- Sys.time()
 
 # Live picks: games not started yet (re-logged each run until kickoff)
@@ -103,8 +103,8 @@ cat(sprintf("Rule frozen %s | favorite if injury_net >= %.2f, underdog if <= %.2
 cat("RECORD (52.4% = breakeven)\n")
 graded |> group_by(type) |> record() |> print()
 cat("\nTHIS WEEK'S PAPER PICKS\n")
-graded |> filter(type == "live", side != "no bet") |>
+graded |> filter(type == "live", side != "no bet", as.POSIXct(kickoff, tz = "America/New_York") > Sys.time()) |>
   select(week, kickoff, pick, injury_net) |> print(n = Inf)
-n_wait <- sum(graded$type == "live" & graded$side == "waiting for injury report")
+n_wait <- sum(graded$type == "live" & graded$side == "waiting for injury report" & as.POSIXct(graded$kickoff, tz = "America/New_York") > Sys.time())
 if (n_wait > 0) cat(sprintf("%d upcoming games are waiting for injury reports (out Wed-Fri) — re-run Saturday.\n", n_wait))
 cat("\nLog:", log_path, "\n")
