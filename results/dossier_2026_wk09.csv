@@ -1,0 +1,15 @@
+game_id_norm,kickoff,fav,line,dog,total_line,fav_qb,fav_qb_rec,dog_qb,dog_qb_rec,fav_rank,dog_rank,eff_implied_home_spread,rest_edge,fav_votes,dog_votes,combos
+2026_09_CIN_ATL,Sun 09:30,CIN,3,ATL,52.5,Joe Burrow,16-8 (67%),Michael Penix Jr.,NA,5,24,-8.1,0,0,0,
+2026_09_DEN_CAR,Sun 13:00,DEN,3,CAR,44.5,Bo Nix,4-5 (44%),Bryce Young,11-8 (58%),14,20,-0.6,-3,0,0,
+2026_09_DAL_IND,Sun 13:00,DAL,4.5,IND,51.5,Dak Prescott,22-19 (54%),Daniel Jones,12-17 (41%),19,29,-7.2,0,0,1,
+2026_09_NYJ_KC,Sun 13:00,KC,8.5,NYJ,47.5,Patrick Mahomes,28-33 (46%),Geno Smith,22-17 (56%),3,16,9.3,0,1,0,
+2026_09_DET_MIA,Sun 13:00,DET,6.5,MIA,49.5,Jared Goff,27-15 (64%),Malik Willis,NA,17,30,-8.4,0,0,1,
+2026_09_CLE_NO,Sun 13:00,NO,3.5,CLE,42.5,Tyler Shough,NA,Shedeur Sanders,NA,27,25,-2.2,7,0,7,61%/61%
+2026_09_NYG_PHI,Sun 13:00,NYG,3,PHI,38.5,J.J. McCarthy,NA,Joe Milton III,NA,15,31,-10.4,7,0,5,62%/62%; 62%/55%; 60%/59%
+2026_09_LAR_WAS,Sun 13:00,LAR,4.5,WAS,47.5,Matthew Stafford,26-23 (53%),Jayden Daniels,NA,4,22,-7.9,0,0,1,
+2026_09_HOU_LAC,Sun 16:05,HOU,6,LAC,40.5,C.J. Stroud,5-6 (45%),Justin Herbert,6-7 (46%),18,32,-9.2,7,0,4,62%/55%; 56%/57%; 60%/55%
+2026_09_LVR_SF,Sun 16:05,SF,10,LVR,51.5,Brock Purdy,15-11 (58%),Kirk Cousins,30-25 (55%),2,21,14.4,7,3,3,62%/61%; 61%/58%; 59%/61%
+2026_09_GB_NE,Sun 16:25,NE,3,GB,44.5,Drake Maye,7-3 (70%),Jordan Love,7-6 (54%),12,11,1.4,-3,0,1,
+2026_09_ARI_SEA,Sun 16:25,SEA,8.5,ARI,39.5,Drew Lock,NA,Gardner Minshew,7-11 (39%),13,26,8.7,-1,2,5,57%/67%
+2026_09_TB_CHI,Sun 20:20,CHI,6,TB,47.5,Caleb Williams,7-4 (64%),Baker Mayfield,23-18 (56%),7,9,3.3,-1,0,4,
+2026_09_BUF_MIN,Mon 20:15,BUF,3,MIN,43.5,Josh Allen,22-17 (56%),Kyler Murray,12-11 (52%),8,6,2.3,0,0,1,
