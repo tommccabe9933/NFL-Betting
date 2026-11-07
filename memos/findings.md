@@ -283,6 +283,17 @@ Single elastic net, train on 2012+, α=0.25, λ=0.08, P>0.53 threshold
 Strategy is robust across ±0.02 threshold changes. Every configuration from
 cover>0.53/nc>0.51 through cover>0.57/nc>0.55 is profitable.
 
+### Opening lines + luck (Nov 2026)
+- New data: Kaggle archangel0x01/nfl-sportsbook-odds-and-results (data/raw/kaggle_odds): consensus line history 2018-22, ESPN BET/DraftKings open+close 2023-26; 2,011 games matched (scripts/58_line_movement.R)
+- Lines drift toward favorites in EVERY season (+0.2 to +1.24 pts; 2026 = +1.24). Underdogs cover ~2 pts more often at the close than the open
+  -> bet underdogs as late as possible, favorites as early as possible
+- Steam / key-number tests: no stable effect (sign flips between 2018-22 and 2023-26)
+- CLV of our rules: underdog rules average -0.5 to -1.6 pts (line moves against them; their win rates assume the closing number).
+  Only 'fav_upset_last & dog_hot -> favorite' has positive CLV (+0.34) with a 59.9% win rate
+- Luck vs point differential (scripts/59_luck_signals.R): market prices it; 'favorite luck >= +0.15 -> dog' 51.3% / 54.0% — tiebreaker only
+- Week 8 live: top 3 picks (BAL +3.5, LAC +7.5, IND +10) all lost; favorites swept the week. Lesson: our signals are mostly
+  same-direction (underdog) bets, so they fail together — mix sides and size small
+
 ### Signal composite (Oct 2026) — negative result
 - scripts/48_signal_composite.R: average of the K most sign-stable features, bet only at extreme scores
 - Features picked on 2016-2020, K/cutoff tuned on 2021-2022 (K=10, |z|>=0.5): 56.6% on 311 validation bets
